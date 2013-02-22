@@ -5,11 +5,11 @@ Currently contains only a streaming json formatter based on
 jackson. So it doesn't use much memory and you can easily format files
 of many many megabytes.
 
-A binary can be downloaded here:
+A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/blob/master/releases/org/meeuw/mihxil-json/0.1/mihxil-json-0.1-jar-with-dependencies.jar)
 
 Usage
 ```
-java -jar ~/Download/mihxil-json-0.1-SNAPSHOT-jar-with-dependencies.jar [<infile>] [<outfile>]
+java -jar ~/Download/mihxil-json-0.1-jar-with-dependencies.jar [<infile>] [<outfile>]
 
 infile: defaults to stdin (can explicitely set to stdin as '-')
 outfile: default to stdout
@@ -17,7 +17,7 @@ outfile: default to stdout
 
 For a file of nearly one Gb:
 ```shell
-michiel@belono:/tmp$ time java -jar /tmp/mihxil-json-0.1-SNAPSHOT-jar-with-dependencies.jar alldocs.json  alldocs.formatted.json
+michiel@belono:/tmp$ time java -jar /tmp/mihxil-json-0.1-jar-with-dependencies.jar alldocs.json  alldocs.formatted.json
 
 real	0m27.783s
 user	0m19.880s
