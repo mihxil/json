@@ -14,17 +14,17 @@ import static org.junit.Assert.assertEquals;
  */
 public class FormatterTest {
 
-	@Test
-	public void format() throws IOException {
-		Formatter formatter = new Formatter();
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		formatter.format(
-				new StringReader("{a:1, b:2}"),
-				out);
-		assertEquals("{\n" +
-				"  \"a\" : 1,\n" +
-				"  \"b\" : 2\n" +
-				"}", out.toString());
-	}
+    @Test
+    public void format() throws IOException {
+        Formatter formatter = new Formatter();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        formatter.format(
+                new StringReader("{a:1, b:2}"),
+                out);
+        assertEquals("{\n" +
+                "  \"a\" : 1,\n" +
+                "  \"b\" : 2\n" +
+                "}", out.toString());
+    }
 
 }
