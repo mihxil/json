@@ -5,7 +5,9 @@ Currently contains only a streaming json formatter based on
 jackson. So it doesn't use much memory and you can easily format files
 of many many megabytes.
 
-A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/blob/master/releases/org/meeuw/mihxil-json/0.1/mihxil-json-0.1-jar-with-dependencies.jar)
+A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.1/mihxil-json-0.1-jar-with-dependencies.jar)
+
+https://github.com/mihxil/mvn-repo/raw/master/releases can be used as a maven repository.
 
 Usage
 ```
