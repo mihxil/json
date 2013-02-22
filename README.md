@@ -7,6 +7,8 @@ of many many megabytes.
 
 A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.1/mihxil-json-0.1-jar-with-dependencies.jar)
 
+https://github.com/mihxil/mvn-repo/raw/master/releases can be used as a maven repository.
+
 Usage
 ```
 java -jar ~/Download/mihxil-json-0.1-jar-with-dependencies.jar [<infile>] [<outfile>]
