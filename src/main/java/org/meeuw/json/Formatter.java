@@ -19,7 +19,7 @@ import java.io.*;
 
 public class Formatter {
 
-    void format(InputStream in, OutputStream out) throws IOException {
+    public void format(InputStream in, OutputStream out) throws IOException {
         JsonFactory jsonFactory = getJsonFactory();
 
         JsonParser jp = jsonFactory.createJsonParser(in);
@@ -27,7 +27,7 @@ public class Formatter {
         format(jp, generator);
     }
 
-    void format(Reader in, OutputStream out) throws IOException {
+    public void format(Reader in, OutputStream out) throws IOException {
         JsonFactory jsonFactory = getJsonFactory();
         JsonParser jp = jsonFactory.createJsonParser(in);
         JsonGenerator generator = jsonFactory.createJsonGenerator(out);
@@ -69,16 +69,18 @@ public class Formatter {
                 case FIELD_NAME:
                     generator.writeFieldName(jp.getText());
                     break;
-
                 case VALUE_EMBEDDED_OBJECT:
-                    generator.writeObject(token.asByteArray());
+                    // don't know
+                    generator.writeObject(jp.getText());
                     break;
                 case VALUE_STRING:
                     generator.writeString(jp.getText());
                     break;
                 case VALUE_NUMBER_INT:
+                    generator.writeNumber(jp.getValueAsInt());
+                    break;
                 case VALUE_NUMBER_FLOAT:
-                    generator.writeNumber(jp.getText());
+                    generator.writeNumber(jp.getValueAsDouble());
                     break;
                 case VALUE_TRUE:
                     generator.writeBoolean(true);
