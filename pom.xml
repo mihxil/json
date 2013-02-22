@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.meeuw</groupId>
+  <artifactId>mihxil-json</artifactId>
+  <version>0.1-SNAPSHOT</version>
+
+  <properties>
+    <github.maven.repository>file:///Users/michiel/github/mvn-repo/</github.maven.repository>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+    </dependency>
+      <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-core-asl</artifactId>
+          <version>1.9.4</version>
+      </dependency>
+  </dependencies>
+  <packaging>jar</packaging>
+
+  <build>
+    <defaultGoal>install</defaultGoal>
+
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-2</version>
+          <executions>
+            <execution>
+              <id>create-executable-jar</id>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+              <configuration>
+                <descriptorRefs>
+                  <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+                <archive>
+                  <manifest>
+                    <mainClass>org.meeuw.json.Formatter</mainClass>
+                  </manifest>
+                </archive>
+              </configuration>
+            </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
+
+  <distributionManagement>
+    <repository>
+      <id>repo</id>
+      <url>${github.maven.repository}/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshot-repo</id>
+      <url>${github.maven.repository}/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+
+</project>
