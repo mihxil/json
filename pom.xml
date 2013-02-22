@@ -6,6 +6,7 @@
   <artifactId>mihxil-json</artifactId>
   <version>0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
+  <description>Json-related utilities. Contains a formatter for now, but I may add json search functionality too</description>
 
   <properties>
     <github.maven.repository>file:///Users/michiel/github/mihxil/mvn-repo/</github.maven.repository>
