@@ -4,7 +4,7 @@
 
   <groupId>org.meeuw</groupId>
   <artifactId>mihxil-json</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <packaging>jar</packaging>
 
   <properties>
