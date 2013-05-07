@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -40,16 +41,17 @@ public class Grep extends AbstractJsonReader {
             case VALUE_TRUE:
             case VALUE_FALSE:
             case VALUE_NULL:
-                if (recordMatcher.matches(path)) {
+                String value = jp.getText();
+                if (recordMatcher.matches(path, value)) {
                     output.print(recordsep);
                 }
-                if (matcher.matches(path)) {
+                if (matcher.matches(path, value)) {
                     switch (outputFormat) {
                         case PATHANDVALUE:
-                            output.print(join(path) + "=" + jp.getText() + sep);
+                            output.print(join(path) + "=" + value + sep);
                             break;
                         case KEYANDVALUE:
-                            output.print(path.peekLast() + "=" + jp.getText() + sep);
+                            output.print(path.peekLast() + "=" + value + sep);
                             break;
                         case VALUE:
                             output.print(jp.getText() + sep);
@@ -133,10 +135,55 @@ public class Grep extends AbstractJsonReader {
 
     public static interface PathMatcher {
 
-        boolean matches(Deque<PathEntry> path);
+        boolean matches(Deque<PathEntry> path, String value);
     }
 
-    public static class SinglePathMatcher implements PathMatcher {
+    public static abstract class KeysMatcher implements PathMatcher {
+        @Override
+        final public boolean matches(Deque<PathEntry> path, String value) {
+            return matches(path);
+        }
+        protected abstract  boolean matches(Deque<PathEntry> path);
+
+    }
+
+    public static abstract class ValueMatcher implements PathMatcher {
+        @Override
+        final public boolean matches(Deque<PathEntry> path, String value) {
+            return matches(value);
+        }
+
+        protected abstract boolean matches(String value);
+
+    }
+    public static class ValueRegexpMatcher extends ValueMatcher {
+        private final Pattern pattern;
+
+        public ValueRegexpMatcher(Pattern pattern) {
+            this.pattern = pattern;
+        }
+
+        @Override
+        protected boolean matches(String value) {
+            return pattern.matcher(value).matches();
+        }
+    }
+
+    public static class ValueEqualsMatcher extends ValueMatcher {
+        private final String test;
+
+        public ValueEqualsMatcher(String test) {
+            this.test = test;
+        }
+
+        @Override
+        protected boolean matches(String value) {
+            return test.equals(value);
+        }
+    }
+
+
+    public static class SinglePathMatcher extends KeysMatcher {
         private final KeyPattern[] pathPattern;
 
         public SinglePathMatcher(KeyPattern... pathPattern) {
@@ -154,25 +201,41 @@ public class Grep extends AbstractJsonReader {
         }
     }
 
-    public static class PathMatcherChain implements PathMatcher {
+    public static class PathMatcherOrChain implements PathMatcher {
         private final PathMatcher[] matchers;
 
-        public PathMatcherChain(PathMatcher[] matchers) {
+        public PathMatcherOrChain(PathMatcher... matchers) {
             this.matchers = matchers;
         }
 
         @Override
-        public boolean matches(Deque<PathEntry> path) {
+        public boolean matches(Deque<PathEntry> path, String value) {
             for (PathMatcher matcher : matchers) {
-                if (matcher.matches(path)) return true;
+                if (matcher.matches(path, value)) return true;
             }
             return false;
         }
     }
-    public static class NeverPathMatcher implements  PathMatcher {
+
+    public static class PathMatcherAndChain implements PathMatcher {
+        private final PathMatcher[] matchers;
+
+        public PathMatcherAndChain(PathMatcher... matchers) {
+            this.matchers = matchers;
+        }
 
         @Override
-        public boolean matches(Deque<PathEntry> path) {
+        public boolean matches(Deque<PathEntry> path, String value) {
+            for (PathMatcher matcher : matchers) {
+                if (! matcher.matches(path, value)) return false;
+            }
+            return true;
+        }
+    }
+    public static class NeverPathMatcher implements PathMatcher {
+
+        @Override
+        public boolean matches(Deque<PathEntry> path, String value) {
             return false;
         }
     }
@@ -184,10 +247,29 @@ public class Grep extends AbstractJsonReader {
         for (String s : split) {
             list.add(parsePathMatcher(s));
         }
-        return new PathMatcherChain(list.toArray(new PathMatcher[list.size()]));
+        return new PathMatcherOrChain(list.toArray(new PathMatcher[list.size()]));
 
     }
     public static PathMatcher parsePathMatcher(String arg) {
+        String[] split = arg.split("~", 2);
+        if (split.length == 2) {
+            return new PathMatcherAndChain(
+                    parseKeysMatcher(split[0]),
+                    new ValueRegexpMatcher(Pattern.compile(split[1])));
+        }
+        split = arg.split("=", 2);
+        if (split.length == 2) {
+            return new PathMatcherAndChain(
+                    parseKeysMatcher(split[0]),
+                    new ValueEqualsMatcher(split[1]));
+        }
+        // >, <, operators...
+
+        return parseKeysMatcher(split[0]);
+
+    }
+
+    public static PathMatcher parseKeysMatcher(String arg) {
         String[] split = arg.split("\\.");
         ArrayList<KeyPattern> list = new ArrayList<KeyPattern>(split.length);
         for (String s : split) {
