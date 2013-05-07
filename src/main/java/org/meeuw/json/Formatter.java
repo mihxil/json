@@ -17,8 +17,8 @@ import java.io.OutputStream;
 import java.util.Deque;
 
 /**
+ * Pretty prints the json-stream. Depends entirely on jackson.
  * @author Michiel Meeuwissen
- * @since 1.0
  */
 
 public class Formatter extends AbstractJsonReader {

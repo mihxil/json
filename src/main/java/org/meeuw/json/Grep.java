@@ -14,7 +14,9 @@ import java.util.Deque;
 import java.util.regex.Pattern;
 
 /**
- *
+ * jsongrep. To search in json streams. You can match on the keys
+ * E.g. 'rows.*.id' will result in only all 'id' values in a json structure.
+ * Try the commandline option -help for an overview of all features.
  */
 public class Grep extends AbstractJsonReader {
 

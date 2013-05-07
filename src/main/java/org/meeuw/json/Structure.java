@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.Deque;
 
 /**
-
+ * This Json-reader just outputs the parsed keys to output. It is not very usefull in itself, but it show what the 'path' argument of {@link #handleToken} is at any moment, so this is more or less the simplest concretization of AbstractJsonReader.
  */
 public class Structure extends AbstractJsonReader {
 
