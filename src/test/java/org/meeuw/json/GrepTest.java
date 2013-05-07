@@ -13,10 +13,10 @@ public class GrepTest {
 
     @Test
     public void grep() throws IOException {
-        Grep grep = new Grep(System.out, new Grep.SinglePathMatcher(
+        Grep grep = new Grep(new Grep.SinglePathMatcher(
                 new Grep.PreciseMatch("a"),
                 new Grep.PreciseMatch("b"),
-                new Grep.PreciseMatch("b1")));
+                new Grep.PreciseMatch("b1")), System.out);
         //new String[] {"c", "*", "d"});
         //Grep grep = new Grep(new String[] {"b", "b1"});
 
@@ -28,9 +28,9 @@ public class GrepTest {
     @Test
     public void grepSubObject() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Grep grep = new Grep(out, new Grep.SinglePathMatcher(
+        Grep grep = new Grep(new Grep.SinglePathMatcher(
                 new Grep.PreciseMatch("b"),
-                new Grep.PreciseMatch("b1")));
+                new Grep.PreciseMatch("b1")), out);
 
 
         grep.read(new StringReader("{b: {b1: 5}, c:5}"));
@@ -41,10 +41,10 @@ public class GrepTest {
     @Test
     public void grepArray() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Grep grep = new Grep(out, new Grep.SinglePathMatcher(
+        Grep grep = new Grep(new Grep.SinglePathMatcher(
                 new Grep.PreciseMatch("c"),
                 new Grep.Wildcard(),
-                new Grep.PreciseMatch("b2")));
+                new Grep.PreciseMatch("b2")), out);
 
         grep.read(new StringReader("{c: [{b1: 1}, {b2: 2}]}"));
         assertEquals("c.1.b2=2\n", new String(out.toByteArray()));

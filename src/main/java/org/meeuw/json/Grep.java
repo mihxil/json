@@ -1,5 +1,6 @@
 package org.meeuw.json;
 
+import org.apache.commons.cli.*;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Deque;
 
 /**
@@ -17,9 +19,9 @@ public class Grep extends AbstractJsonReader {
     private final PathMatcher matcher;
     private final PrintStream output;
 
-    public Grep(OutputStream out, PathMatcher matcher) {
+    public Grep(PathMatcher matcher, OutputStream output) {
         this.matcher = matcher;
-        this.output = new PrintStream(out);
+        this.output = new PrintStream(output);
     }
 
     @Override
@@ -101,11 +103,64 @@ public class Grep extends AbstractJsonReader {
         }
     }
 
+    public static class PathMatcherChain implements PathMatcher {
+        private final PathMatcher[] matchers;
 
-    public static void main(String[] argv) throws IOException {
-        Grep grep = new Grep(System.out, new SinglePathMatcher(new PreciseMatch("rows"), new PreciseMatch("sortDate")));
+        public PathMatcherChain(PathMatcher[] matchers) {
+            this.matchers = matchers;
+        }
 
-        InputStream in = getInput(argv);
+        @Override
+        public boolean matches(Deque<PathEntry> path) {
+            for (PathMatcher matcher : matchers) {
+                if (matcher.matches(path)) return true;
+            }
+            return false;
+        }
+    }
+
+    public static PathMatcher parsePathMatcherChain(String arg) {
+        String[] split = arg.split(",");
+        if (split.length == 1) return parsePathMatcher(arg);
+        ArrayList<PathMatcher> list = new ArrayList<PathMatcher>(split.length);
+        for (String s : split) {
+            list.add(parsePathMatcher(s));
+        }
+        return new PathMatcherChain(list.toArray(new PathMatcher[list.size()]));
+
+    }
+    public static PathMatcher parsePathMatcher(String arg) {
+        String[] split = arg.split("\\.");
+        ArrayList<KeyPattern> list = new ArrayList<KeyPattern>(split.length);
+        for (String s : split) {
+            list.add(parseKeyPattern(s));
+        }
+        return new SinglePathMatcher(list.toArray(new KeyPattern[list.size()]));
+    }
+
+    public static KeyPattern parseKeyPattern(String arg) {
+        if ("*".equals(arg)) return new Wildcard();
+        return new PreciseMatch(arg);
+    }
+
+    public static void main(String[] argv) throws IOException, ParseException {
+        CommandLineParser parser = new BasicParser();
+        Options options = new Options().addOption(new Option("help", "print this message"));
+        CommandLine cl = parser.parse(options, argv, true);
+        String[] args = cl.getArgs();
+        if (cl.hasOption("help")) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp(
+                    "jsongrep [OPTIONS] <grep expression> [<INPUT FILE>|-]",
+                    options
+            );
+            System.exit(1);
+        }
+        if (args.length <1) throw new MissingArgumentException("No grep expression given");
+        Grep grep = new Grep(parsePathMatcherChain(args[0]), System.out);
+
+
+        InputStream in = getInput(args, 1);
 
         grep.read(in);
         in.close();

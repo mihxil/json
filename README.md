@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mihxil/json.png?)](https://travis-ci.org/mihxil/json)
+
 Json Tools
 ==========
 
@@ -41,3 +43,16 @@ michiel@belono:/tmp$ ls -lah alldocs.*
 Grep
 ----
 A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.2/mihxil-json-0.2-grep.jar)
+
+This is a streaming 'jsongrep', and works a bit like grep.
+
+Example
+```
+michiel@belono:~/github/mihxil/json$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}" | java -jar target/mihxil-json-0.2-SNAPSHOT-grep.jar  y.arr.*.e,a
+a=b
+y.arr.1.e=z
+```
+
+I hope this also explains how the grep expression works. Currently
+only precise and * matches on the keys work, but it would be simple to think up
+some more. Also it might be usefull to not need to specify the full path.

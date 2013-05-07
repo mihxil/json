@@ -105,31 +105,29 @@ public abstract class AbstractJsonReader {
     }
 
     private static File getFile(String string) {
-        if ("-".equals(string)) return null;
+        if ("-".equals(string) || string == null) return null;
         return new File(string);
     }
 
-    protected static InputStream getInput(String[] argv) throws IOException {
+    protected static InputStream getInput(String[] argv, int pos) throws IOException {
         final InputStream in;
-        if (argv.length > 0) {
-            File file = getFile(argv[0]);
-            if (file == null) {
-                in = System.in;
-            } else if (!file.exists()) {
-                in = new URL(argv[0]).openStream();
-            } else {
-                in = new FileInputStream(file);
-            }
-        } else {
+        String arg = argv.length > pos ? argv[pos] : null;
+        File file = getFile(arg);
+        if (file == null) {
             in = System.in;
+        } else if (!file.exists()) {
+            in = new URL(arg).openStream();
+        } else {
+            in = new FileInputStream(file);
         }
         return in;
     }
 
-    protected static OutputStream getOutput(String[] argv) throws IOException {
+    protected static OutputStream getOutput(String[] argv, int pos) throws IOException {
         final OutputStream out;
-        if (argv.length > 1) {
-            File file = getFile(argv[1]);
+        String arg = argv.length >= pos ? argv[pos] : null;
+        if (arg != null) {
+            File file = getFile(arg);
             out = file == null ? System.out : new FileOutputStream(file);
         } else {
             out = System.out;

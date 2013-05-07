@@ -4,6 +4,7 @@
  */
 package org.meeuw.json;
 
+import org.apache.commons.cli.*;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParser;
@@ -78,10 +79,13 @@ public class Formatter extends AbstractJsonReader {
     }
 
 
-    public static void main(String[] argv) throws IOException {
-        OutputStream out = getOutput(argv);
+    public static void main(String[] argv) throws IOException, ParseException {
+        CommandLineParser parser = new BasicParser();
+        CommandLine cl = parser.parse(new Options(), argv, true);
+        String[] args = cl.getArgs();
+        OutputStream out = getOutput(args, 1);
         Formatter formatter = new Formatter(out);
-        InputStream in = getInput(argv);
+        InputStream in = getInput(args, 0);
 
         formatter.read(in);
         in.close();
