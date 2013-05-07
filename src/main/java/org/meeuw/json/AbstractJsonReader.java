@@ -125,7 +125,7 @@ public abstract class AbstractJsonReader {
 
     protected static OutputStream getOutput(String[] argv, int pos) throws IOException {
         final OutputStream out;
-        String arg = argv.length >= pos ? argv[pos] : null;
+        String arg = argv.length > pos ? argv[pos] : null;
         if (arg != null) {
             File file = getFile(arg);
             out = file == null ? System.out : new FileOutputStream(file);
@@ -136,7 +136,7 @@ public abstract class AbstractJsonReader {
     }
 
 
-    protected String join(Iterable<?> list) {
+    protected static String join(Iterable<?> list) {
         StringBuilder build = new StringBuilder();
         for (Object s : list) {
             if (build.length() > 0) build.append(".");

@@ -11,15 +11,17 @@ I tried several tools imlemented in python (python -mjson.tool,
 'jsongrep'), but those consumed very much memory when I fead them a
 json stream of a Gigabyte or so, and seemed not useable for that.
 
+All tools support a -help argument for an overview of all supported options.
+
 
 Formatter
 --------
-A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.2/mihxil-json-0.2-formatter.jar)
+A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.3/mihxil-json-0.3-formatter.jar)
 
 
 Usage
 ```
-java -jar ~/Download/mihxil-json-0.2-formatter.jar [<infile>] [<outfile>]
+java -jar ~/Download/mihxil-json-0.3-formatter.jar [<infile>] [<outfile>]
 
 infile: defaults to stdin (can explicitely set to stdin as '-'). Can
         be file name but  can also be a remote URL
@@ -42,16 +44,17 @@ michiel@belono:/tmp$ ls -lah alldocs.*
 
 Grep
 ----
-A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.2/mihxil-json-0.2-grep.jar)
+A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.3/mihxil-json-0.3-grep.jar)
 
 This is a streaming 'jsongrep', and works a bit like grep.
 
 Example
 ```
-michiel@belono:~/github/mihxil/json$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}" | java -jar target/mihxil-json-0.2-SNAPSHOT-grep.jar  y.arr.*.e,a
+michiel@belono:~/github/mihxil/json$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}" | java -jar target/mihxil-json-0.3-SNAPSHOT-grep.jar  y.arr.*.e,a
 a=b
 y.arr.1.e=z
 ```
+
 
 I hope this also explains how the grep expression works. Currently
 only precise and * matches on the keys work, but it would be simple to think up

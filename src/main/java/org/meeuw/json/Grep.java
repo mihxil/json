@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 
 /**
@@ -18,6 +19,12 @@ public class Grep extends AbstractJsonReader {
 
     private final PathMatcher matcher;
     private final PrintStream output;
+
+    private Output outputFormat = Output.PATHANDVALUE;
+
+    private String sep = "\n";
+    private String recordsep = "\n";
+    private PathMatcher recordMatcher = new NeverPathMatcher();
 
     public Grep(PathMatcher matcher, OutputStream output) {
         this.matcher = matcher;
@@ -33,9 +40,23 @@ public class Grep extends AbstractJsonReader {
             case VALUE_TRUE:
             case VALUE_FALSE:
             case VALUE_NULL:
-                if (matcher.matches(path)) {
-                    output.println(join(path) + "=" + jp.getText());
+                if (recordMatcher.matches(path)) {
+                    output.print(recordsep);
                 }
+                if (matcher.matches(path)) {
+                    switch (outputFormat) {
+                        case PATHANDVALUE:
+                            output.print(join(path) + "=" + jp.getText() + sep);
+                            break;
+                        case KEYANDVALUE:
+                            output.print(path.peekLast() + "=" + jp.getText() + sep);
+                            break;
+                        case VALUE:
+                            output.print(jp.getText() + sep);
+                            break;
+                    }
+                }
+
                 break;
 
         }
@@ -46,7 +67,37 @@ public class Grep extends AbstractJsonReader {
         output.close();
     }
 
+    public Output getOutputFormat() {
+        return outputFormat;
+    }
 
+    public void setOutputFormat(Output outputFormat) {
+        this.outputFormat = outputFormat;
+    }
+
+    public String getSep() {
+        return sep;
+    }
+
+    public void setSep(String sep) {
+        this.sep = sep;
+    }
+
+    public String getRecordsep() {
+        return recordsep;
+    }
+
+    public void setRecordsep(String recordsep) {
+        this.recordsep = recordsep;
+    }
+
+    public PathMatcher getRecordMatcher() {
+        return recordMatcher;
+    }
+
+    public void setRecordMatcher(PathMatcher recordMatcher) {
+        this.recordMatcher = recordMatcher;
+    }
 
     public static interface KeyPattern {
         boolean matches(PathEntry key);
@@ -118,6 +169,13 @@ public class Grep extends AbstractJsonReader {
             return false;
         }
     }
+    public static class NeverPathMatcher implements  PathMatcher {
+
+        @Override
+        public boolean matches(Deque<PathEntry> path) {
+            return false;
+        }
+    }
 
     public static PathMatcher parsePathMatcherChain(String arg) {
         String[] split = arg.split(",");
@@ -143,9 +201,19 @@ public class Grep extends AbstractJsonReader {
         return new PreciseMatch(arg);
     }
 
+    private enum Output {
+        PATHANDVALUE,
+        KEYANDVALUE,
+        VALUE
+    }
+
     public static void main(String[] argv) throws IOException, ParseException {
         CommandLineParser parser = new BasicParser();
         Options options = new Options().addOption(new Option("help", "print this message"));
+        options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
+        options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
+        options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
+        options.addOption(new Option("recordsep", true, "Record separator"));
         CommandLine cl = parser.parse(options, argv, true);
         String[] args = cl.getArgs();
         if (cl.hasOption("help")) {
@@ -158,6 +226,18 @@ public class Grep extends AbstractJsonReader {
         }
         if (args.length <1) throw new MissingArgumentException("No grep expression given");
         Grep grep = new Grep(parsePathMatcherChain(args[0]), System.out);
+        if (cl.hasOption("output")) {
+            grep.setOutputFormat(Output.valueOf(cl.getOptionValue("output").toUpperCase()));
+        }
+        if (cl.hasOption("sep")) {
+            grep.setSep(cl.getOptionValue("sep"));
+        }
+        if (cl.hasOption("recordsep")) {
+            grep.setRecordsep(cl.getOptionValue("recordsep"));
+        }
+        if (cl.hasOption("record")) {
+            grep.setRecordMatcher(parsePathMatcherChain(cl.getOptionValue("record")));
+        }
 
 
         InputStream in = getInput(args, 1);
