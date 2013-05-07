@@ -103,10 +103,10 @@ public class Grep extends AbstractJsonReader {
         this.recordMatcher = recordMatcher;
     }
 
-    public static interface KeyPattern {
+    protected static interface KeyPattern {
         boolean matches(PathEntry key);
     }
-    public static class PreciseMatch implements  KeyPattern {
+    protected static class PreciseMatch implements  KeyPattern {
         private final String key;
 
         public PreciseMatch(String key) {
@@ -122,7 +122,7 @@ public class Grep extends AbstractJsonReader {
             return key;
         }
     }
-    public static class Wildcard implements  KeyPattern {
+    protected static class Wildcard implements  KeyPattern {
 
         @Override
         public boolean matches(PathEntry key) {
@@ -135,12 +135,12 @@ public class Grep extends AbstractJsonReader {
         }
     }
 
-    public static interface PathMatcher {
+    protected static interface PathMatcher {
 
         boolean matches(Deque<PathEntry> path, String value);
     }
 
-    public static abstract class KeysMatcher implements PathMatcher {
+    protected static abstract class KeysMatcher implements PathMatcher {
         @Override
         final public boolean matches(Deque<PathEntry> path, String value) {
             return matches(path);
@@ -149,7 +149,7 @@ public class Grep extends AbstractJsonReader {
 
     }
 
-    public static abstract class ValueMatcher implements PathMatcher {
+    protected static abstract class ValueMatcher implements PathMatcher {
         @Override
         final public boolean matches(Deque<PathEntry> path, String value) {
             return matches(value);
@@ -158,7 +158,7 @@ public class Grep extends AbstractJsonReader {
         protected abstract boolean matches(String value);
 
     }
-    public static class ValueRegexpMatcher extends ValueMatcher {
+    protected static class ValueRegexpMatcher extends ValueMatcher {
         private final Pattern pattern;
 
         public ValueRegexpMatcher(Pattern pattern) {
@@ -171,7 +171,7 @@ public class Grep extends AbstractJsonReader {
         }
     }
 
-    public static class ValueEqualsMatcher extends ValueMatcher {
+    protected static class ValueEqualsMatcher extends ValueMatcher {
         private final String test;
 
         public ValueEqualsMatcher(String test) {
@@ -185,7 +185,7 @@ public class Grep extends AbstractJsonReader {
     }
 
 
-    public static class SinglePathMatcher extends KeysMatcher {
+    protected static class SinglePathMatcher extends KeysMatcher {
         private final KeyPattern[] pathPattern;
 
         public SinglePathMatcher(KeyPattern... pathPattern) {
@@ -203,7 +203,7 @@ public class Grep extends AbstractJsonReader {
         }
     }
 
-    public static class PathMatcherOrChain implements PathMatcher {
+    protected static class PathMatcherOrChain implements PathMatcher {
         private final PathMatcher[] matchers;
 
         public PathMatcherOrChain(PathMatcher... matchers) {
@@ -219,7 +219,7 @@ public class Grep extends AbstractJsonReader {
         }
     }
 
-    public static class PathMatcherAndChain implements PathMatcher {
+    protected static class PathMatcherAndChain implements PathMatcher {
         private final PathMatcher[] matchers;
 
         public PathMatcherAndChain(PathMatcher... matchers) {
@@ -234,7 +234,7 @@ public class Grep extends AbstractJsonReader {
             return true;
         }
     }
-    public static class NeverPathMatcher implements PathMatcher {
+    protected  static class NeverPathMatcher implements PathMatcher {
 
         @Override
         public boolean matches(Deque<PathEntry> path, String value) {
@@ -242,7 +242,7 @@ public class Grep extends AbstractJsonReader {
         }
     }
 
-    public static PathMatcher parsePathMatcherChain(String arg) {
+    protected static PathMatcher parsePathMatcherChain(String arg) {
         String[] split = arg.split(",");
         if (split.length == 1) return parsePathMatcher(arg);
         ArrayList<PathMatcher> list = new ArrayList<PathMatcher>(split.length);
@@ -252,7 +252,7 @@ public class Grep extends AbstractJsonReader {
         return new PathMatcherOrChain(list.toArray(new PathMatcher[list.size()]));
 
     }
-    public static PathMatcher parsePathMatcher(String arg) {
+    protected static PathMatcher parsePathMatcher(String arg) {
         String[] split = arg.split("~", 2);
         if (split.length == 2) {
             return new PathMatcherAndChain(
@@ -271,7 +271,7 @@ public class Grep extends AbstractJsonReader {
 
     }
 
-    public static PathMatcher parseKeysMatcher(String arg) {
+    protected static PathMatcher parseKeysMatcher(String arg) {
         String[] split = arg.split("\\.");
         ArrayList<KeyPattern> list = new ArrayList<KeyPattern>(split.length);
         for (String s : split) {
@@ -280,7 +280,7 @@ public class Grep extends AbstractJsonReader {
         return new SinglePathMatcher(list.toArray(new KeyPattern[list.size()]));
     }
 
-    public static KeyPattern parseKeyPattern(String arg) {
+    protected static KeyPattern parseKeyPattern(String arg) {
         if ("*".equals(arg)) return new Wildcard();
         return new PreciseMatch(arg);
     }
