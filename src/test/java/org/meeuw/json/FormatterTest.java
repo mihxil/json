@@ -16,11 +16,11 @@ public class FormatterTest {
 
     @Test
     public void format() throws IOException {
-        Formatter formatter = new Formatter();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        formatter.format(
-                new StringReader("{a:1, b:2}"),
-                out);
+        Formatter formatter = new Formatter(out);
+
+        formatter.read(
+                new StringReader("{a:1, b:2}"));
         assertEquals("{\n" +
                 "  \"a\" : 1,\n" +
                 "  \"b\" : 2\n" +

@@ -10,118 +10,82 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.util.DefaultPrettyPrinter;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Deque;
 
 /**
  * @author Michiel Meeuwissen
  * @since 1.0
  */
 
-public class Formatter {
+public class Formatter extends AbstractJsonReader {
 
-    public void format(InputStream in, OutputStream out) throws IOException {
+    final JsonGenerator generator;
+    public Formatter(OutputStream out) throws IOException {
         JsonFactory jsonFactory = getJsonFactory();
-
-        JsonParser jp = jsonFactory.createJsonParser(in);
-        JsonGenerator generator = jsonFactory.createJsonGenerator(out);
-        format(jp, generator);
+        generator = jsonFactory.createJsonGenerator(out);
+        generator.setPrettyPrinter(new DefaultPrettyPrinter());
     }
 
-    public void format(Reader in, OutputStream out) throws IOException {
-        JsonFactory jsonFactory = getJsonFactory();
-        JsonParser jp = jsonFactory.createJsonParser(in);
-        JsonGenerator generator = jsonFactory.createJsonGenerator(out);
-        format(jp, generator);
-    }
-
-    private void format(JsonParser jp, JsonGenerator generator) throws IOException {
-        jp.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        jp.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        jp.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-        jp.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-        generator.setPrettyPrinter(new DefaultPrettyPrinter ());
-
-        int depth = 0;
-        while(true) {
-            JsonToken token = jp.nextToken();
-            if(token == null) {
+    @Override
+    protected void handleToken(JsonParser jp, JsonToken token, Deque<PathEntry> path) throws IOException {
+        switch(token) {
+            case START_OBJECT:
+                generator.writeStartObject();
                 break;
-            }
-            if(token == JsonToken.START_OBJECT) {
-                depth++;
-            }
-            if(token == JsonToken.END_OBJECT) {
-                depth--;
-            }
-            switch(token) {
-                case START_OBJECT:
-                    generator.writeStartObject();
-                    break;
-                case END_OBJECT:
-                    generator.writeEndObject();
-                    break;
-                case START_ARRAY:
-                    generator.writeStartArray();
-                    break;
-                case END_ARRAY:
-                    generator.writeEndArray();
-                    break;
-                case FIELD_NAME:
-                    generator.writeFieldName(jp.getText());
-                    break;
-                case VALUE_EMBEDDED_OBJECT:
-                    // don't know
-                    generator.writeObject(jp.getText());
-                    break;
-                case VALUE_STRING:
-                    generator.writeString(jp.getText());
-                    break;
-                case VALUE_NUMBER_INT:
-                    generator.writeNumber(jp.getValueAsInt());
-                    break;
-                case VALUE_NUMBER_FLOAT:
-                    generator.writeNumber(jp.getValueAsDouble());
-                    break;
-                case VALUE_TRUE:
-                    generator.writeBoolean(true);
-                    break;
-                case VALUE_FALSE:
-                    generator.writeBoolean(false);
-                    break;
-                case VALUE_NULL:
-                    generator.writeNull();
-                    break;
-
-            }
-
+            case END_OBJECT:
+                generator.writeEndObject();
+                break;
+            case START_ARRAY:
+                generator.writeStartArray();
+                break;
+            case END_ARRAY:
+                generator.writeEndArray();
+                break;
+            case FIELD_NAME:
+                generator.writeFieldName(jp.getText());
+                break;
+            case VALUE_EMBEDDED_OBJECT:
+                // don't know
+                generator.writeObject(jp.getText());
+                break;
+            case VALUE_STRING:
+                generator.writeString(jp.getText());
+                break;
+            case VALUE_NUMBER_INT:
+                generator.writeNumber(jp.getText());
+                break;
+            case VALUE_NUMBER_FLOAT:
+                generator.writeNumber(jp.getValueAsDouble());
+                break;
+            case VALUE_TRUE:
+                generator.writeBoolean(true);
+                break;
+            case VALUE_FALSE:
+                generator.writeBoolean(false);
+                break;
+            case VALUE_NULL:
+                generator.writeNull();
+                break;
 
         }
+    }
+    @Override
+    protected void ready() throws IOException {
         generator.close();
     }
 
-    public JsonFactory getJsonFactory() {
-        return new JsonFactory();
-    }
-
-    private static File getFile(String string) {
-        if ("-".equals(string)) return null;
-        return new File(string);
-    }
 
     public static void main(String[] argv) throws IOException {
-        InputStream in = System.in;
-        OutputStream out = System.out;
-        if (argv.length > 0) {
-            File file = getFile(argv[0]);
-            in = file == null ? System.in : new FileInputStream(file);
-        }
-        if (argv.length > 1) {
-            File file = getFile(argv[1]);
-            out = file == null ? System.out : new FileOutputStream(file);
-        }
+        OutputStream out = getOutput(argv);
+        Formatter formatter = new Formatter(out);
+        InputStream in = getInput(argv);
 
-        Formatter formatter = new Formatter();
-        formatter.format(in, out);
+        formatter.read(in);
+        in.close();
+        out.close();
     }
 
 }

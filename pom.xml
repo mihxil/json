@@ -51,15 +51,15 @@
         <version>2.2-beta-2</version>
           <executions>
             <execution>
-              <id>create-executable-jar</id>
+              <id>create-formatter-jar</id>
               <phase>package</phase>
               <goals>
                 <goal>single</goal>
               </goals>
               <configuration>
-                <descriptorRefs>
-                  <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
+                <descriptors>
+                  <descriptor>src/main/assembly/formatter.xml</descriptor>
+                </descriptors>
                 <archive>
                   <manifest>
                     <mainClass>org.meeuw.json.Formatter</mainClass>
@@ -67,6 +67,23 @@
                 </archive>
               </configuration>
             </execution>
+              <execution>
+                <id>create-grep-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <descriptors>
+                    <descriptor>src/main/assembly/grep.xml</descriptor>
+                  </descriptors>
+                  <archive>
+                    <manifest>
+                      <mainClass>org.meeuw.json.Grep</mainClass>
+                    </manifest>
+                  </archive>
+                </configuration>
+              </execution>
         </executions>
       </plugin>
     </plugins>
