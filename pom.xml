@@ -4,7 +4,7 @@
 
   <groupId>org.meeuw</groupId>
   <artifactId>mihxil-json</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.2</version>
   <packaging>jar</packaging>
   <description>Json-related utilities. Contains a formatter for now, but I may add json search functionality too</description>
 
