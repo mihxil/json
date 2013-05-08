@@ -35,7 +35,7 @@ public abstract class AbstractJsonReader {
 
 
         int depth = 0;
-        Deque<PathEntry> path = new ArrayDeque<PathEntry>();
+        Deque<PathEntry> path = new Path();
         while (true) {
             JsonToken token = jp.nextToken();
             if (token == null) {
@@ -150,10 +150,24 @@ public abstract class AbstractJsonReader {
 
     }
 
+    public static class Path extends ArrayDeque<PathEntry> {
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            for (PathEntry pe : this) {
+                pe.append(builder);
+            }
+            return builder.toString();
+        }
+
+    }
+
     /**
      * Representation of one entry in the current 'path'.
      */
     public static interface PathEntry {
+
+        void append(StringBuilder builder);
 
     }
     public static class KeyEntry implements PathEntry {
@@ -165,6 +179,12 @@ public abstract class AbstractJsonReader {
         @Override
         public String toString() {
             return key;
+        }
+
+        @Override
+        public void append(StringBuilder builder) {
+            if (builder.length() > 0) builder.append('.');
+            builder.append(key);
         }
     }
     public static class ArrayEntry implements PathEntry {
@@ -179,7 +199,12 @@ public abstract class AbstractJsonReader {
 
         @Override
         public String toString() {
-            return "" + index;
+            return "[" + index + "]";
+        }
+
+        @Override
+        public void append(StringBuilder builder) {
+            builder.append('[').append(index).append(']');
         }
     }
 }

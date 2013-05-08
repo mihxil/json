@@ -57,7 +57,7 @@ public class Grep extends AbstractJsonReader {
                     }
                     switch (outputFormat) {
                         case PATHANDVALUE:
-                            output.print(join(path) + "=" + value );
+                            output.print(path.toString() + "=" + value );
                             break;
                         case KEYANDVALUE:
                             output.print(path.peekLast() + "=" + value );

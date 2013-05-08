@@ -29,7 +29,7 @@ public class Structure extends AbstractJsonReader {
             case VALUE_TRUE:
             case VALUE_FALSE:
             case VALUE_NULL:
-                out.println(join(path));
+                out.println(path.toString());
         }
     }
 

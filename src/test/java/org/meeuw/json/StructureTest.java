@@ -22,10 +22,10 @@ public class StructureTest {
         String[] result = (new String(out.toByteArray())).split("\n");
         assertEquals("b.b1",  result[0]);
         assertEquals("c",     result[1]);
-        assertEquals("d.0",   result[2]);
-        assertEquals("d.1",   result[3]);
-        assertEquals("d.2.x", result[4]);
-        assertEquals("d.3.y", result[5]);
+        assertEquals("d[0]",   result[2]);
+        assertEquals("d[1]",   result[3]);
+        assertEquals("d[2].x", result[4]);
+        assertEquals("d[3].y", result[5]);
         assertEquals("e",     result[6]);
 
 
@@ -38,9 +38,9 @@ public class StructureTest {
         structure.read(new StringReader("{d: [{x: 'blabla'}, {y: 'bloebloe'}], e: 'bla'}"));
 
         String[] result = (new String(out.toByteArray())).split("\n");
-        assertEquals("d.0.x", result[0]);
-        assertEquals("d.1.y", result[1]);
-        assertEquals("e",     result[2]);
+        assertEquals("d[0].x", result[0]);
+        assertEquals("d[1].y", result[1]);
+        assertEquals("e",      result[2]);
 
 
     }
