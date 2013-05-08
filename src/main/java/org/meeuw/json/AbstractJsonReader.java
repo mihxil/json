@@ -13,22 +13,26 @@ import java.util.Deque;
 public abstract class AbstractJsonReader {
 
     public void read(InputStream in) throws IOException {
-        JsonFactory jsonFactory = getJsonFactory();
-        JsonParser jp = jsonFactory.createJsonParser(in);
+        JsonParser jp = getJsonFactory().createJsonParser(in);
+        setJsonParserOptions(jp);
         read(jp);
     }
 
     public void read(Reader in) throws IOException {
-        JsonFactory jsonFactory = getJsonFactory();
-        JsonParser jp = jsonFactory.createJsonParser(in);
+        JsonParser jp = getJsonFactory().createJsonParser(in);
+        setJsonParserOptions(jp);
         read(jp);
     }
 
-    private void read(JsonParser jp) throws IOException {
+    protected void setJsonParserOptions(JsonParser jp) {
         jp.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
         jp.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
         jp.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         jp.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+    }
+
+    public void read(JsonParser jp) throws IOException {
+
 
         int depth = 0;
         Deque<PathEntry> path = new ArrayDeque<PathEntry>();
@@ -145,6 +149,10 @@ public abstract class AbstractJsonReader {
         return build.toString();
 
     }
+
+    /**
+     * Representation of one entry in the current 'path'.
+     */
     public static interface PathEntry {
 
     }

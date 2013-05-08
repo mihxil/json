@@ -46,7 +46,7 @@ Grep
 ----
 A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.3/mihxil-json-0.3-grep.jar)
 
-This is a streaming 'jsongrep', and works a bit like grep.
+This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used to produce one line abstracts of the records which can easily be processed further by a normal grep or awk or so.
 
 Example
 ```

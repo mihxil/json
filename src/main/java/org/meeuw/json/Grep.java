@@ -20,14 +20,17 @@ import java.util.regex.Pattern;
  */
 public class Grep extends AbstractJsonReader {
 
+    // settings
     private final PathMatcher matcher;
     private final PrintStream output;
 
     private Output outputFormat = Output.PATHANDVALUE;
-
     private String sep = "\n";
     private String recordsep = "\n";
     private PathMatcher recordMatcher = new NeverPathMatcher();
+
+    // state
+    private boolean needsSeperator = false;
 
     public Grep(PathMatcher matcher, OutputStream output) {
         this.matcher = matcher;
@@ -46,19 +49,24 @@ public class Grep extends AbstractJsonReader {
                 String value = jp.getText();
                 if (recordMatcher.matches(path, value)) {
                     output.print(recordsep);
+                    needsSeperator = false;
                 }
                 if (matcher.matches(path, value)) {
+                    if (needsSeperator) {
+                        output.print(sep);
+                    }
                     switch (outputFormat) {
                         case PATHANDVALUE:
-                            output.print(join(path) + "=" + value + sep);
+                            output.print(join(path) + "=" + value );
                             break;
                         case KEYANDVALUE:
-                            output.print(path.peekLast() + "=" + value + sep);
+                            output.print(path.peekLast() + "=" + value );
                             break;
                         case VALUE:
-                            output.print(jp.getText() + sep);
+                            output.print(jp.getText());
                             break;
                     }
+                    needsSeperator = true;
                 }
 
                 break;
@@ -68,6 +76,7 @@ public class Grep extends AbstractJsonReader {
 
     @Override
     protected void ready() {
+        output.print("\n");
         output.close();
     }
 
