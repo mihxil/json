@@ -139,17 +139,6 @@ public abstract class AbstractJsonReader {
         return out;
     }
 
-
-    protected static String join(Iterable<?> list) {
-        StringBuilder build = new StringBuilder();
-        for (Object s : list) {
-            if (build.length() > 0) build.append(".");
-            build.append(s);
-        }
-        return build.toString();
-
-    }
-
     public static class Path extends ArrayDeque<PathEntry> {
         @Override
         public String toString() {
@@ -159,7 +148,6 @@ public abstract class AbstractJsonReader {
             }
             return builder.toString();
         }
-
     }
 
     /**

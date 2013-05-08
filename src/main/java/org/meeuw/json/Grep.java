@@ -112,9 +112,16 @@ public class Grep extends AbstractJsonReader {
         this.recordMatcher = recordMatcher;
     }
 
+    /**
+     * A key pattern matches one key in a json object.
+     */
     protected static interface KeyPattern {
         boolean matches(PathEntry key);
     }
+
+    /**
+     * a precise key pattern matches only if the key exactly equals to a certain value.
+     */
     protected static class PreciseMatch implements  KeyPattern {
         private final String key;
 
@@ -131,6 +138,10 @@ public class Grep extends AbstractJsonReader {
             return key;
         }
     }
+
+    /**
+     * A wild card matches always.
+     */
     protected static class Wildcard implements  KeyPattern {
 
         @Override
@@ -144,11 +155,17 @@ public class Grep extends AbstractJsonReader {
         }
     }
 
+    /**
+     * A Patch matcher defines matches on an entire json path and value.
+     */
     protected static interface PathMatcher {
 
         boolean matches(Deque<PathEntry> path, String value);
     }
 
+    /**
+     * a keys matcher only considers the keys (and indices) of a json path for matching.
+     */
     protected static abstract class KeysMatcher implements PathMatcher {
         @Override
         final public boolean matches(Deque<PathEntry> path, String value) {
@@ -158,6 +175,9 @@ public class Grep extends AbstractJsonReader {
 
     }
 
+    /**
+     * a keys matcher only considers the value of a json path for matching.
+     */
     protected static abstract class ValueMatcher implements PathMatcher {
         @Override
         final public boolean matches(Deque<PathEntry> path, String value) {
@@ -167,6 +187,10 @@ public class Grep extends AbstractJsonReader {
         protected abstract boolean matches(String value);
 
     }
+
+    /**
+     * Matches the value with a regular expression.
+     */
     protected static class ValueRegexpMatcher extends ValueMatcher {
         private final Pattern pattern;
 
@@ -194,6 +218,9 @@ public class Grep extends AbstractJsonReader {
     }
 
 
+    /**
+     * A single path matches precisely one 'path'. For multiple matches we'd wrap them in {@link PathMatcherOrChain} or {@link PathMatcherAndChain}
+     */
     protected static class SinglePathMatcher extends KeysMatcher {
         private final KeyPattern[] pathPattern;
 
@@ -243,6 +270,10 @@ public class Grep extends AbstractJsonReader {
             return true;
         }
     }
+
+    /**
+     * The matcher that matches never.
+     */
     protected  static class NeverPathMatcher implements PathMatcher {
 
         @Override
@@ -250,6 +281,9 @@ public class Grep extends AbstractJsonReader {
             return false;
         }
     }
+
+
+    // Parse methods for the command line
 
     protected static PathMatcher parsePathMatcherChain(String arg) {
         String[] split = arg.split(",");
@@ -299,6 +333,8 @@ public class Grep extends AbstractJsonReader {
         KEYANDVALUE,
         VALUE
     }
+
+
 
     public static void main(String[] argv) throws IOException, ParseException {
         CommandLineParser parser = new BasicParser();
