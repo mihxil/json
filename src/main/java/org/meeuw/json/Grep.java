@@ -57,10 +57,10 @@ public class Grep extends AbstractJsonReader {
                     }
                     switch (outputFormat) {
                         case PATHANDVALUE:
-                            output.print(path.toString() + "=" + value );
+                            output.print(path.toString()); output.print('='); output.print(value);
                             break;
                         case KEYANDVALUE:
-                            output.print(path.peekLast() + "=" + value );
+                            output.print(path.peekLast()); output.print('='); output.print(value);
                             break;
                         case VALUE:
                             output.print(jp.getText());
@@ -77,7 +77,7 @@ public class Grep extends AbstractJsonReader {
     @Override
     protected void ready() {
         if (needsSeperator) {
-            output.print("\n");
+            output.print('\n');
         }
         output.close();
     }
