@@ -51,4 +51,18 @@ public class GrepTest {
 
 
     }
+
+    @Test
+    public void grepEmpty() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Grep grep = new Grep(new Grep.SinglePathMatcher(
+                new Grep.PreciseMatch("c"),
+                new Grep.Wildcard(),
+                new Grep.PreciseMatch("b2")), out);
+
+        grep.read(new StringReader("{c: [{b1: 1}, {b3: 2}]}"));
+        assertEquals("", new String(out.toByteArray()));
+
+
+    }
 }

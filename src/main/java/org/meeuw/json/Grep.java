@@ -76,7 +76,9 @@ public class Grep extends AbstractJsonReader {
 
     @Override
     protected void ready() {
-        output.print("\n");
+        if (needsSeperator) {
+            output.print("\n");
+        }
         output.close();
     }
 
