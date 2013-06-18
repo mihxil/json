@@ -1,8 +1,8 @@
 package org.meeuw.json;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.*;
 import java.net.URL;
@@ -13,13 +13,13 @@ import java.util.Deque;
 public abstract class AbstractJsonReader {
 
     public void read(InputStream in) throws IOException {
-        JsonParser jp = getJsonFactory().createJsonParser(in);
+        JsonParser jp = getJsonFactory().createParser(in);
         setJsonParserOptions(jp);
         read(jp);
     }
 
     public void read(Reader in) throws IOException {
-        JsonParser jp = getJsonFactory().createJsonParser(in);
+        JsonParser jp = getJsonFactory().createParser(in);
         setJsonParserOptions(jp);
         read(jp);
     }

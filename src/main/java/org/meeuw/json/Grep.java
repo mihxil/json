@@ -1,8 +1,8 @@
 package org.meeuw.json;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import org.apache.commons.cli.*;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
 
 import java.io.IOException;
 import java.io.InputStream;

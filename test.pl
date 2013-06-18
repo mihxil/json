@@ -15,7 +15,7 @@ while(<>) {
 				} else {
 						if ($hash{"creationDate"} != $sortDate) {
 								print "@items\n";
-						}
+            }
 				}
 		}
 }

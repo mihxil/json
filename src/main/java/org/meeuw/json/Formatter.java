@@ -4,12 +4,12 @@
  */
 package org.meeuw.json;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import org.apache.commons.cli.*;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
-import org.codehaus.jackson.util.DefaultPrettyPrinter;
 
 import java.io.IOException;
 import java.io.InputStream;
