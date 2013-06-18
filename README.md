@@ -49,12 +49,19 @@ A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/
 This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used to produce one line abstracts of the records which can easily be processed further by a normal grep or awk or so.
 
 Example
-```
-michiel@belono:~/github/mihxil/json$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}" | java -jar target/mihxil-json-0.3-SNAPSHOT-grep.jar  y.arr.*.e,a
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | 
+                 java -jar target/mihxil-json-0.3-SNAPSHOT-grep.jar  y.arr.*.e,a
 a=b
 y.arr.1.e=z
 ```
 
+
+Another example on a couchdb database (find documents where certain field has certain value)
+```sh
+$ jsongrep rows.*.doc.workflow=FOR_REPUBLICATION,rows.*.doc.mid  http://couchdbhost/database/_all_docs?include_docs=true  |
+                grep -A 1 workflow 
+```
 
 I hope this also explains how the grep expression works. Currently
 only precise and * matches on the keys work, but it would be simple to think up
