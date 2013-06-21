@@ -1,16 +1,15 @@
-package org.meeuw.json;
+package org.meeuw.json.grep;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import org.apache.commons.cli.*;
+import org.meeuw.json.ArrayEntry;
+import org.meeuw.json.JsonIterator;
+import org.meeuw.json.ParseEvent;
+import org.meeuw.json.PathEntry;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
 /**
@@ -18,93 +17,67 @@ import java.util.regex.Pattern;
  * E.g. 'rows.*.id' will result in only all 'id' values in a json structure.
  * Try the commandline option -help for an overview of all features.
  */
-public class Grep extends AbstractJsonReader {
+public class Grep implements Iterator<ParseEvent> {
 
     // settings
     private final PathMatcher matcher;
-    private final PrintStream output;
 
-    private Output outputFormat = Output.PATHANDVALUE;
-    private String sep = "\n";
-    private String recordsep = "\n";
     private PathMatcher recordMatcher = new NeverPathMatcher();
 
-    // state
-    private boolean needsSeperator = false;
+    final JsonIterator wrapped;
+    ParseEvent next = null;
 
-    public Grep(PathMatcher matcher, OutputStream output) {
+    public Grep(PathMatcher matcher, JsonParser jp) {
         this.matcher = matcher;
-        this.output = new PrintStream(output);
+        this.wrapped = new JsonIterator(jp);
+    }
+    @Override
+    public boolean hasNext() {
+        findNext();
+        return next != null;
+    }
+    @Override
+    public ParseEvent next() {
+        findNext();
+        if (next == null) throw new NoSuchElementException();
+        ParseEvent result = next;
+        next = null;
+        return result;
+    }
+    @Override
+    public void remove() {
+        wrapped.remove();
     }
 
-    @Override
-    protected void handleToken(JsonParser jp, JsonToken token, Deque<PathEntry> path) throws IOException {
-        switch (token) {
-            case VALUE_STRING:
-            case VALUE_NUMBER_INT:
-            case VALUE_NUMBER_FLOAT:
-            case VALUE_TRUE:
-            case VALUE_FALSE:
-            case VALUE_NULL:
-                String value = jp.getText();
-                if (recordMatcher.matches(path, value)) {
-                    output.print(recordsep);
-                    needsSeperator = false;
+    protected void findNext() {
+        if( next == null) {
+            while (wrapped.hasNext() && next == null) {
+                ParseEvent event = wrapped.next();
+                switch (event.getToken()) {
+                    case VALUE_STRING:
+                    case VALUE_NUMBER_INT:
+                    case VALUE_NUMBER_FLOAT:
+                    case VALUE_TRUE:
+                    case VALUE_FALSE:
+                    case VALUE_NULL:
+                        String value = event.getValue();
+                        if (recordMatcher.matches(event.getPath(), value)) {
+                            //output.print(recordsep);
+                            //needsSeperator = false;
+                        }
+                        if (matcher.matches(event.getPath(), value)) {
+                            //if (needsSeperator) {
+                            //output.print(sep);
+                            //}
+                            next = event;
+                        }
                 }
-                if (matcher.matches(path, value)) {
-                    if (needsSeperator) {
-                        output.print(sep);
-                    }
-                    switch (outputFormat) {
-                        case PATHANDVALUE:
-                            output.print(path.toString()); output.print('='); output.print(value);
-                            break;
-                        case KEYANDVALUE:
-                            output.print(path.peekLast()); output.print('='); output.print(value);
-                            break;
-                        case VALUE:
-                            output.print(jp.getText());
-                            break;
-                    }
-                    needsSeperator = true;
-                }
-
-                break;
-
+            }
         }
     }
 
-    @Override
-    protected void ready() {
-        if (needsSeperator) {
-            output.print('\n');
-        }
-        output.close();
-    }
 
-    public Output getOutputFormat() {
-        return outputFormat;
-    }
 
-    public void setOutputFormat(Output outputFormat) {
-        this.outputFormat = outputFormat;
-    }
-
-    public String getSep() {
-        return sep;
-    }
-
-    public void setSep(String sep) {
-        this.sep = sep;
-    }
-
-    public String getRecordsep() {
-        return recordsep;
-    }
-
-    public void setRecordsep(String recordsep) {
-        this.recordsep = recordsep;
-    }
 
     public PathMatcher getRecordMatcher() {
         return recordMatcher;
@@ -226,15 +199,23 @@ public class Grep extends AbstractJsonReader {
     protected static class SinglePathMatcher extends KeysMatcher {
         private final KeyPattern[] pathPattern;
 
+        private boolean ignoreArrays;
+
         public SinglePathMatcher(KeyPattern... pathPattern) {
+            this(false, pathPattern);
+        }
+
+        public SinglePathMatcher(boolean ignoreArrays, KeyPattern... pathPattern) {
+            this.ignoreArrays = ignoreArrays;
             this.pathPattern = pathPattern;
         }
 
         @Override
         public boolean matches(Deque<PathEntry> path) {
-            if (path.size() != pathPattern.length) return false;
+            if (!ignoreArrays && path.size() != pathPattern.length) return false;
             int i = 0;
             for (PathEntry e : path) {
+                if (ignoreArrays && e instanceof ArrayEntry) continue;
                 if (! pathPattern[i++].matches(e)) return false;
             }
             return true;
@@ -330,51 +311,8 @@ public class Grep extends AbstractJsonReader {
         return new PreciseMatch(arg);
     }
 
-    private enum Output {
-        PATHANDVALUE,
-        KEYANDVALUE,
-        VALUE
-    }
 
 
 
-    public static void main(String[] argv) throws IOException, ParseException {
-        CommandLineParser parser = new BasicParser();
-        Options options = new Options().addOption(new Option("help", "print this message"));
-        options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
-        options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
-        options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
-        options.addOption(new Option("recordsep", true, "Record separator"));
-        CommandLine cl = parser.parse(options, argv, true);
-        String[] args = cl.getArgs();
-        if (cl.hasOption("help")) {
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp(
-                    "jsongrep [OPTIONS] <grep expression> [<INPUT FILE>|-]",
-                    options
-            );
-            System.exit(1);
-        }
-        if (args.length <1) throw new MissingArgumentException("No grep expression given");
-        Grep grep = new Grep(parsePathMatcherChain(args[0]), System.out);
-        if (cl.hasOption("output")) {
-            grep.setOutputFormat(Output.valueOf(cl.getOptionValue("output").toUpperCase()));
-        }
-        if (cl.hasOption("sep")) {
-            grep.setSep(cl.getOptionValue("sep"));
-        }
-        if (cl.hasOption("recordsep")) {
-            grep.setRecordsep(cl.getOptionValue("recordsep"));
-        }
-        if (cl.hasOption("record")) {
-            grep.setRecordMatcher(parsePathMatcherChain(cl.getOptionValue("record")));
-        }
-
-
-        InputStream in = getInput(args, 1);
-
-        grep.read(in);
-        in.close();
-    }
 
 }

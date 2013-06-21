@@ -4,17 +4,13 @@
  */
 package org.meeuw.json;
 
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import org.apache.commons.cli.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Deque;
 
 /**
  * Pretty prints the json-stream. Depends entirely on jackson.
@@ -25,14 +21,13 @@ public class Formatter extends AbstractJsonReader {
 
     final JsonGenerator generator;
     public Formatter(OutputStream out) throws IOException {
-        JsonFactory jsonFactory = getJsonFactory();
-        generator = jsonFactory.createJsonGenerator(out);
+        generator = Util.getJsonFactory().createGenerator(out);
         generator.setPrettyPrinter(new DefaultPrettyPrinter());
     }
 
     @Override
-    protected void handleToken(JsonParser jp, JsonToken token, Deque<PathEntry> path) throws IOException {
-        switch(token) {
+    protected void handleToken(ParseEvent event) throws IOException {
+        switch(event.getToken()) {
             case START_OBJECT:
                 generator.writeStartObject();
                 break;
@@ -46,20 +41,20 @@ public class Formatter extends AbstractJsonReader {
                 generator.writeEndArray();
                 break;
             case FIELD_NAME:
-                generator.writeFieldName(jp.getText());
+                generator.writeFieldName(event.getValue());
                 break;
             case VALUE_EMBEDDED_OBJECT:
                 // don't know
-                generator.writeObject(jp.getText());
+                generator.writeObject(event.getValue());
                 break;
             case VALUE_STRING:
-                generator.writeString(jp.getText());
+                generator.writeString(event.getValue());
                 break;
             case VALUE_NUMBER_INT:
-                generator.writeNumber(jp.getText());
+                generator.writeNumber(event.getValue());
                 break;
             case VALUE_NUMBER_FLOAT:
-                generator.writeNumber(jp.getValueAsDouble());
+                generator.writeNumber(event.getValue()); //.getValueAsDouble());
                 break;
             case VALUE_TRUE:
                 generator.writeBoolean(true);
@@ -83,11 +78,11 @@ public class Formatter extends AbstractJsonReader {
         CommandLineParser parser = new BasicParser();
         CommandLine cl = parser.parse(new Options(), argv, true);
         String[] args = cl.getArgs();
-        OutputStream out = getOutput(args, 1);
+        OutputStream out = Util.getOutput(args, 1);
         Formatter formatter = new Formatter(out);
-        InputStream in = getInput(args, 0);
+        InputStream in = Util.getInput(args, 0);
 
-        formatter.read(in);
+        formatter.read(Util.getJsonParser(in));
         in.close();
         out.close();
     }

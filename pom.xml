@@ -85,7 +85,7 @@
                   </descriptors>
                   <archive>
                     <manifest>
-                      <mainClass>org.meeuw.json.Grep</mainClass>
+                      <mainClass>org.meeuw.json.grep.Grep</mainClass>
                     </manifest>
                   </archive>
                 </configuration>

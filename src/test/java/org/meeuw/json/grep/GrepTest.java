@@ -1,4 +1,4 @@
-package org.meeuw.json;
+package org.meeuw.json.grep;
 
 
 import org.junit.Test;
@@ -13,10 +13,12 @@ public class GrepTest {
 
     //@Test
     public void grep() throws IOException {
-        Grep grep = new Grep(new Grep.SinglePathMatcher(
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
                 new Grep.PreciseMatch("a"),
                 new Grep.PreciseMatch("b"),
-                new Grep.PreciseMatch("b1")), System.out);
+                new Grep.PreciseMatch("b1")), out);
+
         //new String[] {"c", "*", "d"});
         //Grep grep = new Grep(new String[] {"b", "b1"});
 
@@ -28,7 +30,7 @@ public class GrepTest {
     @Test
     public void grepSubObject() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Grep grep = new Grep(new Grep.SinglePathMatcher(
+        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
                 new Grep.PreciseMatch("b"),
                 new Grep.PreciseMatch("b1")), out);
 
@@ -41,7 +43,7 @@ public class GrepTest {
     @Test
     public void grepArray() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Grep grep = new Grep(new Grep.SinglePathMatcher(
+        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
                 new Grep.PreciseMatch("c"),
                 new Grep.Wildcard(),
                 new Grep.PreciseMatch("b2")), out);
@@ -55,7 +57,7 @@ public class GrepTest {
     @Test
     public void grepEmpty() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Grep grep = new Grep(new Grep.SinglePathMatcher(
+        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
                 new Grep.PreciseMatch("c"),
                 new Grep.Wildcard(),
                 new Grep.PreciseMatch("b2")), out);
@@ -65,4 +67,32 @@ public class GrepTest {
 
 
     }
+
+
+    @Test
+    public void grepPathIgnoreArray() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(true,
+                new Grep.PreciseMatch("titles"),
+                new Grep.PreciseMatch("value")), out);
+        grep.setOutputFormat(GrepMain.Output.VALUE);
+
+        grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
+        assertEquals("title1\ntitle2\n", new String(out.toByteArray()));
+
+
+    }
+
+
+    @Test
+    public void grepTitle() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(Grep.parsePathMatcherChain("titles.*.value"), out);
+        grep.setOutputFormat(GrepMain.Output.VALUE);
+        grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
+        assertEquals("title1\ntitle2\n", new String(out.toByteArray()));
+
+
+    }
+
 }
