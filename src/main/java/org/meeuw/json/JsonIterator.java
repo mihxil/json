@@ -63,7 +63,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                             PathEntry prev = path.peekLast();
                             if (prev != null) {
                                 if (prev instanceof ArrayEntry) {
-                                    ((ArrayEntry) prev).inc();
+                                    path.addLast(((ArrayEntry) path.pollLast()).inc());
                                 } else {
                                     path.removeLast();
                                 }
@@ -93,7 +93,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                         case END_ARRAY:
                             PathEntry prev = path.peekLast();
                             if (prev instanceof ArrayEntry) {
-                                ((ArrayEntry) prev).inc();
+                                path.addLast(((ArrayEntry) path.pollLast()).inc());
                             } else {
                                 path.removeLast();
                             }

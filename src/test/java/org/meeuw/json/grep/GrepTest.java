@@ -48,7 +48,7 @@ public class GrepTest {
                 new Grep.Wildcard(),
                 new Grep.PreciseMatch("b2")), out);
 
-        grep.read(new StringReader("{c: [{b1: 1}, {b2: 2}]}"));
+        grep.read(new StringReader("{c: [{b1: 1}, {b2: 2}], d:3}"));
         assertEquals("c[1].b2=2\n", new String(out.toByteArray()));
 
 

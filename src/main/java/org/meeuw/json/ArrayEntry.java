@@ -5,13 +5,17 @@ package org.meeuw.json;
 * @since ...
 */
 public class ArrayEntry implements PathEntry {
-    Integer index = 0;
+    final int index;
 
     public ArrayEntry() {
+        index = 0;
+    }
+    private ArrayEntry(int index) {
+        this.index = index;
     }
 
-    protected void inc() {
-        index++;
+    protected ArrayEntry inc() {
+        return new ArrayEntry(index + 1);
     }
 
     @Override
