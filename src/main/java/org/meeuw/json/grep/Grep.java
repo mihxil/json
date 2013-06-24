@@ -1,17 +1,16 @@
 package org.meeuw.json.grep;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.regex.Pattern;
-
+import com.fasterxml.jackson.core.JsonParser;
 import org.meeuw.json.ArrayEntry;
 import org.meeuw.json.JsonIterator;
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.PathEntry;
 
-import com.fasterxml.jackson.core.JsonParser;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 
 /**
  * jsongrep. To search in json streams. You can match on the keys
