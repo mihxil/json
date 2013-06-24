@@ -1,16 +1,17 @@
 package org.meeuw.json.grep;
 
-import com.fasterxml.jackson.core.JsonParser;
-import org.meeuw.json.ArrayEntry;
-import org.meeuw.json.JsonIterator;
-import org.meeuw.json.ParseEvent;
-import org.meeuw.json.PathEntry;
-
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
+
+import org.meeuw.json.ArrayEntry;
+import org.meeuw.json.JsonIterator;
+import org.meeuw.json.ParseEvent;
+import org.meeuw.json.PathEntry;
+
+import com.fasterxml.jackson.core.JsonParser;
 
 /**
  * jsongrep. To search in json streams. You can match on the keys
@@ -133,7 +134,7 @@ public class Grep implements Iterator<ParseEvent> {
     /**
      * A Patch matcher defines matches on an entire json path and value.
      */
-    protected static interface PathMatcher {
+    public static interface PathMatcher {
 
         boolean matches(Deque<PathEntry> path, String value);
     }
@@ -179,7 +180,7 @@ public class Grep implements Iterator<ParseEvent> {
         }
     }
 
-    protected static class ValueEqualsMatcher extends ValueMatcher {
+    public static class ValueEqualsMatcher extends ValueMatcher {
         private final String test;
 
         public ValueEqualsMatcher(String test) {
@@ -238,7 +239,7 @@ public class Grep implements Iterator<ParseEvent> {
         }
     }
 
-    protected static class PathMatcherAndChain implements PathMatcher {
+    public static class PathMatcherAndChain implements PathMatcher {
         private final PathMatcher[] matchers;
 
         public PathMatcherAndChain(PathMatcher... matchers) {
@@ -297,7 +298,7 @@ public class Grep implements Iterator<ParseEvent> {
 
     }
 
-    protected static PathMatcher parseKeysMatcher(String arg, boolean ignoreArrays) {
+    public static PathMatcher parseKeysMatcher(String arg, boolean ignoreArrays) {
         String[] split = arg.split("\\.");
         ArrayList<KeyPattern> list = new ArrayList<KeyPattern>(split.length);
         for (String s : split) {
