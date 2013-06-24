@@ -1,8 +1,8 @@
 package org.meeuw.json;
 
-import org.junit.Test;
-
 import java.io.IOException;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,7 +22,7 @@ public class JsonIteratorTest {
         System.out.println(event.getPath());
         System.out.println(iterator.next().getPath());
         System.out.println(iterator.next().getPath());
-        System.out.println(iterator.next().getPath());
+
     }
 
 }
