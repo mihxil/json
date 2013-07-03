@@ -1,11 +1,11 @@
 package org.meeuw.json.grep;
 
 
-import org.junit.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -48,7 +48,7 @@ public class GrepTest {
                 new Grep.Wildcard(),
                 new Grep.PreciseMatch("b2")), out);
 
-        grep.read(new StringReader("{c: [{b1: 1}, {b2: 2}]}"));
+        grep.read(new StringReader("{c: [{b1: 1}, {b2: 2}], d:3}"));
         assertEquals("c[1].b2=2\n", new String(out.toByteArray()));
 
 
@@ -87,7 +87,7 @@ public class GrepTest {
     @Test
     public void grepTitle() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Grep.parsePathMatcherChain("titles.*.value"), out);
+        GrepMain grep = new GrepMain(Grep.parsePathMatcherChain("titles.*.value", false), out);
         grep.setOutputFormat(GrepMain.Output.VALUE);
         grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
         assertEquals("title1\ntitle2\n", new String(out.toByteArray()));
