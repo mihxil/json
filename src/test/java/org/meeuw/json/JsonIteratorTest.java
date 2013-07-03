@@ -1,8 +1,8 @@
 package org.meeuw.json;
 
-import java.io.IOException;
-
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,13 +15,11 @@ public class JsonIteratorTest {
     @Test
     public void test() throws IOException {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{'a':'b'}"));
-        ParseEvent event = iterator.next();
-        System.out.println(event.getPath());
-        assertEquals("", event.getPath().toString());
-        event = iterator.next();
-        System.out.println(event.getPath());
-        System.out.println(iterator.next().getPath());
-        System.out.println(iterator.next().getPath());
+        assertEquals("", iterator.next().getPath().toString());
+        assertEquals("a", iterator.next().getPath().toString());
+        assertEquals("a", iterator.next().getPath().toString());
+        assertEquals("", iterator.next().getPath().toString());
+
 
     }
 
