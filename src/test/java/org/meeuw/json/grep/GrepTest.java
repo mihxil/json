@@ -1,11 +1,11 @@
 package org.meeuw.json.grep;
 
 
+import org.junit.Test;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,6 +41,19 @@ public class GrepTest {
     }
 
     @Test
+    public void grepSubObject2() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
+                new Grep.PreciseMatch("b")
+        ), out);
+
+
+        grep.read(new StringReader("{b: {b1: 5}, c:5}"));
+        assertEquals("b={...}\n", new String(out.toByteArray()));
+
+    }
+
+    @Test
     public void grepArray() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
@@ -50,6 +63,19 @@ public class GrepTest {
 
         grep.read(new StringReader("{c: [{b1: 1}, {b2: 2}], d:3}"));
         assertEquals("c[1].b2=2\n", new String(out.toByteArray()));
+
+
+    }
+
+
+    @Test
+    public void grepArray2() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
+                new Grep.PreciseMatch("c")), out);
+
+        grep.read(new StringReader("{c: [{b1: 1}, {b2: 2}], d:3}"));
+        assertEquals("c=[...]\n", new String(out.toByteArray()));
 
 
     }
@@ -94,5 +120,6 @@ public class GrepTest {
 
 
     }
+
 
 }

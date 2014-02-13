@@ -33,4 +33,9 @@ public class ParseEvent {
         return path;
     }
 
+    @Override
+    public String toString() {
+        return token + " " + path + "=" + value;
+    }
+
 }

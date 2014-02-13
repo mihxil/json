@@ -60,6 +60,8 @@ public class Grep implements Iterator<ParseEvent> {
                     case VALUE_TRUE:
                     case VALUE_FALSE:
                     case VALUE_NULL:
+                    case END_ARRAY:
+                    case END_OBJECT:
                         String value = event.getValue();
                         if (recordMatcher.matches(event.getPath(), value)) {
                             //output.print(recordsep);
@@ -215,8 +217,12 @@ public class Grep implements Iterator<ParseEvent> {
             if (!ignoreArrays && path.size() != pathPattern.length) return false;
             int i = 0;
             for (PathEntry e : path) {
-                if (ignoreArrays && e instanceof ArrayEntry) continue;
-                if (! pathPattern[i++].matches(e)) return false;
+                if (ignoreArrays && e instanceof ArrayEntry && i < path.size()) {
+                    continue;
+                }
+                if (! pathPattern[i++].matches(e)) {
+                    return false;
+                }
             }
             return true;
         }

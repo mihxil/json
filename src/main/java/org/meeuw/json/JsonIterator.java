@@ -50,6 +50,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                     if (token == null) {
                         break;
                     }
+                    String text = jp.getText();
                     switch (token) {
                         case START_OBJECT:
                             depth++;
@@ -68,11 +69,13 @@ public class JsonIterator implements Iterator<ParseEvent> {
                                     path.removeLast();
                                 }
                             }
+                            text = "{...}";
                             break;
                         }
                         case END_ARRAY: {
                             PathEntry prev = path.pollLast();
                             depth--;
+                            text = "[...]";
                             break;
                         }
                         case FIELD_NAME:
@@ -81,7 +84,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                             break;
                     }
 
-                    next = new ParseEvent(token, new Path(path), jp.getText());
+                    next = new ParseEvent(token, new Path(path), text);
 
                     switch (token) {
                         case VALUE_STRING:
