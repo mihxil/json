@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 /**
- * This Json-reader just outputs the parsed keys to output. It is not very usefull in itself, but it show what the 'path' argument of {@link #handleToken} is at any moment, so this is more or less the simplest concretization of AbstractJsonReader.
+ * This Json-reader just outputs the parsed keys to output. It is not very usefull in itself, but it show what the 'path' argument of {@link #handleToken} is at any moment, so this is more or less the simplest concretisation of AbstractJsonReader.
  */
 public class Structure extends AbstractJsonReader {
 
