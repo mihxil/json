@@ -2,12 +2,19 @@ package org.meeuw.json.grep;
 
 
 import org.junit.Test;
+import org.meeuw.json.ArrayEntry;
+import org.meeuw.json.KeyEntry;
+import org.meeuw.json.PathEntry;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GrepTest {
 
@@ -94,6 +101,20 @@ public class GrepTest {
 
     }
 
+
+    @Test
+    public void grepSinglePathPatcherTest() throws IOException {
+        Grep.SinglePathMatcher matcher = new Grep.SinglePathMatcher(true,
+                new Grep.PreciseMatch("titles"),
+                new Grep.PreciseMatch("value"));
+        assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2)))));
+        assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("foo"), new ArrayEntry(2)))));
+        assertTrue(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new KeyEntry("value")))));
+        assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("foo"), new KeyEntry("value")))));
+        assertTrue(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("value")))));
+        assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("foo")))));
+
+    }
 
     @Test
     public void grepPathIgnoreArray() throws IOException {

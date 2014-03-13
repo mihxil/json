@@ -39,7 +39,9 @@ public class Grep implements Iterator<ParseEvent> {
     @Override
     public ParseEvent next() {
         findNext();
-        if (next == null) throw new NoSuchElementException();
+        if (next == null) {
+            throw new NoSuchElementException();
+        }
         ParseEvent result = next;
         next = null;
         return result;
@@ -214,10 +216,14 @@ public class Grep implements Iterator<ParseEvent> {
 
         @Override
         public boolean matches(Deque<PathEntry> path) {
-            if (!ignoreArrays && path.size() != pathPattern.length) return false;
+            if (!ignoreArrays && path.size() != pathPattern.length) {
+                return false;
+            }
             int i = 0;
+            int j = 0;
             for (PathEntry e : path) {
-                if (ignoreArrays && e instanceof ArrayEntry && i < path.size()) {
+                j++;
+                if (ignoreArrays && e instanceof ArrayEntry && j < path.size()) {
                     continue;
                 }
                 if (! pathPattern[i++].matches(e)) {
@@ -254,7 +260,9 @@ public class Grep implements Iterator<ParseEvent> {
         @Override
         public boolean matches(Deque<PathEntry> path, String value) {
             for (PathMatcher matcher : matchers) {
-                if (! matcher.matches(path, value)) return false;
+                if (! matcher.matches(path, value)) {
+                    return false;
+                }
             }
             return true;
         }
@@ -276,7 +284,9 @@ public class Grep implements Iterator<ParseEvent> {
 
     public static PathMatcher parsePathMatcherChain(String arg, boolean ignoreArrays) {
         String[] split = arg.split(",");
-        if (split.length == 1) return parsePathMatcher(arg, ignoreArrays);
+        if (split.length == 1) {
+            return parsePathMatcher(arg, ignoreArrays);
+        }
         ArrayList<PathMatcher> list = new ArrayList<PathMatcher>(split.length);
         for (String s : split) {
             list.add(parsePathMatcher(s, ignoreArrays));

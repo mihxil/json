@@ -10,7 +10,7 @@ public class ArrayEntry implements PathEntry {
     public ArrayEntry() {
         index = 0;
     }
-    private ArrayEntry(int index) {
+    public ArrayEntry(int index) {
         this.index = index;
     }
 
