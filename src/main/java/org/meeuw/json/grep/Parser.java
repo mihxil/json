@@ -56,6 +56,9 @@ public class Parser {
         if ("*".equals(arg)) {
             return new Grep.Wildcard();
         }
+        if ("*]".equals(arg)) {
+            return new Grep.ArrayEntryMatch();
+        }
         if (arg.endsWith("]")) {
             return new Grep.ArrayIndexMatch(Integer.parseInt(arg.substring(0, arg.length() - 1)));
         } else {

@@ -118,6 +118,18 @@ public class Grep implements Iterator<GrepEvent> {
         }
     }
 
+    protected static class ArrayEntryMatch implements KeyPattern {
+        @Override
+        public boolean matches(PathEntry key) {
+            return key instanceof ArrayEntry;
+        }
+        @Override
+        public String toString() {
+            return "[*]";
+        }
+
+    }
+
     /**
      * a precise key pattern matches only if the key exactly equals to a certain value.
      */

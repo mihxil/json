@@ -44,6 +44,17 @@ public class ParserTest {
         assertEquals("b", result.getPatterns()[2].toString());
     }
 
+    @Test
+    public void wildcardArrayIndex() {
+        Grep.SinglePathMatcher result = Parser.parseKeysMatcher("a[*].b", false);
+        assertTrue(result.getPatterns()[0] instanceof Grep.PreciseMatch);
+        assertEquals("a", result.getPatterns()[0].toString());
+        assertTrue(result.getPatterns()[1] instanceof Grep.ArrayEntryMatch);
+        assertEquals("[*]", result.getPatterns()[1].toString());
+        assertTrue(result.getPatterns()[2] instanceof Grep.PreciseMatch);
+        assertEquals("b", result.getPatterns()[2].toString());
+    }
+
 
 
 
