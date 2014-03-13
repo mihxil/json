@@ -55,6 +55,24 @@ public class ParserTest {
         assertEquals("b", result.getPatterns()[2].toString());
     }
 
+    @Test
+    public void value() {
+        Grep.PathMatcherAndChain result = (Grep.PathMatcherAndChain) Parser.parsePathMatcher("a[*].b=c", false);
+        assertTrue(result.getPatterns()[0] instanceof Grep.SinglePathMatcher);
+        assertEquals("a[*].b", result.getPatterns()[0].toString());
+        assertTrue(result.getPatterns()[1] instanceof Grep.ValueEqualsMatcher);
+        assertEquals("c", result.getPatterns()[1].toString());
+    }
+
+    @Test
+    public void regexp() {
+        Grep.PathMatcherAndChain result = (Grep.PathMatcherAndChain) Parser.parsePathMatcher("a[*].b~.*", false);
+        assertTrue(result.getPatterns()[0] instanceof Grep.SinglePathMatcher);
+        assertEquals("a[*].b", result.getPatterns()[0].toString());
+        assertTrue(result.getPatterns()[1] instanceof Grep.ValueRegexpMatcher);
+        assertEquals(".*", result.getPatterns()[1].toString());
+    }
+
 
 
 

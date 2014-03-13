@@ -6,7 +6,6 @@ import org.meeuw.json.JsonIterator;
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.PathEntry;
 
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -133,7 +132,7 @@ public class Grep implements Iterator<GrepEvent> {
     /**
      * a precise key pattern matches only if the key exactly equals to a certain value.
      */
-    protected static class ArrayIndexMatch implements KeyPattern {
+    protected static class ArrayIndexMatch extends ArrayEntryMatch {
         private final int index;
 
         public ArrayIndexMatch(int index) {
@@ -142,7 +141,7 @@ public class Grep implements Iterator<GrepEvent> {
 
         @Override
         public boolean matches(PathEntry key) {
-            if (key instanceof ArrayEntry) {
+            if (super.matches(key)) {
                 return ((ArrayEntry) key).getIndex() == this.index;
             } else {
                 return false;
@@ -218,6 +217,11 @@ public class Grep implements Iterator<GrepEvent> {
         protected boolean matches(String value) {
             return pattern.matcher(value).matches();
         }
+
+        @Override
+        public String toString() {
+            return String.valueOf(pattern);
+        }
     }
 
     public static class ValueEqualsMatcher extends ValueMatcher {
@@ -230,6 +234,10 @@ public class Grep implements Iterator<GrepEvent> {
         @Override
         protected boolean matches(String value) {
             return test.equals(value);
+        }
+        @Override
+        public String toString() {
+            return test;
         }
     }
 
@@ -269,7 +277,12 @@ public class Grep implements Iterator<GrepEvent> {
         }
         @Override
         public String toString() {
-            return Arrays.asList(pathPattern).toString();
+            StringBuilder builder = new StringBuilder();
+            for (KeyPattern p : pathPattern) {
+                if (builder.length() > 0 && ! (p instanceof ArrayEntryMatch)) builder.append(".");
+                builder.append(String.valueOf(p));
+            }
+            return builder.toString();
         }
         public KeyPattern[] getPatterns() {
             return pathPattern;
@@ -309,6 +322,9 @@ public class Grep implements Iterator<GrepEvent> {
                 }
             }
             return true;
+        }
+        public PathMatcher[] getPatterns() {
+            return matchers;
         }
     }
 
