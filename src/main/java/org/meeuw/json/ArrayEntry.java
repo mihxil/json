@@ -18,6 +18,10 @@ public class ArrayEntry implements PathEntry {
         return new ArrayEntry(index + 1);
     }
 
+    public int getIndex() {
+        return index;
+    }
+
     @Override
     public String toString() {
         return "[" + index + "]";

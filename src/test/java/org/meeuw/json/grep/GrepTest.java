@@ -95,6 +95,20 @@ public class GrepTest {
 
 
     @Test
+    public void grepArray2() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
+                new Grep.PreciseMatch("c"),
+                new Grep.ArrayIndexMatch(0)), out);
+
+        grep.read(new StringReader("{c: ['een']}"));
+        assertEquals("c[0]=een\n", new String(out.toByteArray()));
+
+
+    }
+
+
+    @Test
     public void grepArrayResult() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
@@ -156,7 +170,7 @@ public class GrepTest {
     @Test
     public void grepTitle() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Grep.parsePathMatcherChain("titles.*.value", false), out);
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.*.value", false), out);
         grep.setOutputFormat(GrepMain.Output.VALUE);
         grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
         assertEquals("title1\ntitle2\n", new String(out.toByteArray()));

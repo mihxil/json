@@ -1,13 +1,11 @@
 package org.meeuw.json.grep;
 
-import java.io.*;
-import java.util.Arrays;
-
+import com.fasterxml.jackson.core.JsonParser;
 import org.apache.commons.cli.*;
-import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Util;
 
-import com.fasterxml.jackson.core.JsonParser;
+import java.io.*;
+import java.util.Arrays;
 
 /**
  * @author Michiel Meeuwissen
@@ -119,7 +117,7 @@ public class GrepMain {
             System.exit(1);
         }
         if (args.length < 1) throw new MissingArgumentException("No pathMatcher expression given");
-        GrepMain grep = new GrepMain(Grep.parsePathMatcherChain(args[0], false), System.out);
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain(args[0], false), System.out);
         if (cl.hasOption("output")) {
             grep.setOutputFormat(Output.valueOf(cl.getOptionValue("output").toUpperCase()));
         }

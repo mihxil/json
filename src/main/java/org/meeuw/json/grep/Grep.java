@@ -6,7 +6,7 @@ import org.meeuw.json.JsonIterator;
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.PathEntry;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -115,6 +115,31 @@ public class Grep implements Iterator<GrepEvent> {
         @Override
         public String toString() {
             return key;
+        }
+    }
+
+    /**
+     * a precise key pattern matches only if the key exactly equals to a certain value.
+     */
+    protected static class ArrayIndexMatch implements KeyPattern {
+        private final int index;
+
+        public ArrayIndexMatch(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public boolean matches(PathEntry key) {
+            if (key instanceof ArrayEntry) {
+                return ((ArrayEntry) key).getIndex() == this.index;
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(index);
         }
     }
 
@@ -230,6 +255,13 @@ public class Grep implements Iterator<GrepEvent> {
             }
             return i == pathPattern.length;
         }
+        @Override
+        public String toString() {
+            return Arrays.asList(pathPattern).toString();
+        }
+        public KeyPattern[] getPatterns() {
+            return pathPattern;
+        }
     }
 
     protected static class PathMatcherOrChain implements PathMatcher {
@@ -279,55 +311,6 @@ public class Grep implements Iterator<GrepEvent> {
         }
     }
 
-
-    // Parse methods for the command line
-
-    public static PathMatcher parsePathMatcherChain(String arg, boolean ignoreArrays) {
-        String[] split = arg.split(",");
-        if (split.length == 1) {
-            return parsePathMatcher(arg, ignoreArrays);
-        }
-        ArrayList<PathMatcher> list = new ArrayList<PathMatcher>(split.length);
-        for (String s : split) {
-            list.add(parsePathMatcher(s, ignoreArrays));
-        }
-        return new PathMatcherOrChain(list.toArray(new PathMatcher[list.size()]));
-
-    }
-    protected static PathMatcher parsePathMatcher(String arg, boolean ignoreArrays) {
-        String[] split = arg.split("~", 2);
-        if (split.length == 2) {
-            return new PathMatcherAndChain(
-                    parseKeysMatcher(split[0], ignoreArrays),
-                    new ValueRegexpMatcher(Pattern.compile(split[1])));
-        }
-        split = arg.split("=", 2);
-        if (split.length == 2) {
-            return new PathMatcherAndChain(
-                    parseKeysMatcher(split[0], ignoreArrays),
-                    new ValueEqualsMatcher(split[1]));
-        }
-        // >, <, operators...
-
-        return parseKeysMatcher(split[0], ignoreArrays);
-
-    }
-
-    public static PathMatcher parseKeysMatcher(String arg, boolean ignoreArrays) {
-        String[] split = arg.split("\\.");
-        ArrayList<KeyPattern> list = new ArrayList<KeyPattern>(split.length);
-        for (String s : split) {
-            list.add(parseKeyPattern(s));
-        }
-        return new SinglePathMatcher(ignoreArrays, list.toArray(new KeyPattern[list.size()]));
-    }
-
-    protected static KeyPattern parseKeyPattern(String arg) {
-        if ("*".equals(arg)) {
-            return new Wildcard();
-        }
-        return new PreciseMatch(arg);
-    }
 
 
 
