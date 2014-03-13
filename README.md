@@ -51,9 +51,9 @@ This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used t
 Example
 ```sh
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | 
-                 java -jar ~/Download/mihxil-json-0.4-grep.jar  y.arr.*.e,a
+                 java -jar ~/Downloads/mihxil-json-0.4-grep.jar  y.arr[*].e,a
 a=b
-y.arr.1.e=z
+y.arr[1].e=z
 ```
 
 
