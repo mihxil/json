@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * E.g. 'rows.*.id' will result in only all 'id' values in a json structure.
  * Try the commandline option -help for an overview of all features.
  */
-public class Grep implements Iterator<ParseEvent> {
+public class Grep implements Iterator<GrepEvent> {
 
     // settings
     private final PathMatcher matcher;
@@ -37,14 +37,14 @@ public class Grep implements Iterator<ParseEvent> {
         return next != null;
     }
     @Override
-    public ParseEvent next() {
+    public GrepEvent next() {
         findNext();
         if (next == null) {
             throw new NoSuchElementException();
         }
         ParseEvent result = next;
         next = null;
-        return result;
+        return new GrepEvent(result);
     }
     @Override
     public void remove() {
@@ -220,17 +220,15 @@ public class Grep implements Iterator<ParseEvent> {
                 return false;
             }
             int i = 0;
-            int j = 0;
             for (PathEntry e : path) {
-                j++;
-                if (ignoreArrays && e instanceof ArrayEntry && j < path.size()) {
+                if (ignoreArrays && e instanceof ArrayEntry) {
                     continue;
                 }
                 if (! pathPattern[i++].matches(e)) {
                     return false;
                 }
             }
-            return true;
+            return i == pathPattern.length;
         }
     }
 
@@ -244,7 +242,9 @@ public class Grep implements Iterator<ParseEvent> {
         @Override
         public boolean matches(Deque<PathEntry> path, String value) {
             for (PathMatcher matcher : matchers) {
-                if (matcher.matches(path, value)) return true;
+                if (matcher.matches(path, value)) {
+                    return true;
+                }
             }
             return false;
         }
@@ -323,7 +323,9 @@ public class Grep implements Iterator<ParseEvent> {
     }
 
     protected static KeyPattern parseKeyPattern(String arg) {
-        if ("*".equals(arg)) return new Wildcard();
+        if ("*".equals(arg)) {
+            return new Wildcard();
+        }
         return new PreciseMatch(arg);
     }
 

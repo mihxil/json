@@ -13,19 +13,20 @@ import java.util.NoSuchElementException;
  * @since 0.4
  */
 public class JsonIterator implements Iterator<ParseEvent> {
-    int depth = 0;
     final Path path = new Path();
     ParseEvent next;
     final JsonParser jp;
 
-    public JsonIterator(JsonParser jp) {
+    public  JsonIterator(JsonParser jp) {
         this.jp = jp;
     }
 
     @Override
     public ParseEvent next() {
         findNext();
-        if (next == null) throw new NoSuchElementException();
+        if (next == null) {
+            throw new NoSuchElementException();
+        }
         ParseEvent result = next;
         next = null;
         return result;
@@ -53,53 +54,54 @@ public class JsonIterator implements Iterator<ParseEvent> {
                     String text = jp.getText();
                     switch (token) {
                         case START_OBJECT:
-                            depth++;
                             break;
-                        case START_ARRAY:
-                            depth++;
-                            path.add(new ArrayEntry());
-                            break;
-                        case END_OBJECT: {
-                            depth--;
+                        case END_ARRAY:
+                            path.pollLast();
                             PathEntry prev = path.peekLast();
-                            if (prev != null) {
-                                if (prev instanceof ArrayEntry) {
-                                    path.addLast(((ArrayEntry) path.pollLast()).inc());
-                                } else {
-                                    path.removeLast();
-                                }
-                            }
-                            text = "{...}";
                             break;
-                        }
-                        case END_ARRAY: {
-                            PathEntry prev = path.pollLast();
-                            depth--;
-                            text = "[...]";
-                            break;
-                        }
                         case FIELD_NAME:
                             String fieldName = jp.getText();
                             path.add(new KeyEntry(fieldName));
                             break;
-                    }
 
+                    }
                     next = new ParseEvent(token, new Path(path), text);
 
-                    switch (token) {
+                    switch(token) {
+                        case START_ARRAY:
+                            path.add(new ArrayEntry());
+                            break;
                         case VALUE_STRING:
                         case VALUE_NUMBER_INT:
                         case VALUE_NUMBER_FLOAT:
                         case VALUE_TRUE:
                         case VALUE_FALSE:
                         case VALUE_NULL:
+                        case END_OBJECT:
+                        case END_ARRAY:
+                            PathEntry prev = path.peekLast();
+                            if (! (prev instanceof ArrayEntry)) {
+                                path.pollLast();
+                            } else {
+                                path.addLast(((ArrayEntry) path.pollLast()).inc());
+                            }
+                            break;
+
+                    }
+                    switch (token) {
                         case END_ARRAY:
                             PathEntry prev = path.peekLast();
                             if (prev instanceof ArrayEntry) {
                                 path.addLast(((ArrayEntry) path.pollLast()).inc());
-                            } else {
-                                path.removeLast();
+                                break;
                             }
+                        case VALUE_STRING:
+                        case VALUE_NUMBER_INT:
+                        case VALUE_NUMBER_FLOAT:
+                        case VALUE_TRUE:
+                        case VALUE_FALSE:
+                        case VALUE_NULL:
+//                            path.removeLast();
                             break;
                     }
 

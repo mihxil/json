@@ -24,7 +24,7 @@ public class ArrayEntry implements PathEntry {
     }
 
     @Override
-    public void append(StringBuilder builder) {
+    public void appendTo(StringBuilder builder) {
         builder.append('[').append(index).append(']');
     }
 }

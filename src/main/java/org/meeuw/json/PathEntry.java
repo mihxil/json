@@ -5,6 +5,6 @@ package org.meeuw.json;
  */
 public interface PathEntry {
 
-    void append(StringBuilder builder);
+    void appendTo(StringBuilder builder);
 
 }

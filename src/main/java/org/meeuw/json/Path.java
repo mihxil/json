@@ -18,7 +18,7 @@ public class Path extends ArrayDeque<PathEntry> {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         for (PathEntry pe : this) {
-            pe.append(builder);
+            pe.appendTo(builder);
         }
         return builder.toString();
     }

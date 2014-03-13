@@ -65,7 +65,7 @@ public class GrepMain {
         Grep grep = new Grep(pathMatcher, in);
         boolean needsSeperator = false;
         while (grep.hasNext()) {
-            ParseEvent match = grep.next();
+            GrepEvent match = grep.next();
             if (needsSeperator) {
                 output.print(sep);
             }
