@@ -16,12 +16,12 @@ All tools support a -help argument for an overview of all supported options.
 
 Formatter
 --------
-A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.3/mihxil-json-0.3-formatter.jar)
+A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.4/mihxil-json-0.4-formatter.jar)
 
 
 Usage
 ```
-java -jar ~/Download/mihxil-json-0.3-formatter.jar [<infile>] [<outfile>]
+java -jar ~/Download/mihxil-json-0.4-formatter.jar [<infile>] [<outfile>]
 
 infile: defaults to stdin (can explicitely set to stdin as '-'). Can
         be file name but  can also be a remote URL
@@ -44,14 +44,14 @@ michiel@belono:/tmp$ ls -lah alldocs.*
 
 Grep
 ----
-A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.3/mihxil-json-0.3-grep.jar)
+A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.4/mihxil-json-0.4-grep.jar)
 
 This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used to produce one line abstracts of the records which can easily be processed further by a normal grep or awk or so.
 
 Example
 ```sh
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | 
-                 java -jar target/mihxil-json-0.3-SNAPSHOT-grep.jar  y.arr.*.e,a
+                 java -jar ~/Download/mihxil-json-0.4-grep.jar  y.arr.*.e,a
 a=b
 y.arr.1.e=z
 ```
