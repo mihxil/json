@@ -16,8 +16,9 @@ All tools support a -help argument for an overview of all supported options.
 Download
 --------
 The executable jars are packaged in a zip, which can be downloaded
-[here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.5/mihxil-json-0.5-package.zip)
-this zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your classpath.
+[here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.5/mihxil-json-0.5-package.zip).
+
+This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your classpath.
 
 
 Formatter
