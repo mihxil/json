@@ -97,7 +97,8 @@ It can also accept a second optional parameter which is a file or an URL:
 ```sh
 $ jsongrep  y.arr[*].*~[xz] test.json
 y.arr[1].e=z
-```sh
+```
+
 It is possible to output less
 ```sh
 $ jsongrep  -output VALUE  y.arr[*].*~[xz] test.json
