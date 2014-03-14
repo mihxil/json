@@ -28,7 +28,6 @@ public class GrepMain {
     private final PrintStream output;
 
     private String sep = "\n";
-    private String recordsep = "\n";
 
     private final Grep.PathMatcher pathMatcher;
 
@@ -52,14 +51,6 @@ public class GrepMain {
 
     public void setSep(String sep) {
         this.sep = sep;
-    }
-
-    public String getRecordsep() {
-        return recordsep;
-    }
-
-    public void setRecordsep(String recordsep) {
-        this.recordsep = recordsep;
     }
 
     public void read(JsonParser in) throws IOException {
@@ -114,7 +105,7 @@ public class GrepMain {
         options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
         options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
         //options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
-        options.addOption(new Option("recordsep", true, "Record separator"));
+        //options.addOption(new Option("recordsep", true, "Record separator"));
         CommandLine cl = parser.parse(options, argv, true);
         String[] args = cl.getArgs();
         if (cl.hasOption("help") || cl.getArgList().isEmpty()) {
@@ -134,7 +125,7 @@ public class GrepMain {
             grep.setSep(cl.getOptionValue("sep"));
         }
         if (cl.hasOption("recordsep")) {
-            grep.setRecordsep(cl.getOptionValue("recordsep"));
+			//   grep.setRecordsep(cl.getOptionValue("recordsep"));
         }
         if (cl.hasOption("record")) {
             //pathMatcher.setRecordMatcher(parsePathMatcherChain(cl.getOptionValue("record")));
