@@ -1,2 +1,0 @@
-#!/usr/bin/env sh
-java -jar target/mihxil-json-0.4-SNAPSHOT-grep.jar "$@"

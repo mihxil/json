@@ -50,17 +50,21 @@ This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used t
 
 Example
 ```sh
-$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | 
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  |
                  java -jar ~/Downloads/mihxil-json-0.4-grep.jar  y.arr[*].e,a
 a=b
 y.arr[1].e=z
 ```
 
 
+It is also possible to match certain values:
+
+
+
 Another example on a couchdb database (find documents where certain field has certain value)
 ```sh
 $ jsongrep rows.*.doc.workflow=FOR_REPUBLICATION,rows.*.doc.mid  http://couchdbhost/database/_all_docs?include_docs=true  |
-                grep -A 1 workflow 
+                grep -A 1 workflow
 ```
 
 I hope this also explains how the grep expression works. Currently
