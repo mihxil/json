@@ -6,9 +6,7 @@ import org.meeuw.json.JsonIterator;
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.PathEntry;
 
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -24,7 +22,7 @@ public class Grep implements Iterator<GrepEvent> {
     private PathMatcher recordMatcher = new NeverPathMatcher();
 
     final JsonIterator wrapped;
-    ParseEvent next = null;
+    private final List<GrepEvent> next = new ArrayList<GrepEvent>();
 
     public Grep(PathMatcher matcher, JsonParser jp) {
         this.matcher = matcher;
@@ -33,17 +31,15 @@ public class Grep implements Iterator<GrepEvent> {
     @Override
     public boolean hasNext() {
         findNext();
-        return next != null;
+        return ! next.isEmpty();
     }
     @Override
     public GrepEvent next() {
         findNext();
-        if (next == null) {
+        if (next.isEmpty()) {
             throw new NoSuchElementException();
         }
-        ParseEvent result = next;
-        next = null;
-        return new GrepEvent(result);
+        return next.remove(0);
     }
     @Override
     public void remove() {
@@ -51,8 +47,8 @@ public class Grep implements Iterator<GrepEvent> {
     }
 
     protected void findNext() {
-        if( next == null) {
-            while (wrapped.hasNext() && next == null) {
+        if( next.isEmpty()) {
+            while (wrapped.hasNext() && next.isEmpty()) {
                 ParseEvent event = wrapped.next();
                 switch (event.getToken()) {
                     case VALUE_STRING:
@@ -65,14 +61,10 @@ public class Grep implements Iterator<GrepEvent> {
                     case END_OBJECT:
                         String value = event.getValue();
                         if (recordMatcher.matches(event.getPath(), value)) {
-                            //output.print(recordsep);
-                            //needsSeperator = false;
+                            next.add(new GrepEvent(event, GrepEvent.Type.RECORD));
                         }
                         if (matcher.matches(event.getPath(), value)) {
-                            //if (needsSeperator) {
-                            //output.print(sep);
-                            //}
-                            next = event;
+                            next.add(new GrepEvent(event));
                         }
                 }
             }

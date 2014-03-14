@@ -29,7 +29,12 @@ public class GrepMain {
 
     private String sep = "\n";
 
+    private String recordsep = "\n";
+
+
     private final Grep.PathMatcher pathMatcher;
+    private Grep.PathMatcher recordMatcher;
+
 
     public GrepMain(Grep.PathMatcher pathMatcher, OutputStream output) {
         this.pathMatcher = pathMatcher;
@@ -53,39 +58,69 @@ public class GrepMain {
         this.sep = sep;
     }
 
+
+
+    public String getRecordsep() {
+        return recordsep;
+    }
+
+    public void setRecordsep(String recordsep) {
+        this.recordsep = recordsep;
+    }
+
+    public Grep.PathMatcher getRecordMatcher() {
+        return recordMatcher;
+    }
+
+    public void setRecordMatcher(Grep.PathMatcher recordMatcher) {
+        this.recordMatcher = recordMatcher;
+    }
+
     public void read(JsonParser in) throws IOException {
         Grep grep = new Grep(pathMatcher, in);
+        if (recordMatcher != null) {
+            grep.setRecordMatcher(recordMatcher);
+        }
         boolean needsSeperator = false;
         while (grep.hasNext()) {
             GrepEvent match = grep.next();
-            if (needsSeperator) {
-                output.print(sep);
-            }
-            switch (outputFormat) {
-				case PATHANDVALUE:
-					output.print(match.getPath().toString());
-                    output.print('=');
-                    output.print(match.getValue());
-                    break;
-                case KEYANDVALUE:
-                    output.print(match.getPath().peekLast());
-                    output.print('=');
-                    output.print(match.getValue());
-                    break;
-				case PATH:
-					output.print(match.getPath().toString());
-					break;
-				case KEY:
-					output.print(match.getPath().peekLast());
-					break;
+            switch (match.getType()) {
                 case VALUE:
-                    output.print(match.getValue());
+                    if (needsSeperator) {
+                        output.print(sep);
+                    }
+                    switch (outputFormat) {
+                        case PATHANDVALUE:
+                            output.print(match.getPath().toString());
+                            output.print('=');
+                            output.print(match.getValue());
+                            break;
+                        case KEYANDVALUE:
+                            output.print(match.getPath().peekLast());
+                            output.print('=');
+                            output.print(match.getValue());
+                            break;
+                        case PATH:
+                            output.print(match.getPath().toString());
+                            break;
+                        case KEY:
+                            output.print(match.getPath().peekLast());
+                            break;
+                        case VALUE:
+                            output.print(match.getValue());
+                        break;
+                    }
+                    needsSeperator = true;
                     break;
+                case RECORD:
+                    if (needsSeperator) {
+                        output.print(recordsep);
+                        needsSeperator = false;
+                    }
             }
-            needsSeperator = true;
         }
         if (needsSeperator) {
-            output.print('\n');
+            output.print(recordsep);
         }
         output.close();
     }
@@ -104,8 +139,8 @@ public class GrepMain {
         Options options = new Options().addOption(new Option("help", "print this message"));
         options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
         options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
-        //options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
-        //options.addOption(new Option("recordsep", true, "Record separator"));
+        options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
+        options.addOption(new Option("recordsep", true, "Record separator"));
         CommandLine cl = parser.parse(options, argv, true);
         String[] args = cl.getArgs();
         if (cl.hasOption("help") || cl.getArgList().isEmpty()) {
@@ -125,10 +160,10 @@ public class GrepMain {
             grep.setSep(cl.getOptionValue("sep"));
         }
         if (cl.hasOption("recordsep")) {
-			//   grep.setRecordsep(cl.getOptionValue("recordsep"));
+            grep.setRecordsep(cl.getOptionValue("recordsep"));
         }
         if (cl.hasOption("record")) {
-            //pathMatcher.setRecordMatcher(parsePathMatcherChain(cl.getOptionValue("record")));
+            grep.setRecordMatcher(Parser.parsePathMatcherChain(cl.getOptionValue("record"), false));
         }
 
 		List<String> argList = cl.getArgList();
