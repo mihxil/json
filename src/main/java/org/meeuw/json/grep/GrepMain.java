@@ -117,7 +117,7 @@ public class GrepMain {
         options.addOption(new Option("recordsep", true, "Record separator"));
         CommandLine cl = parser.parse(options, argv, true);
         String[] args = cl.getArgs();
-        if (cl.hasOption("help")) {
+        if (cl.hasOption("help") || cl.getArgList().isEmpty()) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(
                     "jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]",
