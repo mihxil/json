@@ -6,6 +6,7 @@ import org.meeuw.json.Util;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Michiel Meeuwissen
@@ -17,6 +18,8 @@ public class GrepMain {
     public static enum Output {
         PATHANDVALUE,
         KEYANDVALUE,
+		PATH,
+		KEY,
         VALUE
     }
 
@@ -68,8 +71,8 @@ public class GrepMain {
                 output.print(sep);
             }
             switch (outputFormat) {
-                case PATHANDVALUE:
-                    output.print(match.getPath().toString());
+				case PATHANDVALUE:
+					output.print(match.getPath().toString());
                     output.print('=');
                     output.print(match.getValue());
                     break;
@@ -78,6 +81,12 @@ public class GrepMain {
                     output.print('=');
                     output.print(match.getValue());
                     break;
+				case PATH:
+					output.print(match.getPath().toString());
+					break;
+				case KEY:
+					output.print(match.getPath().peekLast());
+					break;
                 case VALUE:
                     output.print(match.getValue());
                     break;
@@ -104,7 +113,7 @@ public class GrepMain {
         Options options = new Options().addOption(new Option("help", "print this message"));
         options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
         options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
-        options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
+        //options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
         options.addOption(new Option("recordsep", true, "Record separator"));
         CommandLine cl = parser.parse(options, argv, true);
         String[] args = cl.getArgs();
@@ -131,7 +140,8 @@ public class GrepMain {
             //pathMatcher.setRecordMatcher(parsePathMatcherChain(cl.getOptionValue("record")));
         }
 
-        InputStream in = Util.getInput(argv, 1);
+		List<String> argList = cl.getArgList();
+		InputStream in = Util.getInput(argList.toArray(new String[argList.size()]), 1);
         grep.read(in);
         in.close();
     }

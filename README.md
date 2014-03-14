@@ -13,15 +13,18 @@ json stream of a Gigabyte or so, and seemed not useable for that.
 
 All tools support a -help argument for an overview of all supported options.
 
+Download
+--------
+The executable jars are packaged in a zip, which can be downloaded
+[here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.5/mihxil-json-0.5-package.zip)
+this zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your classpath.
+
 
 Formatter
 --------
-A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.4/mihxil-json-0.4-formatter.jar)
-
-
 Usage
 ```
-java -jar ~/Download/mihxil-json-0.4-formatter.jar [<infile>] [<outfile>]
+jsonformat [<infile>] [<outfile>]
 
 infile: defaults to stdin (can explicitely set to stdin as '-'). Can
         be file name but  can also be a remote URL
@@ -30,7 +33,7 @@ outfile: default to stdout
 
 For a file of nearly one Gb:
 ```shell
-michiel@belono:/tmp$ time java -jar /tmp/mihxil-json-0.1-formatter.jar alldocs.json  alldocs.formatted.json
+michiel@belono:/tmp$ time jsonformat alldocs.json  alldocs.formatted.json
 
 real	0m27.783s
 user	0m19.880s
@@ -44,22 +47,67 @@ michiel@belono:/tmp$ ls -lah alldocs.*
 
 Grep
 ----
-A binary can be downloaded [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.4/mihxil-json-0.4-grep.jar)
-
 This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used to produce one line abstracts of the records which can easily be processed further by a normal grep or awk or so.
+
+
+
 
 Example
 ```sh
-$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  |
-                 java -jar ~/Downloads/mihxil-json-0.4-grep.jar  y.arr[*].e,a
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[1].e
+y.arr[1].e=z
+```
+
+It is possible to specify more then one match
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[1].e,a
 a=b
 y.arr[1].e=z
 ```
 
+You can use wildcards in the path:
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].e
+y.arr[1].e=z
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.*[*].d
+y.arr[1].d=z
+```
+
+If it does not match a value but an object or an array, it will be reported like this:
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr,y
+y.arr=[...]
+y={...}
+```
 
 It is also possible to match certain values:
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].*=z
+y.arr[1].e=z
+```
 
+That can also be done using regular expressions
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].*~[xz]
+y.arr[1].e=z
+```
 
+It can also accept a second optional parameter which is a file or an URL:
+```sh
+$ jsongrep  y.arr[*].*~[xz] test.json
+y.arr[1].e=z
+```sh
+It is possible to output less
+```sh
+$ jsongrep  -output VALUE  y.arr[*].*~[xz] test.json
+z
+$ jsongrep  -output KEY  y.arr[*].*~[xz] test.json
+e
+$ jsongrep  -output PATH  y.arr[*].*~[xz] test.json
+y.arr[1].e
+$ jsongrep  -output KEYANDVALUE  y.arr[*].*~[xz] test.json
+e=z
+```
 
 Another example on a couchdb database (find documents where certain field has certain value)
 ```sh
@@ -67,6 +115,7 @@ $ jsongrep rows.*.doc.workflow=FOR_REPUBLICATION,rows.*.doc.mid  http://couchdbh
                 grep -A 1 workflow
 ```
 
-I hope this also explains how the grep expression works. Currently
-only precise and * matches on the keys work, but it would be simple to think up
-some more. Also it might be usefull to not need to specify the full path.
+TODO
+----
+Currently only precise and * matches on the keys are implemented, but it would be simple to think up
+some other matches. E.g. regular expression matching in keys too, or something to match at arbitrary depth.
