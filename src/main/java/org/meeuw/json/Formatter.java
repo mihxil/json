@@ -78,9 +78,10 @@ public class Formatter extends AbstractJsonReader {
         CommandLineParser parser = new BasicParser();
         CommandLine cl = parser.parse(new Options(), argv, true);
         String[] args = cl.getArgs();
+        InputStream in = Util.getInput(args, 0);
+
         OutputStream out = Util.getOutput(args, 1);
         Formatter formatter = new Formatter(out);
-        InputStream in = Util.getInput(args, 0);
 
         formatter.read(Util.getJsonParser(in));
         in.close();
