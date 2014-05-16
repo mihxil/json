@@ -4,7 +4,7 @@ Json Tools
 ==========
 
 This is provides several JSON-related tools implemented with
-Jackson. It's goal is to be useable with extremely large json
+Jackson. Its goal is to be useable with extremely large json
 streams, and everything needs to happen streaming.
 
 I tried several tools imlemented in python (python -mjson.tool,
@@ -18,7 +18,7 @@ Download
 The executable jars are packaged in a zip, which can be downloaded
 [here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.5/mihxil-json-0.5-package.zip).
 
-This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your classpath.
+This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your path.
 
 
 Formatter
