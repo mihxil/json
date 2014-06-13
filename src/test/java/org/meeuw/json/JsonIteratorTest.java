@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.JsonToken;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Michiel Meeuwissen
@@ -90,7 +89,20 @@ public class JsonIteratorTest {
         assertEvent(iterator.next(), JsonToken.VALUE_STRING, 1, "EEE");
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 0);
         assertFalse(iterator.hasNext());
+    }
 
+    @Test
+    public void collectKeys() throws IOException {
+        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: 2}"), true);
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
+        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
+        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "2");
+        ParseEvent last = iterator.next();
+        assertEvent(last, JsonToken.END_OBJECT, 0);
+        assertEquals(Arrays.asList("a", "b"), last.getKeys());
+        assertFalse(iterator.hasNext());
     }
 
     protected void assertEvent(ParseEvent event, JsonToken token, int depth, String value) {

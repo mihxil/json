@@ -22,7 +22,7 @@ public class GrepEvent {
         this.type = Type.VALUE;
     }
     public GrepEvent(ParseEvent event, Type type) {
-        this.event = null;
+        this.event = event;
         this.type = type;
     }
 
