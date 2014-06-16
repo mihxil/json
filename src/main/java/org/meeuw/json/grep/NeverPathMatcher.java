@@ -1,8 +1,6 @@
 package org.meeuw.json.grep;
 
-import org.meeuw.json.PathEntry;
-
-import java.util.Deque;
+import org.meeuw.json.ParseEvent;
 
 /**
  * The matcher that matches never.
@@ -10,7 +8,7 @@ import java.util.Deque;
 class NeverPathMatcher implements PathMatcher {
 
     @Override
-    public boolean matches(Deque<PathEntry> path, String value) {
+    public boolean matches(ParseEvent event, String value) {
         return false;
     }
 }

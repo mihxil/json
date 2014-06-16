@@ -1,13 +1,11 @@
 package org.meeuw.json.grep;
 
-import org.meeuw.json.PathEntry;
-
-import java.util.Deque;
+import org.meeuw.json.ParseEvent;
 
 /**
  * A Patch matcher defines matches on an entire json path and value.
  */
 interface PathMatcher {
 
-    boolean matches(Deque<PathEntry> path, String value);
+    boolean matches(ParseEvent event, String value);
 }

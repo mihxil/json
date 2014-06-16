@@ -1,8 +1,6 @@
 package org.meeuw.json.grep;
 
-import org.meeuw.json.PathEntry;
-
-import java.util.Deque;
+import org.meeuw.json.ParseEvent;
 
 /**
 * @author Michiel Meeuwissen
@@ -16,9 +14,9 @@ class PathMatcherOrChain implements PathMatcher {
     }
 
     @Override
-    public boolean matches(Deque<PathEntry> path, String value) {
+    public boolean matches(ParseEvent event, String value) {
         for (PathMatcher matcher : matchers) {
-            if (matcher.matches(path, value)) {
+            if (matcher.matches(event, value)) {
                 return true;
             }
         }

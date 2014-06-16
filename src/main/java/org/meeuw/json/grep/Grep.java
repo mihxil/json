@@ -57,10 +57,10 @@ public class Grep implements Iterator<GrepEvent> {
                     case END_ARRAY:
                     case END_OBJECT:
                         String value = event.getValue();
-                        if (recordMatcher.matches(event.getPath(), value)) {
+                        if (recordMatcher.matches(event, value)) {
                             next.add(new GrepEvent(event, GrepEvent.Type.RECORD));
                         }
-                        if (matcher.matches(event.getPath(), value)) {
+                        if (matcher.matches(event, value)) {
                             next.add(new GrepEvent(event));
                         }
                 }
