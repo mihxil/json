@@ -2,6 +2,8 @@ package org.meeuw.json.grep;
 
 
 import org.junit.Test;
+import org.meeuw.json.grep.matching.*;
+import org.meeuw.json.grep.parsing.Parser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

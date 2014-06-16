@@ -1,10 +1,10 @@
-package org.meeuw.json.grep;
+package org.meeuw.json.grep.matching;
 
 /**
 * @author Michiel Meeuwissen
 * @since ...
 */
-class ValueEqualsMatcher extends ValueMatcher {
+public class ValueEqualsMatcher extends ValueMatcher {
     private final String test;
 
     public ValueEqualsMatcher(String test) {

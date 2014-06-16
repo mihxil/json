@@ -1,4 +1,4 @@
-package org.meeuw.json.grep;
+package org.meeuw.json.grep.matching;
 
 import org.meeuw.json.ArrayEntry;
 import org.meeuw.json.PathEntry;
@@ -8,7 +8,7 @@ import java.util.Deque;
 /**
  * A single path matches precisely one 'path'. For multiple matches we'd wrap them in {@link PathMatcherOrChain} or {@link PathMatcherAndChain}
  */
-class SinglePathMatcher extends KeysMatcher {
+public class SinglePathMatcher extends KeysMatcher {
     private final KeyPattern[] pathPattern;
 
     private boolean ignoreArrays;

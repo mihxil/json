@@ -1,11 +1,11 @@
-package org.meeuw.json.grep;
+package org.meeuw.json.grep.matching;
 
 import org.meeuw.json.ParseEvent;
 
 /**
  * The matcher that matches never.
  */
-class NeverPathMatcher implements PathMatcher {
+public class NeverPathMatcher implements PathMatcher {
 
     @Override
     public boolean matches(ParseEvent event, String value) {

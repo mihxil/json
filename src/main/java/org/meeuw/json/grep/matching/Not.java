@@ -1,4 +1,4 @@
-package org.meeuw.json.grep;
+package org.meeuw.json.grep.matching;
 
 import org.meeuw.json.ParseEvent;
 

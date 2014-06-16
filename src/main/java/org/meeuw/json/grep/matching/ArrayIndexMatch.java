@@ -1,4 +1,4 @@
-package org.meeuw.json.grep;
+package org.meeuw.json.grep.matching;
 
 import org.meeuw.json.ArrayEntry;
 import org.meeuw.json.PathEntry;
@@ -6,7 +6,7 @@ import org.meeuw.json.PathEntry;
 /**
  * a precise key pattern matches only if the key exactly equals to a certain value.
  */
-class ArrayIndexMatch extends ArrayEntryMatch {
+public class ArrayIndexMatch extends ArrayEntryMatch {
     private final int index;
 
     public ArrayIndexMatch(int index) {

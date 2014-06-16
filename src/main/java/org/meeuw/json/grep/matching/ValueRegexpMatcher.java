@@ -1,11 +1,11 @@
-package org.meeuw.json.grep;
+package org.meeuw.json.grep.matching;
 
 import java.util.regex.Pattern;
 
 /**
  * Matches the value with a regular expression.
  */
-class ValueRegexpMatcher extends ValueMatcher {
+public class ValueRegexpMatcher extends ValueMatcher {
     private final Pattern pattern;
 
     public ValueRegexpMatcher(Pattern pattern) {

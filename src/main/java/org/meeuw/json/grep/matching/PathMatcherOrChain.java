@@ -1,4 +1,4 @@
-package org.meeuw.json.grep;
+package org.meeuw.json.grep.matching;
 
 import org.meeuw.json.ParseEvent;
 
@@ -6,23 +6,20 @@ import org.meeuw.json.ParseEvent;
 * @author Michiel Meeuwissen
 * @since ...
 */
-public class PathMatcherAndChain implements PathMatcher {
+public class PathMatcherOrChain implements PathMatcher {
     private final PathMatcher[] matchers;
 
-    public PathMatcherAndChain(PathMatcher... matchers) {
+    public PathMatcherOrChain(PathMatcher... matchers) {
         this.matchers = matchers;
     }
 
     @Override
     public boolean matches(ParseEvent event, String value) {
         for (PathMatcher matcher : matchers) {
-            if (! matcher.matches(event, value)) {
-                return false;
+            if (matcher.matches(event, value)) {
+                return true;
             }
         }
-        return true;
-    }
-    public PathMatcher[] getPatterns() {
-        return matchers;
+        return false;
     }
 }

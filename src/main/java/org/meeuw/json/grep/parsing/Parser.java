@@ -1,4 +1,6 @@
-package org.meeuw.json.grep;
+package org.meeuw.json.grep.parsing;
+
+import org.meeuw.json.grep.matching.*;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;

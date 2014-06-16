@@ -3,6 +3,8 @@ package org.meeuw.json.grep;
 import com.fasterxml.jackson.core.JsonParser;
 import org.meeuw.json.JsonIterator;
 import org.meeuw.json.ParseEvent;
+import org.meeuw.json.grep.matching.NeverPathMatcher;
+import org.meeuw.json.grep.matching.PathMatcher;
 
 import java.util.*;
 
