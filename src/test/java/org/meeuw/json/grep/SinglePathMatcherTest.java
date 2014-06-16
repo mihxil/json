@@ -23,9 +23,9 @@ public class SinglePathMatcherTest {
 
     @Test
     public void grepSinglePathPatcherTest() throws IOException {
-        Grep.SinglePathMatcher matcher = new Grep.SinglePathMatcher(true,
-                new Grep.PreciseMatch("titles"),
-                new Grep.PreciseMatch("value"));
+        SinglePathMatcher matcher = new SinglePathMatcher(true,
+                new PreciseMatch("titles"),
+                new PreciseMatch("value"));
         assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2)))));
         assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("foo"), new ArrayEntry(2)))));
         assertTrue(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new KeyEntry("value")))));
@@ -39,9 +39,9 @@ public class SinglePathMatcherTest {
 
     @Test
     public void emptyPath() throws IOException {
-        Grep.SinglePathMatcher matcher = new Grep.SinglePathMatcher(true,
-                new Grep.PreciseMatch("titles"),
-                new Grep.PreciseMatch("value"));
+        SinglePathMatcher matcher = new SinglePathMatcher(true,
+                new PreciseMatch("titles"),
+                new PreciseMatch("value"));
         assertFalse(matcher.matches(new ArrayDeque<PathEntry>()));
 
 
@@ -49,9 +49,9 @@ public class SinglePathMatcherTest {
 
     @Test
     public void ignoreArraysNoMatch() {
-        Grep.SinglePathMatcher singlePathMatcher = new Grep.SinglePathMatcher(true,
-                new Grep.PreciseMatch("titles"),
-                new Grep.PreciseMatch("value"));
+        SinglePathMatcher singlePathMatcher = new SinglePathMatcher(true,
+                new PreciseMatch("titles"),
+                new PreciseMatch("value"));
 
         Deque<PathEntry> path = new Path();
         path.add(new KeyEntry("titles"));
@@ -62,9 +62,9 @@ public class SinglePathMatcherTest {
 
     @Test
     public void ignoreArraysMatch() {
-        Grep.SinglePathMatcher singlePathMatcher = new Grep.SinglePathMatcher(true,
-                new Grep.PreciseMatch("titles"),
-                new Grep.PreciseMatch("value"));
+        SinglePathMatcher singlePathMatcher = new SinglePathMatcher(true,
+                new PreciseMatch("titles"),
+                new PreciseMatch("value"));
 
         Deque<PathEntry> path = new Path();
         path.add(new KeyEntry("titles"));

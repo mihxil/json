@@ -32,11 +32,11 @@ public class GrepMain {
     private String recordsep = "\n";
 
 
-    private final Grep.PathMatcher pathMatcher;
-    private Grep.PathMatcher recordMatcher;
+    private final PathMatcher pathMatcher;
+    private PathMatcher recordMatcher;
 
 
-    public GrepMain(Grep.PathMatcher pathMatcher, OutputStream output) {
+    public GrepMain(PathMatcher pathMatcher, OutputStream output) {
         this.pathMatcher = pathMatcher;
         this.output = new PrintStream(output);
     }
@@ -68,11 +68,11 @@ public class GrepMain {
         this.recordsep = recordsep;
     }
 
-    public Grep.PathMatcher getRecordMatcher() {
+    public PathMatcher getRecordMatcher() {
         return recordMatcher;
     }
 
-    public void setRecordMatcher(Grep.PathMatcher recordMatcher) {
+    public void setRecordMatcher(PathMatcher recordMatcher) {
         this.recordMatcher = recordMatcher;
     }
 

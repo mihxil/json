@@ -14,10 +14,10 @@ public class GrepTest {
     @Test
     public void grep() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
-                new Grep.PreciseMatch("a"),
-                new Grep.PreciseMatch("b"),
-                new Grep.PreciseMatch("b1")), out);
+        GrepMain grep = new GrepMain(new SinglePathMatcher(
+                new PreciseMatch("a"),
+                new PreciseMatch("b"),
+                new PreciseMatch("b1")), out);
 
         //new String[] {"c", "*", "d"});
         //Grep grep = new Grep(new String[] {"b", "b1"});
@@ -30,9 +30,9 @@ public class GrepTest {
     @Test
     public void grepSubObject() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
-                new Grep.PreciseMatch("b"),
-                new Grep.PreciseMatch("b1")), out);
+        GrepMain grep = new GrepMain(new SinglePathMatcher(
+                new PreciseMatch("b"),
+                new PreciseMatch("b1")), out);
 
 
         grep.read(new StringReader("{b: {b1: 5}, c:5}"));
@@ -43,8 +43,8 @@ public class GrepTest {
     @Test
     public void grepSubObject2() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
-                new Grep.PreciseMatch("b")
+        GrepMain grep = new GrepMain(new SinglePathMatcher(
+                new PreciseMatch("b")
         ), out);
 
 
@@ -56,8 +56,8 @@ public class GrepTest {
     @Test
     public void grepSubObject3() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
-                new Grep.PreciseMatch("b")
+        GrepMain grep = new GrepMain(new SinglePathMatcher(
+                new PreciseMatch("b")
         ), out);
 
 
@@ -69,8 +69,8 @@ public class GrepTest {
     @Test
     public void grepValue() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
-                new Grep.PreciseMatch("c")
+        GrepMain grep = new GrepMain(new SinglePathMatcher(
+                new PreciseMatch("c")
         ), out);
 
 
@@ -82,10 +82,10 @@ public class GrepTest {
     @Test
     public void grepArray() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
-                new Grep.PreciseMatch("c"),
-                new Grep.Wildcard(),
-                new Grep.PreciseMatch("b2")), out);
+        GrepMain grep = new GrepMain(new SinglePathMatcher(
+                new PreciseMatch("c"),
+                new Wildcard(),
+                new PreciseMatch("b2")), out);
 
         grep.read(new StringReader("{c: [{b1: 1}, {b2: 2}], d:3}"));
         assertEquals("c[1].b2=2\n", new String(out.toByteArray()));
@@ -97,9 +97,9 @@ public class GrepTest {
     @Test
     public void grepArray2() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
-                new Grep.PreciseMatch("c"),
-                new Grep.ArrayIndexMatch(0)), out);
+        GrepMain grep = new GrepMain(new SinglePathMatcher(
+                new PreciseMatch("c"),
+                new ArrayIndexMatch(0)), out);
 
         grep.read(new StringReader("{c: ['een']}"));
         assertEquals("c[0]=een\n", new String(out.toByteArray()));
@@ -111,8 +111,8 @@ public class GrepTest {
     @Test
     public void grepArrayResult() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
-                new Grep.PreciseMatch("c")), out);
+        GrepMain grep = new GrepMain(new SinglePathMatcher(
+                new PreciseMatch("c")), out);
 
         grep.read(new StringReader("{c: [{b1: 1}, {b2: 2}], d:3}"));
         assertEquals("c=[...]\n", new String(out.toByteArray()));
@@ -123,10 +123,10 @@ public class GrepTest {
     @Test
     public void grepEmpty() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(
-                new Grep.PreciseMatch("c"),
-                new Grep.Wildcard(),
-                new Grep.PreciseMatch("b2")), out);
+        GrepMain grep = new GrepMain(new SinglePathMatcher(
+                new PreciseMatch("c"),
+                new Wildcard(),
+                new PreciseMatch("b2")), out);
 
         grep.read(new StringReader("{c: [{b1: 1}, {b3: 2}]}"));
         assertEquals("", new String(out.toByteArray()));
@@ -140,9 +140,9 @@ public class GrepTest {
     @Test
     public void grepPathIgnoreArray() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(true,
-                new Grep.PreciseMatch("titles"),
-                new Grep.PreciseMatch("value")), out);
+        GrepMain grep = new GrepMain(new SinglePathMatcher(true,
+                new PreciseMatch("titles"),
+                new PreciseMatch("value")), out);
         grep.setOutputFormat(GrepMain.Output.VALUE);
 
         grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
@@ -155,9 +155,9 @@ public class GrepTest {
     @Test
     public void grepPathIgnoreArray2() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(new Grep.SinglePathMatcher(true,
-                new Grep.PreciseMatch("titles"),
-                new Grep.PreciseMatch("value")), out);
+        GrepMain grep = new GrepMain(new SinglePathMatcher(true,
+                new PreciseMatch("titles"),
+                new PreciseMatch("value")), out);
         grep.setOutputFormat(GrepMain.Output.VALUE);
 
         grep.read(new StringReader("{}"));

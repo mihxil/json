@@ -13,63 +13,63 @@ public class ParserTest {
 
     @Test
     public void arrayIndex(){
-        Grep.SinglePathMatcher result = Parser.parseKeysMatcher("a[0].b", false);
-        assertTrue(result.getPatterns()[0] instanceof Grep.PreciseMatch);
+        SinglePathMatcher result = Parser.parseKeysMatcher("a[0].b", false);
+        assertTrue(result.getPatterns()[0] instanceof PreciseMatch);
         assertEquals("a", result.getPatterns()[0].toString());
-        assertTrue(result.getPatterns()[1] instanceof Grep.ArrayIndexMatch);
+        assertTrue(result.getPatterns()[1] instanceof ArrayIndexMatch);
         assertEquals("0", result.getPatterns()[1].toString());
-        assertTrue(result.getPatterns()[2] instanceof Grep.PreciseMatch);
+        assertTrue(result.getPatterns()[2] instanceof PreciseMatch);
         assertEquals("b", result.getPatterns()[2].toString());
     }
 
     @Test
     public void arrayIndex2() {
-        Grep.SinglePathMatcher result = Parser.parseKeysMatcher("a.[0].b", false);
-        assertTrue(result.getPatterns()[0] instanceof Grep.PreciseMatch);
+        SinglePathMatcher result = Parser.parseKeysMatcher("a.[0].b", false);
+        assertTrue(result.getPatterns()[0] instanceof PreciseMatch);
         assertEquals("a", result.getPatterns()[0].toString());
-        assertTrue(result.getPatterns()[1] instanceof Grep.ArrayIndexMatch);
+        assertTrue(result.getPatterns()[1] instanceof ArrayIndexMatch);
         assertEquals("0", result.getPatterns()[1].toString());
-        assertTrue(result.getPatterns()[2] instanceof Grep.PreciseMatch);
+        assertTrue(result.getPatterns()[2] instanceof PreciseMatch);
         assertEquals("b", result.getPatterns()[2].toString());
     }
 
     @Test
     public void wildcard() {
-        Grep.SinglePathMatcher result = Parser.parseKeysMatcher("a.*.b", false);
-        assertTrue(result.getPatterns()[0] instanceof Grep.PreciseMatch);
+        SinglePathMatcher result = Parser.parseKeysMatcher("a.*.b", false);
+        assertTrue(result.getPatterns()[0] instanceof PreciseMatch);
         assertEquals("a", result.getPatterns()[0].toString());
-        assertTrue(result.getPatterns()[1] instanceof Grep.Wildcard);
+        assertTrue(result.getPatterns()[1] instanceof Wildcard);
         assertEquals("*", result.getPatterns()[1].toString());
-        assertTrue(result.getPatterns()[2] instanceof Grep.PreciseMatch);
+        assertTrue(result.getPatterns()[2] instanceof PreciseMatch);
         assertEquals("b", result.getPatterns()[2].toString());
     }
 
     @Test
     public void wildcardArrayIndex() {
-        Grep.SinglePathMatcher result = Parser.parseKeysMatcher("a[*].b", false);
-        assertTrue(result.getPatterns()[0] instanceof Grep.PreciseMatch);
+        SinglePathMatcher result = Parser.parseKeysMatcher("a[*].b", false);
+        assertTrue(result.getPatterns()[0] instanceof PreciseMatch);
         assertEquals("a", result.getPatterns()[0].toString());
-        assertTrue(result.getPatterns()[1] instanceof Grep.ArrayEntryMatch);
+        assertTrue(result.getPatterns()[1] instanceof ArrayEntryMatch);
         assertEquals("[*]", result.getPatterns()[1].toString());
-        assertTrue(result.getPatterns()[2] instanceof Grep.PreciseMatch);
+        assertTrue(result.getPatterns()[2] instanceof PreciseMatch);
         assertEquals("b", result.getPatterns()[2].toString());
     }
 
     @Test
     public void value() {
-        Grep.PathMatcherAndChain result = (Grep.PathMatcherAndChain) Parser.parsePathMatcher("a[*].b=c", false);
-        assertTrue(result.getPatterns()[0] instanceof Grep.SinglePathMatcher);
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b=c", false);
+        assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
-        assertTrue(result.getPatterns()[1] instanceof Grep.ValueEqualsMatcher);
+        assertTrue(result.getPatterns()[1] instanceof ValueEqualsMatcher);
         assertEquals("c", result.getPatterns()[1].toString());
     }
 
     @Test
     public void regexp() {
-        Grep.PathMatcherAndChain result = (Grep.PathMatcherAndChain) Parser.parsePathMatcher("a[*].b~.*", false);
-        assertTrue(result.getPatterns()[0] instanceof Grep.SinglePathMatcher);
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b~.*", false);
+        assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
-        assertTrue(result.getPatterns()[1] instanceof Grep.ValueRegexpMatcher);
+        assertTrue(result.getPatterns()[1] instanceof ValueRegexpMatcher);
         assertEquals(".*", result.getPatterns()[1].toString());
     }
 
