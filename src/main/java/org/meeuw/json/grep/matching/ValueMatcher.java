@@ -13,4 +13,9 @@ abstract class ValueMatcher implements PathMatcher {
 
     protected abstract boolean matches(String value);
 
+    @Override
+    public boolean needsKeyCollection() {
+        return false;
+    }
+
 }

@@ -22,6 +22,16 @@ public class PathMatcherAndChain implements PathMatcher {
         }
         return true;
     }
+
+    @Override
+    public boolean needsKeyCollection() {
+        for (PathMatcher matcher : matchers) {
+            if (matcher.needsKeyCollection()) return true;
+        }
+        return false;
+
+    }
+
     public PathMatcher[] getPatterns() {
         return matchers;
     }

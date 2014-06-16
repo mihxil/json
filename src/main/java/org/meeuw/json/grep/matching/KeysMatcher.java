@@ -15,4 +15,9 @@ public abstract class KeysMatcher implements PathMatcher {
     }
     protected abstract  boolean matches(Deque<PathEntry> path);
 
+    @Override
+    public boolean needsKeyCollection() {
+        return false;
+    }
+
 }

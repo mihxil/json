@@ -11,4 +11,10 @@ public class NeverPathMatcher implements PathMatcher {
     public boolean matches(ParseEvent event, String value) {
         return false;
     }
+
+    @Override
+    public boolean needsKeyCollection() {
+        return false;
+
+    }
 }

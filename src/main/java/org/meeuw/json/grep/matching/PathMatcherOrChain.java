@@ -22,4 +22,13 @@ public class PathMatcherOrChain implements PathMatcher {
         }
         return false;
     }
+
+    @Override
+    public boolean needsKeyCollection() {
+        for (PathMatcher matcher : matchers) {
+            if (matcher.needsKeyCollection()) return true;
+        }
+        return false;
+
+    }
 }

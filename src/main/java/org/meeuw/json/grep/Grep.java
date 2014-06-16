@@ -25,8 +25,9 @@ public class Grep implements Iterator<GrepEvent> {
 
     public Grep(PathMatcher matcher, JsonParser jp) {
         this.matcher = matcher;
-        this.wrapped = new JsonIterator(jp);
+        this.wrapped = new JsonIterator(jp, matcher.needsKeyCollection());
     }
+
     @Override
     public boolean hasNext() {
         findNext();

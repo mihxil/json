@@ -6,7 +6,7 @@ import org.meeuw.json.ParseEvent;
  * @author Michiel Meeuwissen
  * @since ...
  */
-class ObjectHasKeyMatcher extends ObjectMatcher {
+public class ObjectHasKeyMatcher extends ObjectMatcher {
 
     private final String key;
 
@@ -17,6 +17,12 @@ class ObjectHasKeyMatcher extends ObjectMatcher {
     @Override
     protected boolean matches(ParseEvent event) {
         return event.getKeys().contains(key);
+
+    }
+
+    @Override
+    public boolean needsKeyCollection() {
+        return true;
 
     }
 }

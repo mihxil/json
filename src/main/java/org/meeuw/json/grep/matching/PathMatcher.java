@@ -8,4 +8,6 @@ import org.meeuw.json.ParseEvent;
 public interface PathMatcher {
 
     boolean matches(ParseEvent event, String value);
+
+    boolean needsKeyCollection();
 }
