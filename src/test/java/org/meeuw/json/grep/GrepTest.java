@@ -116,9 +116,11 @@ public class GrepTest {
 
     @Test
     public void grepNoKeyMatch() throws IOException {
-        Grep grep = new Grep(new Not(new ObjectHasKeyMatcher("b2")), Util.getJsonParser("{c: [{b1: 1}, {b3: 2}]}"));
+        Grep grep = new Grep(new ObjectMatcherNot(new ObjectHasKeyMatcher("b2")), Util.getJsonParser("{c: [{b1: 1}, {b3: 2}]}"));
         assertEquals("c[0]={...}", grep.next().toString());
-        assertFalse(grep.hasNext());
+		assertEquals("c[1]={...}", grep.next().toString());
+		assertEquals("={...}", grep.next().toString());
+		assertFalse(grep.hasNext());
     }
 
 

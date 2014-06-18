@@ -62,17 +62,28 @@ public class GrepMainTest {
 
     }
 
+	@Test
+	public void grepTitle() throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.*.value", false), out);
+		grep.setOutputFormat(GrepMain.Output.VALUE);
+		grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
+		assertEquals("title1\ntitle2\n", new String(out.toByteArray()));
 
-    @Test
-    public void grepTitle() throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.*.value", false), out);
-        grep.setOutputFormat(GrepMain.Output.VALUE);
-        grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
-        assertEquals("title1\ntitle2\n", new String(out.toByteArray()));
+
+	}
 
 
-    }
+	@Test
+	public void grepNotContainsKey() throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.* ! contains a", false), out);
+		grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
+		grep.read(new StringReader("{titles: [{a: 'A'}, {b: 'B'}]}"));
+		assertEquals("titles[1]={...}\n", new String(out.toByteArray()));
+
+
+	}
 
 
 

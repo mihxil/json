@@ -25,4 +25,10 @@ public class ObjectHasKeyMatcher extends ObjectMatcher {
         return true;
 
     }
+
+	@Override
+	public String toString() {
+		return " contains " + key;
+	}
+
 }

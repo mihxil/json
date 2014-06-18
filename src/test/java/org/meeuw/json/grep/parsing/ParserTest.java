@@ -74,7 +74,23 @@ public class ParserTest {
         assertEquals(".*", result.getPatterns()[1].toString());
     }
 
+	@Test
+	public void contains() {
+		PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b contains c", false);
+		assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
+		assertEquals("a[*].b", result.getPatterns()[0].toString());
+		assertTrue(result.getPatterns()[1] instanceof ObjectHasKeyMatcher);
+		assertEquals(" contains c", result.getPatterns()[1].toString());
+	}
 
+	@Test
+	public void notcontains() {
+		PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b ! contains c", false);
+		assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
+		assertEquals("a[*].b", result.getPatterns()[0].toString());
+		assertTrue(result.getPatterns()[1] instanceof ObjectMatcherNot);
+		assertEquals("! contains c", result.getPatterns()[1].toString());
+	}
 
 
 }

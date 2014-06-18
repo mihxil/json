@@ -39,6 +39,19 @@ public class Parser {
                     parseKeysMatcher(split[0], ignoreArrays),
                     new ValueEqualsMatcher(split[1]));
         }
+		split = arg.split("\\s+!\\s*contains\\s+", 2);
+		if (split.length == 2) {
+			return new PathMatcherAndChain(
+					parseKeysMatcher(split[0], ignoreArrays),
+					new ObjectMatcherNot(new ObjectHasKeyMatcher(split[1])));
+		}
+		split = arg.split("\\s+contains\\s+", 2);
+		if (split.length == 2) {
+			return new PathMatcherAndChain(
+					parseKeysMatcher(split[0], ignoreArrays),
+					new ObjectHasKeyMatcher(split[1]));
+		}
+
         // >, <, operators...
 
         return parseKeysMatcher(split[0], ignoreArrays);
