@@ -1,6 +1,9 @@
 package org.meeuw.json.grep.matching;
 
 import org.meeuw.json.ParseEvent;
+import org.meeuw.json.Path;
+import org.meeuw.util.Predicate;
+import org.meeuw.util.Predicates;
 
 /**
  * a keys matcher only considers the value of a json path for matching.
@@ -14,8 +17,8 @@ abstract class ValueMatcher implements PathMatcher {
     protected abstract boolean matches(String value);
 
     @Override
-    public boolean needsKeyCollection() {
-        return false;
+    public Predicate<Path> needsKeyCollection() {
+        return Predicates.alwaysFalse();
     }
 
 }

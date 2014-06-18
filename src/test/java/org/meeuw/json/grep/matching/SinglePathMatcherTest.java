@@ -73,4 +73,12 @@ public class SinglePathMatcherTest {
 
         assertTrue(singlePathMatcher.matches(path));
     }
+
+	@Test
+	public void needsKeyCollection() {
+		PathMatcher matcher = new SinglePathMatcher(new PreciseMatch("c"), new ArrayEntryMatch());
+
+		assertTrue(matcher.needsKeyCollection().test(new Path(new KeyEntry("c"), new ArrayEntry())));
+		assertFalse(matcher.needsKeyCollection().test(new Path(new KeyEntry("c"))));
+	}
 }

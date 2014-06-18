@@ -124,4 +124,12 @@ public class GrepTest {
     }
 
 
+	@Test
+	public void grepKeyNoKeyMatch() throws IOException {
+		Grep grep = new Grep(new PathMatcherAndChain(new SinglePathMatcher(new PreciseMatch("c"), new ArrayEntryMatch()), new ObjectMatcherNot(new ObjectHasKeyMatcher("b1"))), Util.getJsonParser("{c: [{b1: 1}, {b3: 2}]}"));
+		assertEquals("c[1]={...}", grep.next().toString());
+		assertFalse(grep.hasNext());
+	}
+
+
 }

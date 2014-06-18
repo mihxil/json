@@ -1,6 +1,8 @@
 package org.meeuw.json.grep.matching;
 
 import org.meeuw.json.ParseEvent;
+import org.meeuw.json.Path;
+import org.meeuw.util.Predicate;
 
 /**
  * @author Michiel Meeuwissen
@@ -20,7 +22,7 @@ public class ObjectMatcherNot extends ObjectMatcher {
 	}
 
 	@Override
-	public boolean needsKeyCollection() {
+	public Predicate<Path> needsKeyCollection() {
 		return wrapped.needsKeyCollection();
 	}
 

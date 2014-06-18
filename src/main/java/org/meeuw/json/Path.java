@@ -1,6 +1,7 @@
 package org.meeuw.json;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 
 /**
 * @author Michiel Meeuwissen
@@ -14,6 +15,11 @@ public class Path extends ArrayDeque<PathEntry> {
     public Path(Path copy) {
         super(copy);
     }
+	public Path(PathEntry... entries) {
+		super();
+		addAll(Arrays.asList(entries));
+	}
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

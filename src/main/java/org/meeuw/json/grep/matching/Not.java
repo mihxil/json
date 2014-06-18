@@ -1,10 +1,12 @@
 package org.meeuw.json.grep.matching;
 
 import org.meeuw.json.ParseEvent;
+import org.meeuw.json.Path;
+import org.meeuw.util.Predicate;
 
 /**
  * @author Michiel Meeuwissen
- * @since ...
+ * @since 0.6
  */
 public class Not implements PathMatcher {
 
@@ -20,7 +22,7 @@ public class Not implements PathMatcher {
     }
 
     @Override
-    public boolean needsKeyCollection() {
+    public Predicate<Path> needsKeyCollection() {
         return wrapped.needsKeyCollection();
 
     }

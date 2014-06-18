@@ -2,6 +2,7 @@ package org.meeuw.json;
 
 import com.fasterxml.jackson.core.JsonToken;
 import org.junit.Test;
+import org.meeuw.util.Predicate;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -93,15 +94,27 @@ public class JsonIteratorTest {
 
     @Test
     public void collectKeys() throws IOException {
-        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: 2}"), true);
+        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {a: 1, b: 2}}"), new Predicate<Path>() {
+			@Override
+			public boolean test(Path path) {
+				return 	path.size() == 1 && path.peekLast().toString().equals("b");
+			}
+		});
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
-        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
+		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
+		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
         assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
-        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "2");
-        ParseEvent last = iterator.next();
-        assertEvent(last, JsonToken.END_OBJECT, 0);
-        assertEquals(Arrays.asList("a", "b"), last.getKeys());
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 1);
+		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "a");
+		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "1");
+		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "b");
+		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "2");
+		ParseEvent last = iterator.next();
+		assertEvent(last, JsonToken.END_OBJECT, 1);
+		assertEquals(Arrays.asList("a", "b"), last.getKeys());
+		ParseEvent lastout = iterator.next();
+		assertEvent(lastout, JsonToken.END_OBJECT, 0);
+		assertEquals(null, lastout.getKeys());
         assertFalse(iterator.hasNext());
     }
 

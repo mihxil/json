@@ -47,6 +47,8 @@ public class SinglePathMatcher extends KeysMatcher {
         }
         return builder.toString();
     }
+
+
     public KeyPattern[] getPatterns() {
         return pathPattern;
     }

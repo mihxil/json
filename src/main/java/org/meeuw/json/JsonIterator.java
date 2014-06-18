@@ -3,6 +3,8 @@ package org.meeuw.json;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import org.meeuw.util.Predicate;
+import org.meeuw.util.Predicates;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,17 +17,18 @@ public class JsonIterator implements Iterator<ParseEvent> {
     final Path path = new Path();
     ParseEvent next;
     final JsonParser jp;
-    final Deque<List<String>> keys;
+    final Deque<List<String>> keys = new ArrayDeque<List<String>>();
+
+	final Predicate<Path> needsKeyCollection;
 
 
     public  JsonIterator(JsonParser jp) {
-        this(jp, false);
+        this(jp, Predicates.<Path>alwaysFalse());
     }
 
-    public JsonIterator(JsonParser jp, boolean needsKeyCollection) {
+    public JsonIterator(JsonParser jp, Predicate<Path> needsKeyCollection) {
         this.jp = jp;
-        keys = needsKeyCollection ? new ArrayDeque<List<String>>() : null;
-
+		this.needsKeyCollection = needsKeyCollection;
     }
 
     @Override
@@ -62,8 +65,8 @@ public class JsonIterator implements Iterator<ParseEvent> {
                     String text = jp.getText();
                     switch (token) {
                         case START_OBJECT:
-                            if (keys != null) {
-                                keys.add(new ArrayList<String>());
+							if (needsKeyCollection.test(path)) {
+								keys.add(new ArrayList<String>());
                             }
                             break;
                         case END_ARRAY:
@@ -72,13 +75,13 @@ public class JsonIterator implements Iterator<ParseEvent> {
                             break;
                         case FIELD_NAME:
                             String fieldName = jp.getText();
-                            path.add(new KeyEntry(fieldName));
-                            if (keys != null) {
-                                keys.peekLast().add(fieldName);
+							if (needsKeyCollection.test(path)) {
+								keys.peekLast().add(fieldName);
                             }
-                            break;
+							path.add(new KeyEntry(fieldName));
+							break;
                         case END_OBJECT:
-                            if (keys != null) {
+                            if (needsKeyCollection.test(path)) {
                                 eventKeys = keys.pollLast();
                             }
 

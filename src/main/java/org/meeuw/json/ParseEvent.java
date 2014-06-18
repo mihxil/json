@@ -1,8 +1,8 @@
 package org.meeuw.json;
 
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.TreeNode;
 
-import java.util.Deque;
 import java.util.List;
 
 /**
@@ -12,24 +12,35 @@ import java.util.List;
 public class ParseEvent {
 
     private final JsonToken token;
-    private final Deque<PathEntry> path;
+    private final Path path;
     private final String value;
     private final List<String> keys;
+	private final TreeNode node;
 
 
-    public ParseEvent(JsonToken token, Deque<PathEntry> path, String value) {
+    public ParseEvent(JsonToken token, Path path, String value) {
         this.token = token;
         this.path = path;
         this.value = value;
         this.keys = null;
+		this.node = null;
     }
 
-    public ParseEvent(JsonToken token, Deque<PathEntry> path, String value, List<String> keys) {
+    public ParseEvent(JsonToken token, Path path, String value, List<String> keys) {
         this.token = token;
         this.path = path;
         this.value = value;
         this.keys = keys;
+		this.node = null;
     }
+
+	public ParseEvent(JsonToken token, Path path, String value, TreeNode node) {
+		this.token = token;
+		this.path = path;
+		this.value = value;
+		this.keys = null;
+		this.node = node;
+	}
 
     public String getValue() {
         return value;
@@ -39,7 +50,7 @@ public class ParseEvent {
         return token;
     }
 
-    public Deque<PathEntry> getPath() {
+    public Path getPath() {
         return path;
     }
 
