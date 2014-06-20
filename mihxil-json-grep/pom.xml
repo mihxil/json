@@ -36,7 +36,6 @@
                 <goal>single</goal>
               </goals>
               <configuration>
-                <finalName>mihxil-json</finalName>
                 <descriptors>
                   <descriptor>src/main/assembly/grep.xml</descriptor>
                 </descriptors>

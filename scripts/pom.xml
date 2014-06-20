@@ -7,7 +7,7 @@
     <version>0.6-SNAPSHOT</version>
   </parent>
   <artifactId>mihxil-json</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
 
   <dependencies>
@@ -15,11 +15,13 @@
       <groupId>org.meeuw</groupId>
       <artifactId>mihxil-json-grep</artifactId>
       <version>${project.version}</version>
+      <classifier>executable</classifier>
     </dependency>
     <dependency>
       <groupId>org.meeuw</groupId>
       <artifactId>mihxil-json-formatter</artifactId>
       <version>${project.version}</version>
+      <classifier>executable</classifier>
     </dependency>
   </dependencies>
 

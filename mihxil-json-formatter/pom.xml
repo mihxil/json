@@ -48,7 +48,6 @@
                 <goal>single</goal>
               </goals>
               <configuration>
-                <finalName>mihxil-formatter</finalName>
                 <descriptors>
                   <descriptor>src/main/assembly/formatter.xml</descriptor>
                 </descriptors>

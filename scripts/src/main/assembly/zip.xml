@@ -8,9 +8,13 @@
   <dependencySets>
     <dependencySet>
       <outputDirectory>/</outputDirectory>
-      <useProjectArtifact>true</useProjectArtifact>
       <unpack>false</unpack>
       <scope>runtime</scope>
+      <excludes>
+        <exclude>org.meeuw:mihxil-json-core</exclude>
+        <exclude>commons-cli:commons-cli</exclude>
+        <exclude>com.fasterxml.jackson.core:jackson-core</exclude>
+      </excludes>
     </dependencySet>
   </dependencySets>
   <fileSets>
