@@ -12,7 +12,7 @@
     <module>mihxil-json-core</module>
     <module>mihxil-json-formatter</module>
     <module>mihxil-json-grep</module>
-    <module>scripts</module>
+    <module>mihxil-json</module>
   </modules>
 
   <properties>
