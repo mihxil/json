@@ -21,7 +21,7 @@ public class JavascriptMatcherTest {
         node.put("b", "b");
         JavascriptMatcher matcher = new JavascriptMatcher("function(doc) { return doc.a != null; }");
 
-        ParseEvent event = new ParseEvent(JsonToken.END_OBJECT, new Path(), "]", node);
+        ParseEvent event = new ParseEvent(JsonToken.END_OBJECT, new Path(), "]", null, node);
         assertTrue(matcher.matches(event));
     }
 
@@ -32,7 +32,7 @@ public class JavascriptMatcherTest {
         node.put("b", "b");
         JavascriptMatcher matcher = new JavascriptMatcher("function(doc) { return doc.c != null; }");
 
-        ParseEvent event = new ParseEvent(JsonToken.END_OBJECT, new Path(), "]", node);
+        ParseEvent event = new ParseEvent(JsonToken.END_OBJECT, new Path(), "]", null, node);
         assertFalse(matcher.matches(event));
     }
 }

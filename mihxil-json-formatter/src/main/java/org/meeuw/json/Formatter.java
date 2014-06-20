@@ -91,10 +91,10 @@ public class Formatter extends AbstractJsonReader {
             System.exit(1);
         }
         if (cl.hasOption("help")) {
-            System.out.println("jsonformatter - " + version() + " - See https://github.com/mihxil/json");
+            System.out.println("jsonformat - " + version() + " - See https://github.com/mihxil/json");
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(
-                    "jsonformatter [OPTIONS]  [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
+                    "jsonformat [OPTIONS]  [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
                     options);
 
             System.exit(1);
