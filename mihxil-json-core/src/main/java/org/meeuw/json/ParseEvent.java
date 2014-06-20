@@ -34,11 +34,11 @@ public class ParseEvent {
 		this.node = null;
     }
 
-	public ParseEvent(JsonToken token, Path path, String value, Map<String, Object> node) {
+	public ParseEvent(JsonToken token, Path path, String value, List<String> keys, Map<String, Object> node) {
 		this.token = token;
 		this.path = path;
 		this.value = value;
-		this.keys = null;
+		this.keys = keys;
 		this.node = node;
 	}
 
