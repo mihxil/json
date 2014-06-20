@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.meeuw</groupId>
+    <artifactId>mihxil-json-parent</artifactId>
+    <version>0.6-SNAPSHOT</version>
+  </parent>
+  <artifactId>mihxil-json-grep</artifactId>
+  <packaging>jar</packaging>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>org.meeuw</groupId>
+      <artifactId>mihxil-json-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-2</version>
+          <executions>
+            <execution>
+              <id>create-grep-jar</id>
+                <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+              <configuration>
+                <finalName>mihxil-json</finalName>
+                <descriptors>
+                  <descriptor>src/main/assembly/grep.xml</descriptor>
+                </descriptors>
+                <archive>
+                  <manifest>
+                    <mainClass>org.meeuw.json.grep.GrepMain</mainClass>
+                  </manifest>
+                </archive>
+              </configuration>
+            </execution>
+          </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+
+</project>

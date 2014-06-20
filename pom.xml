@@ -3,10 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.meeuw</groupId>
-  <artifactId>mihxil-json</artifactId>
+  <artifactId>mihxil-json-parent</artifactId>
   <version>0.6-SNAPSHOT</version>
-  <packaging>jar</packaging>
-  <description>Json-related utilities. Contains a formatter for now, but I may add json search functionality too</description>
+  <packaging>pom</packaging>
+  <description>Json-related utilities</description>
+
+  <modules>
+    <module>core</module>
+    <module>formatter</module>
+    <module>grep</module>
+    <module>scripts</module>
+  </modules>
 
   <properties>
     <github.maven.repository>file:///Users/michiel/github/mihxil/mvn-repo/</github.maven.repository>
@@ -20,28 +27,36 @@
   </scm>
 
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>2.3.2</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-cli</groupId>
+        <artifactId>commons-cli</artifactId>
+        <version>1.2</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>2.3.2</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-cli</groupId>
-      <artifactId>commons-cli</artifactId>
-      <version>1.2</version>
     </dependency>
   </dependencies>
 
   <build>
     <defaultGoal>install</defaultGoal>
-
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -52,84 +67,7 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>scripts</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-2</version>
-          <executions>
-            <execution>
-              <id>create-formatter-jar</id>
-              <phase>package</phase>
-              <goals>
-                <goal>single</goal>
-              </goals>
-              <configuration>
-                <descriptors>
-                  <descriptor>src/main/assembly/formatter.xml</descriptor>
-                </descriptors>
-                <archive>
-                  <manifest>
-                    <mainClass>org.meeuw.json.Formatter</mainClass>
-                  </manifest>
-                </archive>
-              </configuration>
-            </execution>
-            <execution>
-              <id>create-grep-jar</id>
-                <phase>package</phase>
-              <goals>
-                <goal>single</goal>
-              </goals>
-              <configuration>
-                <descriptors>
-                  <descriptor>src/main/assembly/grep.xml</descriptor>
-                </descriptors>
-                <archive>
-                  <manifest>
-                      <mainClass>org.meeuw.json.grep.GrepMain</mainClass>
-                  </manifest>
-                </archive>
-              </configuration>
-            </execution>
-            <execution>
-              <id>create-zip</id>
-              <phase>package</phase>
-              <goals>
-                <goal>single</goal>
-              </goals>
-              <configuration>
-                <descriptors>
-                  <descriptor>src/main/assembly/zip.xml</descriptor>
-                </descriptors>
-              </configuration>
-            </execution>
-          </executions>
-      </plugin>
-    </plugins>
-
+     </plugins>
   </build>
 
   <distributionManagement>
