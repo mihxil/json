@@ -9,9 +9,9 @@
   <description>Json-related utilities</description>
 
   <modules>
-    <module>core</module>
-    <module>formatter</module>
-    <module>grep</module>
+    <module>mihxil-json-core</module>
+    <module>mihxil-json-formatter</module>
+    <module>mihxil-json-grep</module>
     <module>scripts</module>
   </modules>
 
