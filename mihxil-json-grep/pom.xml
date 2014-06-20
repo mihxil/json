@@ -45,6 +45,9 @@
                   <descriptor>src/main/assembly/grep.xml</descriptor>
                 </descriptors>
                 <archive>
+                  <manifestEntries>
+                    <ProjectVersion>${project.version}</ProjectVersion>
+                  </manifestEntries>
                   <manifest>
                     <mainClass>org.meeuw.json.grep.GrepMain</mainClass>
                   </manifest>

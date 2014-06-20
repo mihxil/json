@@ -65,7 +65,7 @@
               <descriptors>
                 <descriptor>src/main/assembly/zip.xml</descriptor>
               </descriptors>
-               </configuration>
+            </configuration>
           </execution>
         </executions>
       </plugin>

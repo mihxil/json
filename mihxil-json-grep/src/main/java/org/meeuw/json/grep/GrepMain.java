@@ -1,14 +1,16 @@
 package org.meeuw.json.grep;
 
-import com.fasterxml.jackson.core.JsonParser;
-import org.apache.commons.cli.*;
-import org.meeuw.json.Util;
-import org.meeuw.json.grep.matching.*;
-import org.meeuw.json.grep.parsing.Parser;
-
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.cli.*;
+import org.meeuw.json.Util;
+import org.meeuw.json.grep.matching.PathMatcher;
+import org.meeuw.json.grep.parsing.Parser;
+import org.meeuw.util.Manifests;
+
+import com.fasterxml.jackson.core.JsonParser;
 
 /**
  * @author Michiel Meeuwissen
@@ -135,6 +137,9 @@ public class GrepMain {
     }
 
 
+    public static String version() throws IOException {
+        return Manifests.read("ProjectVersion");
+    }
 
     public static void main(String[] argv) throws IOException, ParseException {
         CommandLineParser parser = new BasicParser();
@@ -143,16 +148,23 @@ public class GrepMain {
         options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
         options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
         options.addOption(new Option("recordsep", true, "Record separator"));
+        options.addOption(new Option("version", false, "Output version"));
         CommandLine cl = parser.parse(options, argv, true);
         String[] args = cl.getArgs();
+        if (cl.hasOption("version")) {
+            System.out.println(version());
+            System.exit(1);
+        }
         if (cl.hasOption("help") || cl.getArgList().isEmpty()) {
+            System.out.println("jsongrep - " + version() + " - See https://github.com/mihxil/json");
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(
                     "jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]",
-                    options
-            );
+                    options);
+
             System.exit(1);
         }
+
         if (args.length < 1) throw new MissingArgumentException("No pathMatcher expression given");
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain(args[0], false), System.out);
         if (cl.hasOption("output")) {

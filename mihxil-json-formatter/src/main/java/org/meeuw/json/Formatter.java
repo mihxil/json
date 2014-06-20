@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.cli.*;
+import org.meeuw.util.Manifests;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -75,10 +76,31 @@ public class Formatter extends AbstractJsonReader {
     }
 
 
+    public static String version() throws IOException {
+        return Manifests.read("ProjectVersion");
+    }
+
     public static void main(String[] argv) throws IOException, ParseException {
         CommandLineParser parser = new BasicParser();
-        CommandLine cl = parser.parse(new Options(), argv, true);
+        Options options = new Options().addOption(new Option("help", "print this message"));
+        options.addOption(new Option("version", false, "Output version"));
+        CommandLine cl = parser.parse(options, argv, true);
         String[] args = cl.getArgs();
+        if (cl.hasOption("version")) {
+            System.out.println(version());
+            System.exit(1);
+        }
+        if (cl.hasOption("help")) {
+            System.out.println("jsonformatter - " + version() + " - See https://github.com/mihxil/json");
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp(
+                    "jsonformatter [OPTIONS]  [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
+                    options);
+
+            System.exit(1);
+        }
+
+
         InputStream in = Util.getInput(args, 0);
 
         OutputStream out = Util.getOutput(args, 1);
