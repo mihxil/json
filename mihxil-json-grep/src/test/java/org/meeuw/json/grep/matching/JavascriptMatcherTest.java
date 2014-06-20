@@ -9,6 +9,7 @@ import org.meeuw.json.Path;
 
 import com.fasterxml.jackson.core.JsonToken;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class JavascriptMatcherTest {
@@ -18,9 +19,20 @@ public class JavascriptMatcherTest {
         Map<String, Object> node = new HashMap<String, Object>();
         node.put("a", "a");
         node.put("b", "b");
-        JavascriptMatcher matcher = new JavascriptMatcher("function(doc) { return true}");
+        JavascriptMatcher matcher = new JavascriptMatcher("function(doc) { return doc.a != null; }");
 
         ParseEvent event = new ParseEvent(JsonToken.END_OBJECT, new Path(), "]", node);
         assertTrue(matcher.matches(event));
+    }
+
+    @Test
+    public void testMatchesFalse() throws Exception {
+        Map<String, Object> node = new HashMap<String, Object>();
+        node.put("a", "a");
+        node.put("b", "b");
+        JavascriptMatcher matcher = new JavascriptMatcher("function(doc) { return doc.c != null; }");
+
+        ParseEvent event = new ParseEvent(JsonToken.END_OBJECT, new Path(), "]", node);
+        assertFalse(matcher.matches(event));
     }
 }

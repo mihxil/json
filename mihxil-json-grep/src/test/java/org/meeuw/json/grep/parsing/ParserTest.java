@@ -1,6 +1,7 @@
 package org.meeuw.json.grep.parsing;
 
 import org.junit.Test;
+import org.meeuw.json.grep.matching.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

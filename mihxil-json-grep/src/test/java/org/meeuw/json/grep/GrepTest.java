@@ -1,10 +1,11 @@
 package org.meeuw.json.grep;
 
 
+import java.io.IOException;
+
 import org.junit.Test;
 import org.meeuw.json.Util;
-
-import java.io.IOException;
+import org.meeuw.json.grep.matching.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

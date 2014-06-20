@@ -1,14 +1,15 @@
 package org.meeuw.json.grep.matching;
 
-import javax.script.ScriptContext;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import java.util.Map;
 
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
 import org.meeuw.util.Predicate;
 import org.meeuw.util.Predicates;
+import org.mozilla.javascript.*;
 
 /**
  * @author Michiel Meeuwissen
@@ -28,15 +29,20 @@ public class JavascriptMatcher extends ObjectMatcher {
 
     @Override
     protected boolean matches(ParseEvent event) {
-        ScriptContext context = engine.getContext();
-        //ScriptableObject scope = context.initStandardObjects();
+        //ScriptContext context = engine.getContext();
+        Context context = Context.enter();
+        ScriptableObject scope = context.initStandardObjects();
+        Scriptable that = context.newObject(scope);
+        Function fct = context.compileFunction(scope, script, "script", 1, null);
 
-        context.setAttribute("_", event.getNode(), ScriptContext.ENGINE_SCOPE);
-        try {
-            return (Boolean) engine.eval(script, context);
-        } catch (ScriptException e) {
-            throw new RuntimeException(e);
+        NativeObject nobj = new NativeObject();
+        for (Map.Entry<String, Object> entry : event.getNode().entrySet()) {
+            nobj.defineProperty(entry.getKey(), entry.getValue(), NativeObject.READONLY);
         }
+
+        Object result = fct.call(
+                context, scope, that, new Object[]{nobj});
+        return (Boolean) result;
     }
 
     @Override
