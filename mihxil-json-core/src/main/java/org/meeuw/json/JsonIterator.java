@@ -102,7 +102,8 @@ public class JsonIterator implements Iterator<ParseEvent> {
 
                     next = new ParseEvent(token, new Path(path), text, eventKeys, eventObjects);
 
-                    if (needsJsonCollection.test(path.parent())) {
+                    Path parent = path.parent();
+                    if (parent != null && needsJsonCollection.test(parent)) {
                         switch (token) {
                             case VALUE_STRING:
                                 objects.peekLast().put(path.peekLast().toString(), jp.getText());
@@ -120,7 +121,10 @@ public class JsonIterator implements Iterator<ParseEvent> {
                                 break;
                             case END_OBJECT:
                                 Map<String, Object> object = objects.pollLast();
-                                objects.peekLast().put(path.peekLast().toString(), object);
+                                Map<String, Object> e = objects.peekLast();
+                                if (e != null) {
+                                    e.put(path.peekLast().toString(), object);
+                                }
                                 break;
                             case END_ARRAY:
                                 break;

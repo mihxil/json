@@ -1,9 +1,9 @@
 package org.meeuw.json.grep.parsing;
 
-import org.meeuw.json.grep.matching.*;
-
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+
+import org.meeuw.json.grep.matching.*;
 
 /**
  * @author Michiel Meeuwissen
@@ -51,6 +51,12 @@ public class Parser {
 					parseKeysMatcher(split[0], ignoreArrays),
 					new ObjectHasKeyMatcher(split[1]));
 		}
+        split = arg.split("\\s+function\\(", 2);
+        if (split.length == 2) {
+            return new PathMatcherAndChain(
+                    parseKeysMatcher(split[0], ignoreArrays),
+                    new JavascriptMatcher("function(" + split[1]));
+        }
 
         // >, <, operators...
 

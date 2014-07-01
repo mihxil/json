@@ -18,6 +18,10 @@ public class NeverPathMatcher implements PathMatcher {
     @Override
     public Predicate<Path> needsKeyCollection() {
         return Predicates.alwaysFalse();
+    }
 
+    @Override
+    public Predicate<Path> needsObjectCollection() {
+        return Predicates.alwaysFalse();
     }
 }

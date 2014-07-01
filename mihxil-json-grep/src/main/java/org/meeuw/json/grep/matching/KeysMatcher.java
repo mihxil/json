@@ -1,11 +1,11 @@
 package org.meeuw.json.grep.matching;
 
+import java.util.Deque;
+
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
 import org.meeuw.json.PathEntry;
 import org.meeuw.util.Predicate;
-
-import java.util.Deque;
 
 /**
  * a keys matcher only considers the keys (and indices) of a json path for matching.
@@ -26,5 +26,15 @@ public abstract class KeysMatcher implements PathMatcher {
 			}
 		};
 	}
+
+    @Override
+    public Predicate<Path> needsObjectCollection() {
+        return new Predicate<Path>() {
+            @Override
+            public boolean test(Path pathEntries) {
+                return KeysMatcher.this.matches(pathEntries);
+            }
+        };
+    }
 
 }

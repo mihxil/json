@@ -21,4 +21,9 @@ abstract class ValueMatcher implements PathMatcher {
         return Predicates.alwaysFalse();
     }
 
+    @Override
+    public Predicate<Path> needsObjectCollection() {
+        return Predicates.alwaysFalse();
+    }
+
 }

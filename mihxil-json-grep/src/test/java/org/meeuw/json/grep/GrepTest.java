@@ -131,5 +131,13 @@ public class GrepTest {
 		assertFalse(grep.hasNext());
 	}
 
+    @Test
+    public void grepJsonMatch() throws IOException {
+        Grep grep = new Grep(new PathMatcherAndChain(new SinglePathMatcher(new PreciseMatch("c")), new JavascriptMatcher("function(doc) {return doc.b1 != null;}")),
+                Util.getJsonParser("{c: {b1: 1, b3: 2}}"));
+        assertEquals("c={...}", grep.next().toString());
+        assertFalse(grep.hasNext());
+    }
+
 
 }

@@ -149,6 +149,7 @@ public class GrepMain {
         options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
         options.addOption(new Option("recordsep", true, "Record separator"));
         options.addOption(new Option("version", false, "Output version"));
+        options.addOption(new Option("debug", false, "Debug"));
         CommandLine cl = parser.parse(options, argv, true);
         String[] args = cl.getArgs();
         if (cl.hasOption("version")) {
@@ -178,6 +179,11 @@ public class GrepMain {
         }
         if (cl.hasOption("record")) {
             grep.setRecordMatcher(Parser.parsePathMatcherChain(cl.getOptionValue("record"), false));
+        }
+
+        if (cl.hasOption("debug")) {
+            System.out.println(String.valueOf(grep.pathMatcher));
+            return;
         }
 
 		List<String> argList = cl.getArgList();

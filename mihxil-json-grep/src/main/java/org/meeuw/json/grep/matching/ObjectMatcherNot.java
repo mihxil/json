@@ -26,6 +26,11 @@ public class ObjectMatcherNot extends ObjectMatcher {
 		return wrapped.needsKeyCollection();
 	}
 
+    @Override
+    public Predicate<Path> needsObjectCollection() {
+        return wrapped.needsObjectCollection();
+    }
+
 	@Override
 	public String toString() {
 		return "!" + wrapped.toString();

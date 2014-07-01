@@ -7,10 +7,8 @@ import java.util.NoSuchElementException;
 
 import org.meeuw.json.JsonIterator;
 import org.meeuw.json.ParseEvent;
-import org.meeuw.json.Path;
 import org.meeuw.json.grep.matching.NeverPathMatcher;
 import org.meeuw.json.grep.matching.PathMatcher;
-import org.meeuw.util.Predicates;
 
 import com.fasterxml.jackson.core.JsonParser;
 
@@ -31,7 +29,7 @@ public class Grep implements Iterator<GrepEvent> {
 
     public Grep(PathMatcher matcher, JsonParser jp) {
         this.matcher = matcher;
-        this.wrapped = new JsonIterator(jp, matcher.needsKeyCollection(), Predicates.<Path>alwaysFalse());
+        this.wrapped = new JsonIterator(jp, matcher.needsKeyCollection(), matcher.needsObjectCollection());
     }
 
     @Override

@@ -13,4 +13,6 @@ public interface PathMatcher {
 
     Predicate<Path> needsKeyCollection();
 
+    Predicate<Path> needsObjectCollection();
+
 }

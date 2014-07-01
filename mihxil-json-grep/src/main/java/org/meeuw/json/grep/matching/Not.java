@@ -26,4 +26,10 @@ public class Not implements PathMatcher {
         return wrapped.needsKeyCollection();
 
     }
+
+    @Override
+    public Predicate<Path> needsObjectCollection() {
+        return wrapped.needsObjectCollection();
+
+    }
 }

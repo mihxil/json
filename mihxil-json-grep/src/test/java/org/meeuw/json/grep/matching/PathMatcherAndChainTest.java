@@ -24,8 +24,19 @@ public class PathMatcherAndChainTest {
 
 		assertTrue(matcher.needsKeyCollection().test(new Path(new KeyEntry("c"), new ArrayEntry())));
 		assertFalse(matcher.needsKeyCollection().test(new Path(new KeyEntry("c"))));
-
-
 	}
+
+    @Test
+    public void needsObjectCollection() {
+
+        PathMatcher matcher = new PathMatcherAndChain(
+                new SinglePathMatcher(new PreciseMatch("c"), new PreciseMatch("d")),
+                new JavascriptMatcher("function(doc) {return true}"));
+
+        assertFalse(matcher.needsObjectCollection().test(new Path(new KeyEntry("c"))));
+        assertTrue(matcher.needsObjectCollection().test(new Path(new KeyEntry("c"), new KeyEntry("d"))));
+
+
+    }
 
 }

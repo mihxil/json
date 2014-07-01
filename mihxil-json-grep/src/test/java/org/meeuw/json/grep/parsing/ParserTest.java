@@ -93,4 +93,14 @@ public class ParserTest {
 	}
 
 
+    @Test
+    public void javascript() {
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b function(doc) {}", false);
+        assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
+        assertEquals("a[*].b", result.getPatterns()[0].toString());
+        assertTrue(result.getPatterns()[1] instanceof JavascriptMatcher);
+        assertEquals(" function(doc) {}", result.getPatterns()[1].toString());
+    }
+
+
 }

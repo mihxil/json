@@ -1,5 +1,7 @@
 package org.meeuw.json.grep.matching;
 
+import java.util.Arrays;
+
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
 import org.meeuw.util.Predicate;
@@ -7,7 +9,6 @@ import org.meeuw.util.Predicates;
 
 /**
 * @author Michiel Meeuwissen
-* @since ...
 */
 public class PathMatcherAndChain implements PathMatcher {
     private final PathMatcher[] matchers;
@@ -28,10 +29,20 @@ public class PathMatcherAndChain implements PathMatcher {
 
     @Override
     public Predicate<Path> needsKeyCollection() {
-		return Predicates.and(PathMatchers.getPredicates(matchers));
+		return Predicates.and(PathMatchers.needsKeyCollection(matchers));
+    }
+
+    @Override
+    public Predicate<Path> needsObjectCollection() {
+        return Predicates.and(PathMatchers.needsObjectCollection(matchers));
     }
 
     public PathMatcher[] getPatterns() {
         return matchers;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(Arrays.asList(matchers));
     }
 }

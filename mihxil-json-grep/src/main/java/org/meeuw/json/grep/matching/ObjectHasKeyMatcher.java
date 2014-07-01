@@ -20,13 +20,16 @@ public class ObjectHasKeyMatcher extends ObjectMatcher {
     @Override
     protected boolean matches(ParseEvent event) {
         return event.getKeys().contains(key);
-
     }
 
     @Override
     public Predicate<Path> needsKeyCollection() {
         return Predicates.alwaysTrue();
+    }
 
+    @Override
+    public Predicate<Path> needsObjectCollection() {
+        return Predicates.alwaysFalse();
     }
 
 	@Override

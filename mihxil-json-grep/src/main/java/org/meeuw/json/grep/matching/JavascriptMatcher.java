@@ -36,17 +36,35 @@ public class JavascriptMatcher extends ObjectMatcher {
         Function fct = context.compileFunction(scope, script, "script", 1, null);
 
         NativeObject nobj = new NativeObject();
-        for (Map.Entry<String, Object> entry : event.getNode().entrySet()) {
-            nobj.defineProperty(entry.getKey(), entry.getValue(), NativeObject.READONLY);
+        if (event.getNode() != null) {
+            for (Map.Entry<String, Object> entry : event.getNode().entrySet()) {
+                nobj.defineProperty(entry.getKey(), entry.getValue(), NativeObject.READONLY);
+            }
         }
 
         Object result = fct.call(
                 context, scope, that, new Object[]{nobj});
-        return (Boolean) result;
+        if (! (result instanceof Boolean)) {
+            throw new IllegalArgumentException(
+                    "" + NativeJSON.stringify(context, scope, result, null, null) +
+                            " is not a boolean. Called on " + NativeJSON.stringify(context, scope, nobj, null, null));
+        } else {
+            return (Boolean) result;
+        }
     }
 
     @Override
     public Predicate<Path> needsKeyCollection() {
         return Predicates.alwaysFalse();
+    }
+
+    @Override
+    public Predicate<Path> needsObjectCollection() {
+        return Predicates.alwaysTrue();
+    }
+
+    @Override
+    public String toString() {
+        return " " + script;
     }
 }

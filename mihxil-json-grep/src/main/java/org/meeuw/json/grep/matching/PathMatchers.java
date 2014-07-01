@@ -10,11 +10,19 @@ import org.meeuw.util.Predicate;
 public class PathMatchers {
 
 
-	public static Predicate<Path>[] getPredicates(PathMatcher... matchers) {
+	public static Predicate<Path>[] needsKeyCollection(PathMatcher... matchers) {
 		Predicate<Path>[] result = new Predicate[matchers.length];
 		for (int i = 0; i < matchers.length; i++) {
 			result[i] = matchers[i].needsKeyCollection();
 		}
 		return result;
 	}
+
+    public static Predicate<Path>[] needsObjectCollection(PathMatcher... matchers) {
+        Predicate<Path>[] result = new Predicate[matchers.length];
+        for (int i = 0; i < matchers.length; i++) {
+            result[i] = matchers[i].needsObjectCollection();
+        }
+        return result;
+    }
 }
