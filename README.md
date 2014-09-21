@@ -7,9 +7,10 @@ This is provides several JSON-related tools implemented with
 Jackson. Its goal is to be useable with extremely large json
 streams, and everything needs to happen streaming.
 
-I tried several tools imlemented in python (python -mjson.tool,
-'jsongrep'), but those consumed very much memory when I fead them a
-json stream of a Gigabyte or so, and seemed not useable for that.
+I tried several tools imlemented in python (python -m json.tool,
+'jsongrep'), but those consumed very much memory when I fed them a
+json stream of a Gigabyte or so, and seemed not useable for that, so I implemented similar tools based on 
+jackson2 in java. They are streaming and don't need much memory, and can deal with huge streams of json.
 
 All tools support a -help argument for an overview of all supported options.
 
