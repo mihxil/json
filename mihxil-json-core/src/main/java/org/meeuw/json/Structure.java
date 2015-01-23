@@ -26,6 +26,8 @@ public class Structure extends AbstractJsonReader {
             case VALUE_FALSE:
             case VALUE_NULL:
                 out.println(event.getPath().toString());
+            default:
+                //out.println("UNKNOWN EVENT " + event.getToken());
         }
     }
 

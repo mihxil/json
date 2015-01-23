@@ -153,15 +153,6 @@ public class JsonIterator implements Iterator<ParseEvent> {
                             break;
 
                     }
-                    switch (token) {
-                        case END_ARRAY:
-                            PathEntry prev = path.peekLast();
-                            if (prev instanceof ArrayEntry) {
-                                path.addLast(((ArrayEntry) path.pollLast()).inc());
-                            }
-                            break;
-
-                    }
                 }
             } catch (JsonParseException e) {
                 throw new RuntimeException(e);

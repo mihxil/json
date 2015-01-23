@@ -1,10 +1,10 @@
 package org.meeuw.json;
 
-import org.junit.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,7 +41,14 @@ public class StructureTest {
         assertEquals("d[0].x", result[0]);
         assertEquals("d[1].y", result[1]);
         assertEquals("e",      result[2]);
+    }
 
-
+    @Test
+    public void testArrayInArray() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Structure structure = new Structure(out);
+        structure.read(new StringReader("{ \"items\" : [ { \"a\":['A']}]}"));
+        String[] result = (new String(out.toByteArray())).split("\n");
+        assertEquals("items[0].a[0]", result[0]);
     }
 }

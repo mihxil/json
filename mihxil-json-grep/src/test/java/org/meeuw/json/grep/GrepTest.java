@@ -139,5 +139,12 @@ public class GrepTest {
         assertFalse(grep.hasNext());
     }
 
+    @Test
+    public void grepArrayMatch() throws IOException {
+        Grep grep = new Grep(new PathMatcherAndChain(new SinglePathMatcher(new PreciseMatch("items"), new ArrayEntryMatch())), Util.getJsonParser("{ \"items\" : [ { \"a\" : [], \"result\" :\"value\" }]}\n"));
+        assertEquals("items[0]={...}", grep.next().toString());
+        assertFalse(grep.hasNext());
+    }
+
 
 }

@@ -1,0 +1,812 @@
+{
+  "total" : 8,
+  "offset" : 0,
+  "max" : 100,
+  "items" : [ {
+    "score" : 1.9419903,
+    "highlights" : [ ],
+    "result" : {
+      "objectType" : "program",
+      "mid" : "WO_VPRO_422287",
+      "creationDate" : 1383566061361,
+      "lastModified" : 1421122427346,
+      "sortDate" : 1383566061361,
+      "urn" : "urn:vpro:media:program:31357524",
+      "embeddable" : true,
+      "broadcasters" : [ {
+        "id" : "VPRO",
+        "value" : "VPRO"
+      } ],
+      "portals" : [ {
+        "id" : "3VOOR12",
+        "value" : "3VOOR12"
+      } ],
+      "titles" : [ {
+        "value" : "Jagwar Ma live op London Calling 2013",
+        "owner" : "BROADCASTER",
+        "type" : "MAIN"
+      } ],
+      "genres" : [ ],
+      "countries" : [ ],
+      "languages" : [ ],
+      "descendantOf" : [ {
+        "midRef" : "POMS_S_VPRO_195985",
+        "urnRef" : "urn:vpro:media:group:11443747",
+        "type" : "ARCHIVE"
+      }, {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_360941",
+        "urnRef" : "urn:vpro:media:group:25953073",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST"
+      } ],
+      "memberOf" : [ {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST",
+        "index" : 55,
+        "highlighted" : false,
+        "added" : 1383569292171
+      }, {
+        "midRef" : "POMS_S_VPRO_360941",
+        "urnRef" : "urn:vpro:media:group:25953073",
+        "type" : "PLAYLIST",
+        "index" : 10,
+        "highlighted" : false,
+        "added" : 1383566061582
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST",
+        "index" : 5,
+        "highlighted" : false,
+        "added" : 1387455761881
+      } ],
+      "predictions" : [ {
+        "state" : "REALIZED",
+        "platform" : "INTERNETVOD"
+      } ],
+      "locations" : [ {
+        "programUrl" : "odis+http://content.omroep.nl/vpro/protected/luisterpaal/video/2013/11/04/JagwarMaEDIT.mp4",
+        "avAttributes" : {
+          "bitrate" : 500000,
+          "avFileFormat" : "MP4"
+        },
+        "owner" : "BROADCASTER",
+        "creationDate" : 1383566061510,
+        "lastModified" : 1383566061565,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:location:31357528"
+      } ],
+      "images" : [ {
+        "title" : "Jagwar Ma",
+        "description" : "Jagwar Ma",
+        "imageUri" : "urn:vpro:image:236656",
+        "height" : 300,
+        "width" : 450,
+        "owner" : "BROADCASTER",
+        "type" : "PICTURE",
+        "highlighted" : false,
+        "creationDate" : 1383566061511,
+        "lastModified" : 1383566061564,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:image:31357526"
+      } ],
+      "workflow" : "PUBLISHED",
+      "type" : "CLIP",
+      "avType" : "VIDEO"
+    }
+  }, {
+    "score" : 1.9414871,
+    "highlights" : [ ],
+    "result" : {
+      "objectType" : "program",
+      "mid" : "WO_VPRO_422145",
+      "creationDate" : 1383399803017,
+      "lastModified" : 1421122409750,
+      "sortDate" : 1383399803017,
+      "urn" : "urn:vpro:media:program:31296444",
+      "embeddable" : true,
+      "broadcasters" : [ {
+        "id" : "VPRO",
+        "value" : "VPRO"
+      } ],
+      "portals" : [ {
+        "id" : "3VOOR12",
+        "value" : "3VOOR12"
+      } ],
+      "titles" : [ {
+        "value" : "Mac DeMarco live op London Calling 1 november 2013",
+        "owner" : "BROADCASTER",
+        "type" : "MAIN"
+      } ],
+      "genres" : [ ],
+      "countries" : [ ],
+      "languages" : [ ],
+      "descendantOf" : [ {
+        "midRef" : "POMS_S_VPRO_195985",
+        "urnRef" : "urn:vpro:media:group:11443747",
+        "type" : "ARCHIVE"
+      }, {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_360941",
+        "urnRef" : "urn:vpro:media:group:25953073",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST"
+      } ],
+      "memberOf" : [ {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST",
+        "index" : 57,
+        "highlighted" : false,
+        "added" : 1383571866800
+      }, {
+        "midRef" : "POMS_S_VPRO_360941",
+        "urnRef" : "urn:vpro:media:group:25953073",
+        "type" : "PLAYLIST",
+        "index" : 28,
+        "highlighted" : false,
+        "added" : 1383399817919
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST",
+        "index" : 7,
+        "highlighted" : false,
+        "added" : 1387455701992
+      } ],
+      "predictions" : [ {
+        "state" : "REALIZED",
+        "platform" : "INTERNETVOD"
+      } ],
+      "locations" : [ {
+        "programUrl" : "odis+http://content.omroep.nl/vpro/protected/luisterpaal/video/2013/11/02/MacDeMarcoLC2013.mp4",
+        "avAttributes" : {
+          "bitrate" : 500000,
+          "avFileFormat" : "MP4"
+        },
+        "owner" : "BROADCASTER",
+        "creationDate" : 1383399817806,
+        "lastModified" : 1383399817860,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:location:31296447"
+      } ],
+      "images" : [ {
+        "title" : "Mac DeMarco",
+        "description" : "Mac DeMarco",
+        "imageUri" : "urn:vpro:image:236175",
+        "height" : 300,
+        "width" : 450,
+        "owner" : "BROADCASTER",
+        "type" : "PICTURE",
+        "highlighted" : false,
+        "creationDate" : 1383399817820,
+        "lastModified" : 1383399817885,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:image:31296448"
+      } ],
+      "workflow" : "PUBLISHED",
+      "type" : "CLIP",
+      "avType" : "VIDEO"
+    }
+  }, {
+    "score" : 1.9262861,
+    "highlights" : [ ],
+    "result" : {
+      "objectType" : "program",
+      "mid" : "WO_VPRO_400672",
+      "creationDate" : 1378663075895,
+      "lastModified" : 1421122346108,
+      "sortDate" : 1378663075895,
+      "urn" : "urn:vpro:media:program:29384619",
+      "embeddable" : true,
+      "broadcasters" : [ {
+        "id" : "VPRO",
+        "value" : "VPRO"
+      } ],
+      "portals" : [ {
+        "id" : "3VOOR12",
+        "value" : "3VOOR12"
+      } ],
+      "titles" : [ {
+        "value" : "De Tweede Speeldoos op Into The Great Wide Open 2013",
+        "owner" : "BROADCASTER",
+        "type" : "MAIN"
+      } ],
+      "genres" : [ ],
+      "countries" : [ ],
+      "languages" : [ ],
+      "descendantOf" : [ {
+        "midRef" : "POMS_S_VPRO_195985",
+        "urnRef" : "urn:vpro:media:group:11443747",
+        "type" : "ARCHIVE"
+      }, {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_400214",
+        "urnRef" : "urn:vpro:media:group:29334699",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST"
+      } ],
+      "memberOf" : [ {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST",
+        "index" : 68,
+        "highlighted" : false,
+        "added" : 1379162237310
+      }, {
+        "midRef" : "POMS_S_VPRO_400214",
+        "urnRef" : "urn:vpro:media:group:29334699",
+        "type" : "PLAYLIST",
+        "index" : 54,
+        "highlighted" : false,
+        "added" : 1378663993081
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST",
+        "index" : 8,
+        "highlighted" : false,
+        "added" : 1387455683409
+      } ],
+      "predictions" : [ {
+        "state" : "REALIZED",
+        "platform" : "INTERNETVOD"
+      } ],
+      "locations" : [ {
+        "programUrl" : "odis+http://content.omroep.nl/vpro/protected/luisterpaal/video/2013/09/08/ZO03DeSpeeldoos2a.mp4",
+        "avAttributes" : {
+          "bitrate" : 500000,
+          "avFileFormat" : "MP4"
+        },
+        "owner" : "BROADCASTER",
+        "creationDate" : 1378663992936,
+        "lastModified" : 1378663993082,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:location:29384680"
+      } ],
+      "images" : [ {
+        "title" : "De Tweede Speeldoos op Into The Great Wide Open 2013",
+        "description" : "De Tweede Speeldoos op Into The Great Wide Open 2013",
+        "imageUri" : "urn:vpro:image:218193",
+        "height" : 576,
+        "width" : 1024,
+        "owner" : "BROADCASTER",
+        "type" : "PICTURE",
+        "highlighted" : false,
+        "creationDate" : 1378663089005,
+        "lastModified" : 1378663089158,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:image:29384621"
+      } ],
+      "workflow" : "PUBLISHED",
+      "type" : "CLIP",
+      "avType" : "VIDEO"
+    }
+  }, {
+    "score" : 1.9019145,
+    "highlights" : [ ],
+    "result" : {
+      "objectType" : "program",
+      "mid" : "WO_VPRO_373471",
+      "creationDate" : 1371943280475,
+      "lastModified" : 1421118802812,
+      "sortDate" : 1371943280475,
+      "urn" : "urn:vpro:media:program:26962067",
+      "embeddable" : true,
+      "broadcasters" : [ {
+        "id" : "VPRO",
+        "value" : "VPRO"
+      } ],
+      "portals" : [ {
+        "id" : "3VOOR12",
+        "value" : "3VOOR12"
+      } ],
+      "titles" : [ {
+        "value" : "Damien Rice live op Best Kept Secret 2013",
+        "owner" : "BROADCASTER",
+        "type" : "MAIN"
+      }, {
+        "value" : "Damien Rice live op Best Kept Secret 2013",
+        "owner" : "BROADCASTER",
+        "type" : "SUB"
+      } ],
+      "descriptions" : [ {
+        "value" : "Stage ONE - 22 juni 2013",
+        "owner" : "BROADCASTER",
+        "type" : "SHORT"
+      } ],
+      "genres" : [ ],
+      "countries" : [ ],
+      "languages" : [ ],
+      "descendantOf" : [ {
+        "midRef" : "POMS_S_VPRO_195985",
+        "urnRef" : "urn:vpro:media:group:11443747",
+        "type" : "ARCHIVE"
+      }, {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_344440",
+        "urnRef" : "urn:vpro:media:group:24522934",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_373282",
+        "urnRef" : "urn:vpro:media:group:26934574",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST"
+      } ],
+      "memberOf" : [ {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST",
+        "index" : 78,
+        "highlighted" : false,
+        "added" : 1371996717885
+      }, {
+        "midRef" : "POMS_S_VPRO_344440",
+        "urnRef" : "urn:vpro:media:group:24522934",
+        "type" : "PLAYLIST",
+        "highlighted" : false,
+        "added" : 1372851997500
+      }, {
+        "midRef" : "POMS_S_VPRO_373282",
+        "urnRef" : "urn:vpro:media:group:26934574",
+        "type" : "PLAYLIST",
+        "index" : 6,
+        "highlighted" : false,
+        "added" : 1371945607571
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST",
+        "index" : 4,
+        "highlighted" : false,
+        "added" : 1387455841879
+      } ],
+      "predictions" : [ {
+        "state" : "REALIZED",
+        "platform" : "INTERNETVOD"
+      } ],
+      "locations" : [ {
+        "programUrl" : "odis+http://content.omroep.nl/vpro/protected/luisterpaal/video/2013/06/23/DamienRice.mp4",
+        "avAttributes" : {
+          "bitrate" : 500000,
+          "avFileFormat" : "MP4"
+        },
+        "owner" : "BROADCASTER",
+        "creationDate" : 1371945607441,
+        "lastModified" : 1371945607507,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:location:26966797"
+      } ],
+      "images" : [ {
+        "title" : "Damien Rice",
+        "description" : "Damien Rice",
+        "imageUri" : "urn:vpro:image:194812",
+        "height" : 445,
+        "width" : 444,
+        "owner" : "BROADCASTER",
+        "type" : "PICTURE",
+        "highlighted" : false,
+        "creationDate" : 1371943280695,
+        "lastModified" : 1371943280771,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:image:26962069"
+      } ],
+      "workflow" : "PUBLISHED",
+      "type" : "CLIP",
+      "avType" : "VIDEO"
+    }
+  }, {
+    "score" : 1.8995138,
+    "highlights" : [ ],
+    "result" : {
+      "objectType" : "program",
+      "mid" : "WO_VPRO_367975",
+      "creationDate" : 1371325841415,
+      "lastModified" : 1421118763231,
+      "sortDate" : 1371325841415,
+      "urn" : "urn:vpro:media:program:26707976",
+      "embeddable" : true,
+      "broadcasters" : [ {
+        "id" : "VPRO",
+        "value" : "VPRO"
+      } ],
+      "portals" : [ {
+        "id" : "3VOOR12",
+        "value" : "3VOOR12"
+      } ],
+      "titles" : [ {
+        "value" : "Queens Of The Stone Age 3 On Stage Sessie Pinkpop 2013",
+        "owner" : "BROADCASTER",
+        "type" : "MAIN"
+      } ],
+      "genres" : [ ],
+      "countries" : [ ],
+      "languages" : [ ],
+      "descendantOf" : [ {
+        "midRef" : "POMS_S_VPRO_367808",
+        "urnRef" : "urn:vpro:media:group:26680003",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST"
+      } ],
+      "memberOf" : [ {
+        "midRef" : "POMS_S_VPRO_367808",
+        "urnRef" : "urn:vpro:media:group:26680003",
+        "type" : "PLAYLIST",
+        "index" : 41,
+        "highlighted" : false,
+        "added" : 1371325841732
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST",
+        "index" : 10,
+        "highlighted" : false,
+        "added" : 1387455858390
+      } ],
+      "predictions" : [ {
+        "state" : "REALIZED",
+        "platform" : "INTERNETVOD"
+      } ],
+      "locations" : [ {
+        "programUrl" : "odis+http://content.omroep.nl/vpro/protected/luisterpaal/video/2013/06/15/3OSQOTSA.mp4",
+        "avAttributes" : {
+          "bitrate" : 500000,
+          "avFileFormat" : "MP4"
+        },
+        "owner" : "BROADCASTER",
+        "creationDate" : 1371325841651,
+        "lastModified" : 1371325841768,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:location:26707980"
+      } ],
+      "images" : [ {
+        "title" : "Queens Of The Stoneage",
+        "description" : "Queens Of The Stoneage",
+        "imageUri" : "urn:vpro:image:191767",
+        "height" : 371,
+        "width" : 416,
+        "owner" : "BROADCASTER",
+        "type" : "PICTURE",
+        "highlighted" : false,
+        "creationDate" : 1371325841680,
+        "lastModified" : 1371325841776,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:image:26707981"
+      } ],
+      "workflow" : "PUBLISHED",
+      "type" : "CLIP",
+      "avType" : "VIDEO"
+    }
+  }, {
+    "score" : 1.8745731,
+    "highlights" : [ ],
+    "result" : {
+      "objectType" : "program",
+      "mid" : "WO_VPRO_337772",
+      "creationDate" : 1365270436726,
+      "lastModified" : 1421115430386,
+      "sortDate" : 1365270436726,
+      "urn" : "urn:vpro:media:program:24115794",
+      "embeddable" : true,
+      "broadcasters" : [ {
+        "id" : "VPRO",
+        "value" : "VPRO"
+      } ],
+      "titles" : [ {
+        "value" : "The Growlers op Motel Mozaïque 2013",
+        "owner" : "BROADCASTER",
+        "type" : "MAIN"
+      } ],
+      "descriptions" : [ {
+        "value" : "3voor12 stage Schouwburgplein, Rotterdam - 6 april 2013",
+        "owner" : "BROADCASTER",
+        "type" : "MAIN"
+      }, {
+        "value" : "3voor12 stage Schouwburgplein, Rotterdam - 6 april 2013",
+        "owner" : "BROADCASTER",
+        "type" : "SHORT"
+      } ],
+      "genres" : [ ],
+      "countries" : [ ],
+      "languages" : [ ],
+      "descendantOf" : [ {
+        "midRef" : "POMS_S_VPRO_195985",
+        "urnRef" : "urn:vpro:media:group:11443747",
+        "type" : "ARCHIVE"
+      }, {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_324159",
+        "urnRef" : "urn:vpro:media:group:23789411",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST"
+      } ],
+      "memberOf" : [ {
+        "midRef" : "POMS_S_VPRO_324159",
+        "urnRef" : "urn:vpro:media:group:23789411",
+        "type" : "PLAYLIST",
+        "index" : 2,
+        "highlighted" : false,
+        "added" : 1365271087971
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST",
+        "index" : 12,
+        "highlighted" : false,
+        "added" : 1387453577928
+      } ],
+      "predictions" : [ {
+        "state" : "REALIZED",
+        "platform" : "INTERNETVOD"
+      } ],
+      "locations" : [ {
+        "programUrl" : "odis+http://content.omroep.nl/vpro/protected/luisterpaal/video/2013/04/06/MM13TheGrowlers3v12tv.mp4",
+        "avAttributes" : {
+          "bitrate" : 500000,
+          "avFileFormat" : "MP4"
+        },
+        "owner" : "BROADCASTER",
+        "creationDate" : 1365271066134,
+        "lastModified" : 1365271066223,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:location:24115814"
+      } ],
+      "images" : [ {
+        "title" : "The Growlers op Motel Mozaï¿½que 2013",
+        "description" : "The Growlers op Motel Mozaï¿½que 2013",
+        "imageUri" : "urn:vpro:image:168136",
+        "height" : 555,
+        "width" : 656,
+        "owner" : "BROADCASTER",
+        "type" : "PICTURE",
+        "highlighted" : false,
+        "creationDate" : 1365270437666,
+        "lastModified" : 1365270437765,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:image:24115798"
+      } ],
+      "workflow" : "PUBLISHED",
+      "type" : "CLIP",
+      "avType" : "VIDEO"
+    }
+  }, {
+    "score" : 1.8579158,
+    "highlights" : [ ],
+    "result" : {
+      "objectType" : "program",
+      "mid" : "WO_VPRO_134633",
+      "creationDate" : 1361526454591,
+      "lastModified" : 1421115388343,
+      "sortDate" : 1361526454591,
+      "urn" : "urn:vpro:media:program:22111825",
+      "embeddable" : true,
+      "broadcasters" : [ {
+        "id" : "VPRO",
+        "value" : "VPRO"
+      } ],
+      "titles" : [ {
+        "value" : "Unknown Mortal Orchestra in Paradiso Amsterdam - 7 februari '13",
+        "owner" : "BROADCASTER",
+        "type" : "MAIN"
+      }, {
+        "value" : "Unknown Mortal Orchestra in Paradiso Amsterdam - 7 februari '13",
+        "owner" : "BROADCASTER",
+        "type" : "SUB"
+      } ],
+      "descriptions" : [ {
+        "value" : "Paradiso  Amsterdam - 7FEB13",
+        "owner" : "BROADCASTER",
+        "type" : "SHORT"
+      } ],
+      "genres" : [ ],
+      "countries" : [ ],
+      "languages" : [ ],
+      "descendantOf" : [ {
+        "midRef" : "POMS_S_VPRO_195985",
+        "urnRef" : "urn:vpro:media:group:11443747",
+        "type" : "ARCHIVE"
+      }, {
+        "midRef" : "POMS_S_VPRO_195984",
+        "urnRef" : "urn:vpro:media:group:11443757",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_078618",
+        "urnRef" : "urn:vpro:media:group:17927920",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_261644",
+        "urnRef" : "urn:vpro:media:group:23412444",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_344440",
+        "urnRef" : "urn:vpro:media:group:24522934",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST"
+      } ],
+      "memberOf" : [ {
+        "midRef" : "POMS_S_VPRO_078618",
+        "urnRef" : "urn:vpro:media:group:17927920",
+        "type" : "PLAYLIST",
+        "index" : 42,
+        "highlighted" : false,
+        "added" : 1361526500712
+      }, {
+        "midRef" : "POMS_S_VPRO_261644",
+        "urnRef" : "urn:vpro:media:group:23412444",
+        "type" : "PLAYLIST",
+        "index" : 8,
+        "highlighted" : false,
+        "added" : 1363646249175
+      }, {
+        "midRef" : "POMS_S_VPRO_344440",
+        "urnRef" : "urn:vpro:media:group:24522934",
+        "type" : "PLAYLIST",
+        "highlighted" : false,
+        "added" : 1369233349706
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST",
+        "index" : 9,
+        "highlighted" : false,
+        "added" : 1387455628281
+      } ],
+      "predictions" : [ {
+        "state" : "REALIZED",
+        "platform" : "INTERNETVOD"
+      } ],
+      "locations" : [ {
+        "programUrl" : "odis+http://content.omroep.nl/vpro/protected/luisterpaal/video/2013/02/22/UnknownMortalOrchestra3v12tv2.mp4",
+        "avAttributes" : {
+          "bitrate" : 500000,
+          "avFileFormat" : "MP4"
+        },
+        "owner" : "BROADCASTER",
+        "creationDate" : 1361526454838,
+        "lastModified" : 1361526454921,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:location:22111829"
+      } ],
+      "images" : [ {
+        "title" : "Unknown Mortal Orchestra live in Paradiso, Amsterdam ",
+        "description" : "Unknown Mortal Orchestra live in Paradiso, Amsterdam ",
+        "imageUri" : "urn:vpro:image:141829",
+        "height" : 565,
+        "width" : 619,
+        "owner" : "BROADCASTER",
+        "type" : "PICTURE",
+        "highlighted" : false,
+        "creationDate" : 1361526454855,
+        "lastModified" : 1361526454962,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:image:22111830"
+      } ],
+      "workflow" : "PUBLISHED",
+      "type" : "CLIP",
+      "avType" : "VIDEO"
+    }
+  }, {
+    "score" : 1.8417804,
+    "highlights" : [ ],
+    "result" : {
+      "objectType" : "program",
+      "mid" : "WO_VPRO_075054",
+      "creationDate" : 1358081130619,
+      "lastModified" : 1421115286893,
+      "sortDate" : 1358081130619,
+      "urn" : "urn:vpro:media:program:17702841",
+      "embeddable" : true,
+      "broadcasters" : [ {
+        "id" : "VPRO",
+        "value" : "VPRO"
+      } ],
+      "portals" : [ {
+        "id" : "3VOOR12",
+        "value" : "3VOOR12"
+      } ],
+      "titles" : [ {
+        "value" : "TDTMCM live op Noorderslag 2013",
+        "owner" : "BROADCASTER",
+        "type" : "MAIN"
+      } ],
+      "genres" : [ ],
+      "countries" : [ ],
+      "languages" : [ ],
+      "descendantOf" : [ {
+        "midRef" : "POMS_S_VPRO_073949",
+        "urnRef" : "urn:vpro:media:group:17647136",
+        "type" : "PLAYLIST"
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST"
+      } ],
+      "memberOf" : [ {
+        "midRef" : "POMS_S_VPRO_073949",
+        "urnRef" : "urn:vpro:media:group:17647136",
+        "type" : "PLAYLIST",
+        "index" : 42,
+        "highlighted" : false,
+        "added" : 1358081208914
+      }, {
+        "midRef" : "POMS_S_VPRO_457552",
+        "urnRef" : "urn:vpro:media:group:34325717",
+        "type" : "PLAYLIST",
+        "index" : 13,
+        "highlighted" : false,
+        "added" : 1387453485342
+      } ],
+      "predictions" : [ {
+        "state" : "REALIZED",
+        "platform" : "INTERNETVOD"
+      } ],
+      "locations" : [ {
+        "programUrl" : "odis+http://content.omroep.nl/vpro/protected/luisterpaal/video/2013/01/13/TDTMCMFNL.mp4",
+        "avAttributes" : {
+          "bitrate" : 500000,
+          "avFileFormat" : "MP4"
+        },
+        "owner" : "BROADCASTER",
+        "creationDate" : 1358081130747,
+        "lastModified" : 1358081130919,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:location:17702844"
+      } ],
+      "images" : [ {
+        "title" : "tosti",
+        "description" : "tosti",
+        "imageUri" : "urn:vpro:image:128318",
+        "height" : 549,
+        "width" : 655,
+        "owner" : "BROADCASTER",
+        "type" : "PICTURE",
+        "highlighted" : false,
+        "creationDate" : 1358081208872,
+        "lastModified" : 1358081208945,
+        "workflow" : "PUBLISHED",
+        "urn" : "urn:vpro:media:image:17702845"
+      } ],
+      "workflow" : "PUBLISHED",
+      "type" : "CLIP",
+      "avType" : "VIDEO"
+    }
+  } ]
+}

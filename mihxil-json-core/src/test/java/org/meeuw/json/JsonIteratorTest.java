@@ -153,6 +153,39 @@ public class JsonIteratorTest {
 		assertFalse(iterator.hasNext());
 	}
 
+
+    @Test
+    public void array() throws IOException {
+        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{ \"items\":[{\"a\":'x'}]}"));
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "items");
+        assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "a");
+        assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "x");
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
+        assertEvent(iterator.next(), JsonToken.END_ARRAY, 1);
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 0);
+        assertFalse(iterator.hasNext());
+    }
+    @Test
+    public void arrayInArray() throws IOException {
+        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{ \"items\":[{\"a\":[], \"b\": 'B'}]}"));
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "items");
+        assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "a");
+        assertEvent(iterator.next(), JsonToken.START_ARRAY, 3);
+        assertEvent(iterator.next(), JsonToken.END_ARRAY, 3);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "b");
+        assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "B");
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
+        assertEvent(iterator.next(), JsonToken.END_ARRAY, 1);
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 0);
+        assertFalse(iterator.hasNext());
+    }
+
     protected void assertEvent(ParseEvent event, JsonToken token, int depth, String value) {
         assertTrue(event.getToken() == token);
         assertEquals(depth, event.getPath().size());

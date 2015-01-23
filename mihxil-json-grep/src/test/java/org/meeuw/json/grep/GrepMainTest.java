@@ -86,6 +86,43 @@ public class GrepMainTest {
 	}
 
 
+    @Test
+    public void grepArrays() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.[*]", false), out);
+        grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
+        grep.read(new StringReader("{titles: [{a: 'A'}, {b: 'B'}]}"));
+        assertEquals("titles[0]={...}\n" +
+            "titles[1]={...}\n", new String(out.toByteArray()));
 
+
+    }
+
+    @Test
+    public void grepArrays2() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items.[*]", false), out);
+        grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
+        grep.read(getClass().getResourceAsStream("/items.json"));
+        assertEquals("items[0]={...}\n" +
+            "items[1]={...}\n", new String(out.toByteArray()));
+    }
+
+
+    @Test
+    public void grepArrays3() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items.[*]", false), out);
+        grep.read(getClass().getResourceAsStream("/big.json"));
+
+        assertEquals("items[0]={...}\n" +
+            "items[1]={...}\n" +
+            "items[2]={...}\n" +
+            "items[3]={...}\n" +
+            "items[4]={...}\n" +
+            "items[5]={...}\n" +
+            "items[6]={...}\n" +
+            "items[7]={...}\n", new String(out.toByteArray()));
+    }
 
 }
