@@ -49,15 +49,12 @@ public class Util {
     }
 
     public static OutputStream getOutput(String[] argv, int pos) throws IOException {
-        final OutputStream out;
-        String arg = argv.length > pos ? argv[pos] : null;
-        if (arg != null) {
-            File file = getFile(arg);
-            out = file == null ? System.out : new FileOutputStream(file);
+        if (argv.length > pos) {
+            File file = getFile(argv[pos]);
+            return file == null ? System.out : new FileOutputStream(file);
         } else {
-            out = System.out;
+            return System.out;
         }
-        return out;
     }
 
     protected static void setJsonParserOptions(JsonParser jp) {
