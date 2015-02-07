@@ -19,19 +19,11 @@ public class ParseEvent {
 
 
     public ParseEvent(JsonToken token, Path path, String value) {
-        this.token = token;
-        this.path = path;
-        this.value = value;
-        this.keys = null;
-		this.node = null;
+        this(token, path, value, null);
     }
 
     public ParseEvent(JsonToken token, Path path, String value, List<String> keys) {
-        this.token = token;
-        this.path = path;
-        this.value = value;
-        this.keys = keys;
-		this.node = null;
+        this(token, path, value, keys, null);
     }
 
 	public ParseEvent(JsonToken token, Path path, String value, List<String> keys, Map<String, Object> node) {
