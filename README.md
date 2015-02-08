@@ -98,8 +98,14 @@ You can find objects missing a certain key
 
 ```sh
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  'y.arr[*] ! contains d'
-y.arr[0]={...}
+y.arr[1]={...}
 ```
+You can match directly inside the tree ('...' means 'an abitrary path)
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...e'
+y.arr[1].e=z
+```
+
 
 It can also accept a second optional parameter which is a file or an URL:
 ```sh
@@ -128,4 +134,4 @@ $ jsongrep rows.*.doc.workflow=FOR_REPUBLICATION,rows.*.doc.mid  http://couchdbh
 TODO
 ----
 Currently only precise and * matches on the keys are implemented, but it would be simple to think up
-some other matches. E.g. regular expression matching in keys too, or something to match at arbitrary depth.
+some other matches. E.g. regular expression matching in keys too.
