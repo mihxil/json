@@ -1,24 +1,47 @@
 package org.meeuw.json;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Iterator;
+import javax.swing.table.TableStringConverter;
+import java.util.*;
 
 /**
 * @author Michiel Meeuwissen
 * @since 0.4
 */
-public class Path extends ArrayDeque<PathEntry> {
+public class Path extends AbstractList<PathEntry> {
+
+    private final List<PathEntry> backing = new ArrayList<PathEntry>();
 
     public Path() {
 
     }
+
+    @Override
+    public int size() {
+        return backing.size();
+    }
+
+    @Override
+    public PathEntry get(int index) {
+        return backing.get(index);
+    }
+
+    @Override
+    public PathEntry set(int i, PathEntry e) {
+        return backing.set(i, e);
+    }
+    @Override
+    public void add(int i, PathEntry e) {
+        backing.add(i, e);
+    }
+    @Override
+    public PathEntry remove(int i) {
+        return backing.remove(i);
+    }
     public Path(Path copy) {
-        super(copy);
+        backing.addAll(copy.backing);
     }
 	public Path(PathEntry... entries) {
-		super();
-		addAll(Arrays.asList(entries));
+        backing.addAll(Arrays.asList(entries));
 	}
 
     public Path parent() {
@@ -41,5 +64,19 @@ public class Path extends ArrayDeque<PathEntry> {
             pe.appendTo(builder);
         }
         return builder.toString();
+    }
+
+    public PathEntry peekLast() {
+        return backing.size() == 0 ? null : backing.get(backing.size() - 1);
+
+
+    }
+
+    public PathEntry pollLast() {
+        return backing.size() == 0 ? null : backing.remove(backing.size() - 1);
+    }
+
+    public void addLast(ArrayEntry inc) {
+        backing.add(inc);
     }
 }

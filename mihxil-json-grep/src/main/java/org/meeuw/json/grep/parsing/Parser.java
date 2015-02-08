@@ -65,12 +65,24 @@ public class Parser {
     }
 
     public static SinglePathMatcher parseKeysMatcher(String arg, boolean ignoreArrays) {
-        String[] split = arg.split("[\\.\\[]+");
-        ArrayList<KeyPattern> list = new ArrayList<KeyPattern>(split.length);
+        String[] split = arg.split("[\\.\\[]");
+        ArrayList<KeysPattern> list = new ArrayList<KeysPattern>(split.length);
+        boolean foundEmpty = false;
         for (String s : split) {
-            list.add(parseKeyPattern(s));
+            if (s.isEmpty()) {
+                if (foundEmpty) {
+                    list.add(new AnyDepthMatcher());
+                    foundEmpty = false;
+                } else {
+                    foundEmpty = true;
+                }
+
+            } else {
+                foundEmpty = false;
+                list.add(parseKeyPattern(s));
+            }
         }
-        return new SinglePathMatcher(ignoreArrays, list.toArray(new KeyPattern[list.size()]));
+        return new SinglePathMatcher(ignoreArrays, list.toArray(new KeysPattern[list.size()]));
     }
 
     protected static KeyPattern parseKeyPattern(String arg) {

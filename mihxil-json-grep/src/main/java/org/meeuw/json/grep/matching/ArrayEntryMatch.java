@@ -7,7 +7,7 @@ import org.meeuw.json.PathEntry;
 * @author Michiel Meeuwissen
 * @since ...
 */
-public class ArrayEntryMatch implements KeyPattern {
+public class ArrayEntryMatch extends AbstractKeyPattern {
     @Override
     public boolean matches(PathEntry key) {
         return key instanceof ArrayEntry;

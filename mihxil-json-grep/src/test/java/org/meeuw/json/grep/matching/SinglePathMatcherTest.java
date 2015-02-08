@@ -1,18 +1,18 @@
 package org.meeuw.json.grep.matching;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.junit.Test;
 import org.meeuw.json.ArrayEntry;
 import org.meeuw.json.KeyEntry;
 import org.meeuw.json.Path;
 import org.meeuw.json.PathEntry;
 
-import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -26,13 +26,13 @@ public class SinglePathMatcherTest {
         SinglePathMatcher matcher = new SinglePathMatcher(true,
                 new PreciseMatch("titles"),
                 new PreciseMatch("value"));
-        assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2)))));
-        assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("foo"), new ArrayEntry(2)))));
-        assertTrue(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new KeyEntry("value")))));
-        assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("foo"), new KeyEntry("value")))));
-        assertTrue(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("value")))));
-        assertFalse(matcher.matches(new ArrayDeque<PathEntry>(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("foo")))));
-        assertFalse(matcher.matches(new ArrayDeque<PathEntry>()));
+        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2))));
+        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("foo"), new ArrayEntry(2))));
+        assertTrue(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("titles"), new KeyEntry("value"))));
+        assertFalse(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("foo"), new KeyEntry("value"))));
+        assertTrue(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("value"))));
+        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("foo"))));
+        assertFalse(matcher.matches(Collections.<PathEntry>emptyList()));
 
 
     }
@@ -42,9 +42,7 @@ public class SinglePathMatcherTest {
         SinglePathMatcher matcher = new SinglePathMatcher(true,
                 new PreciseMatch("titles"),
                 new PreciseMatch("value"));
-        assertFalse(matcher.matches(new ArrayDeque<PathEntry>()));
-
-
+        assertFalse(matcher.matches(Collections.<PathEntry>emptyList()));
     }
 
     @Test
@@ -53,7 +51,7 @@ public class SinglePathMatcherTest {
                 new PreciseMatch("titles"),
                 new PreciseMatch("value"));
 
-        Deque<PathEntry> path = new Path();
+        Path path = new Path();
         path.add(new KeyEntry("titles"));
         path.add(new ArrayEntry(1));
 
@@ -66,7 +64,7 @@ public class SinglePathMatcherTest {
                 new PreciseMatch("titles"),
                 new PreciseMatch("value"));
 
-        Deque<PathEntry> path = new Path();
+        Path path = new Path();
         path.add(new KeyEntry("titles"));
         path.add(new ArrayEntry(1));
         path.add(new KeyEntry("value"));
@@ -81,4 +79,29 @@ public class SinglePathMatcherTest {
 		assertTrue(matcher.needsKeyCollection().test(new Path(new KeyEntry("c"), new ArrayEntry())));
 		assertFalse(matcher.needsKeyCollection().test(new Path(new KeyEntry("c"))));
 	}
+
+    @Test
+    public void testWithSkip() {
+
+        PathMatcher matcher = new SinglePathMatcher(mock(KeysPattern.class), new ArrayEntryMatch());
+
+    }
+
+    @Test
+    public void testAnyDepthMatcher() throws IOException {
+        SinglePathMatcher matcher = new SinglePathMatcher(false,
+                new AnyDepthMatcher(),
+                new PreciseMatch("value"));
+        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2))));
+        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("foo"), new ArrayEntry(2))));
+        assertTrue(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("titles"), new KeyEntry("value"))));
+        assertTrue(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("foo"), new KeyEntry("value"))));
+        assertTrue(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("a"), new KeyEntry("b"), new KeyEntry("value"))));
+        assertTrue(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("value"))));
+        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("foo"))));
+        assertFalse(matcher.matches(Collections.<PathEntry>emptyList()));
+
+
+
+    }
 }

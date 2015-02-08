@@ -5,7 +5,7 @@ import org.meeuw.json.PathEntry;
 /**
  * A wild card matches always.
  */
-public class Wildcard implements  KeyPattern {
+public class Wildcard extends AbstractKeyPattern {
 
     @Override
     public boolean matches(PathEntry key) {

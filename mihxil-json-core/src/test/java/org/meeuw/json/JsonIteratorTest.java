@@ -186,6 +186,30 @@ public class JsonIteratorTest {
         assertFalse(iterator.hasNext());
     }
 
+    @Test
+    public void npe() throws IOException {
+        JsonIterator iterator = new JsonIterator(
+                Util.getJsonParser("{\"items\" : [{ \"result\" : {\"a\" : {}, \"b\" : 1 }} ]}"), Predicates.<Path>alwaysFalse(), Predicates.<Path>alwaysFalse());
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "items");
+        assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "result");
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 3);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 4, "a");
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 4);
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 4);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 4, "b");
+        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 4);
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 3);
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
+        assertEvent(iterator.next(), JsonToken.END_ARRAY, 1);
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 0);
+        assertFalse(iterator.hasNext());
+        assertFalse(iterator.hasNext());
+
+    }
+
     protected void assertEvent(ParseEvent event, JsonToken token, int depth, String value) {
         assertTrue(event.getToken() == token);
         assertEquals(depth, event.getPath().size());

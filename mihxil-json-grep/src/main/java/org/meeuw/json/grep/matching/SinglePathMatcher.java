@@ -1,55 +1,84 @@
 package org.meeuw.json.grep.matching;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.meeuw.json.ArrayEntry;
 import org.meeuw.json.PathEntry;
-
-import java.util.Deque;
 
 /**
  * A single path matches precisely one 'path'. For multiple matches we'd wrap them in {@link PathMatcherOrChain} or {@link PathMatcherAndChain}
  */
 public class SinglePathMatcher extends KeysMatcher {
-    private final KeyPattern[] pathPattern;
+    private final KeysPattern[] pathPattern;
 
     private boolean ignoreArrays;
 
-    public SinglePathMatcher(KeyPattern... pathPattern) {
+    public SinglePathMatcher(KeysPattern... pathPattern) {
         this(false, pathPattern);
     }
 
-    public SinglePathMatcher(boolean ignoreArrays, KeyPattern... pathPattern) {
+    public SinglePathMatcher(boolean ignoreArrays, KeysPattern... pathPattern) {
         this.ignoreArrays = ignoreArrays;
         this.pathPattern = pathPattern;
     }
 
     @Override
-    public boolean matches(Deque<PathEntry> path) {
-        if (!ignoreArrays && path.size() != pathPattern.length) {
-            return false;
-        }
-        int i = 0;
-        for (PathEntry e : path) {
-            if (ignoreArrays && e instanceof ArrayEntry) {
-                continue;
+    public boolean matches(List<PathEntry> path) {
+
+        if (ignoreArrays) {
+            List<PathEntry> withoutArrays = new ArrayList<PathEntry>();
+            for (PathEntry e : path) {
+                if (! (e instanceof ArrayEntry)) {
+                    withoutArrays.add(e);
+                }
             }
-            if (! pathPattern[i++].matches(e)) {
+            return matches(Arrays.asList(pathPattern), withoutArrays);
+        }
+
+        return matches(Arrays.asList(pathPattern), path);
+    }
+
+
+    private boolean matches(List<KeysPattern> patterns, List<PathEntry> entries) {
+        if (patterns.size() > 0) {
+            KeysPattern first = patterns.get(0);
+            int matchCounts = first.matchCounts(entries);
+            if (matchCounts >= 0) {
+                for (int i = 0; i < matchCounts; i++) {
+                    if (i == entries.size() - 1) {
+                        return patterns.size() == 1;
+                    }
+                    if (matches(patterns.subList(1, patterns.size()), entries.subList(i + 1, entries.size()))) {
+                        return true;
+                    }
+                }
+                return false;
+            } else {
                 return false;
             }
+
+        } else {
+            return entries.size() == 0;
         }
-        return i == pathPattern.length;
     }
+
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        for (KeyPattern p : pathPattern) {
-            if (builder.length() > 0 && ! (p instanceof ArrayEntryMatch)) builder.append(".");
+        for (KeysPattern p : pathPattern) {
+            if (builder.length() > 0 && ! (p instanceof ArrayEntryMatch)) {
+                builder.append(".");
+            }
             builder.append(String.valueOf(p));
         }
         return builder.toString();
     }
 
 
-    public KeyPattern[] getPatterns() {
+    public KeysPattern[] getPatterns() {
         return pathPattern;
     }
 }

@@ -102,5 +102,13 @@ public class ParserTest {
         assertEquals(" function(doc) {}", result.getPatterns()[1].toString());
     }
 
+    @Test
+    public void anyDepth() {
+        SinglePathMatcher result = Parser.parseKeysMatcher("...b", false);
+        assertTrue(result.getPatterns()[0] instanceof AnyDepthMatcher);
+        assertTrue(result.getPatterns()[1] instanceof PreciseMatch);
+
+
+    }
 
 }

@@ -1,9 +1,11 @@
 package org.meeuw.json.grep;
 
 import org.meeuw.json.ParseEvent;
+import org.meeuw.json.Path;
 import org.meeuw.json.PathEntry;
 
 import java.util.Deque;
+import java.util.List;
 
 /**
  * @author Michiel Meeuwissen
@@ -26,7 +28,7 @@ public class GrepEvent {
         this.type = type;
     }
 
-    public Deque<PathEntry> getPath() {
+    public Path getPath() {
         return event.getPath();
     }
 

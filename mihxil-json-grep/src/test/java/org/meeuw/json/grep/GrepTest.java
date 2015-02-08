@@ -116,7 +116,8 @@ public class GrepTest {
 
     @Test
     public void grepNoKeyMatch() throws IOException {
-        Grep grep = new Grep(new ObjectMatcherNot(new ObjectHasKeyMatcher("b2")), Util.getJsonParser("{c: [{b1: 1}, {b3: 2}]}"));
+        Grep grep = new Grep(new ObjectMatcherNot(
+                new ObjectHasKeyMatcher("b2")), Util.getJsonParser("{c: [{b1: 1}, {b3: 2}]}"));
         assertEquals("c[0]={...}", grep.next().toString());
 		assertEquals("c[1]={...}", grep.next().toString());
 		assertEquals("={...}", grep.next().toString());
@@ -126,14 +127,18 @@ public class GrepTest {
 
 	@Test
 	public void grepKeyNoKeyMatch() throws IOException {
-		Grep grep = new Grep(new PathMatcherAndChain(new SinglePathMatcher(new PreciseMatch("c"), new ArrayEntryMatch()), new ObjectMatcherNot(new ObjectHasKeyMatcher("b1"))), Util.getJsonParser("{c: [{b1: 1}, {b3: 2}]}"));
+		Grep grep = new Grep(new PathMatcherAndChain(
+                new SinglePathMatcher(new PreciseMatch("c"), new ArrayEntryMatch()),
+                new ObjectMatcherNot(new ObjectHasKeyMatcher("b1"))), Util.getJsonParser("{c: [{b1: 1}, {b3: 2}]}"));
 		assertEquals("c[1]={...}", grep.next().toString());
 		assertFalse(grep.hasNext());
 	}
 
     @Test
     public void grepJsonMatch() throws IOException {
-        Grep grep = new Grep(new PathMatcherAndChain(new SinglePathMatcher(new PreciseMatch("c")), new JavascriptMatcher("function(doc) {return doc.b1 != null;}")),
+        Grep grep = new Grep(new PathMatcherAndChain(
+                new SinglePathMatcher(new PreciseMatch("c")),
+                new JavascriptMatcher("function(doc) {return doc.b1 != null;}")),
                 Util.getJsonParser("{c: {b1: 1, b3: 2}}"));
         assertEquals("c={...}", grep.next().toString());
         assertFalse(grep.hasNext());
@@ -141,9 +146,24 @@ public class GrepTest {
 
     @Test
     public void grepArrayMatch() throws IOException {
-        Grep grep = new Grep(new PathMatcherAndChain(new SinglePathMatcher(new PreciseMatch("items"), new ArrayEntryMatch())), Util.getJsonParser("{ \"items\" : [ { \"a\" : [], \"result\" :\"value\" }]}\n"));
+        Grep grep = new Grep(
+                new SinglePathMatcher(
+                        new PreciseMatch("items"),
+                        new ArrayEntryMatch()),
+                Util.getJsonParser("{ \"items\" : [ { \"a\" : [], \"result\" :\"value\" }]}\n"));
         assertEquals("items[0]={...}", grep.next().toString());
         assertFalse(grep.hasNext());
+    }
+
+    @Test
+    public void nonpe() throws IOException {
+        Grep grep = new Grep(
+                new SinglePathMatcher(
+                        new PreciseMatch("items"),
+                        new ArrayEntryMatch(),
+                        new PreciseMatch("result")),
+                Util.getJsonParser("{\"items\" : [{ \"result\" : {\"a\" : {}, \"b\" : 1 }} ]}"));
+        assertEquals("items[0].result={...}", grep.next().toString());
     }
 
 

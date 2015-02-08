@@ -5,7 +5,7 @@ import org.meeuw.json.PathEntry;
 /**
  * a precise key pattern matches only if the key exactly equals to a certain value.
  */
-public class PreciseMatch implements  KeyPattern {
+public class PreciseMatch extends AbstractKeyPattern  {
     private final String key;
 
     public PreciseMatch(String key) {

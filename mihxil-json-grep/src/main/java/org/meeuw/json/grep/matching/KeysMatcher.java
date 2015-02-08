@@ -1,6 +1,7 @@
 package org.meeuw.json.grep.matching;
 
 import java.util.Deque;
+import java.util.List;
 
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
@@ -15,7 +16,7 @@ public abstract class KeysMatcher implements PathMatcher {
     final public boolean matches(ParseEvent event, String value) {
         return matches(event.getPath());
     }
-    protected abstract  boolean matches(Deque<PathEntry> path);
+    protected abstract  boolean matches(List<PathEntry> path);
 
 	@Override
 	public Predicate<Path> needsKeyCollection() {

@@ -17,7 +17,9 @@ public class KeyEntry implements PathEntry {
 
     @Override
     public void appendTo(StringBuilder builder) {
-        if (builder.length() > 0) builder.append('.');
+        if (builder.length() > 0) {
+            builder.append('.');
+        }
         builder.append(key);
     }
 }
