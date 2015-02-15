@@ -20,7 +20,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
     private final JsonParser jp;
     private final Deque<List<String>> keys = new ArrayDeque<List<String>>();
 
-    private final Deque<Map<String, Object>> objects = new ArrayDeque<Map<String, Object>>();
+    private final Deque<Object> objects = new ArrayDeque<Object>();
 
 	private final Predicate<Path> needsKeyCollection;
 
@@ -68,7 +68,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                         break;
                     }
                     List<String> eventKeys = null;
-                    Map<String, Object> eventObjects = null;
+                    Object eventObjects = null;
 
                     String text = jp.getText();
                     switch (token) {
@@ -80,9 +80,16 @@ public class JsonIterator implements Iterator<ParseEvent> {
                                 objects.add(new HashMap<String, Object>());
                             }
                             break;
+                        case START_ARRAY:
+                            if (needsJsonCollection.test(path) || !objects.isEmpty()) {
+                                objects.add(new ArrayList<Object>());
+                            }
+                            break;
                         case END_ARRAY:
                             path.pollLast();
-                            //PathEntry prev = path.peekLast();
+                            if (needsJsonCollection.test(path)) {
+                                eventObjects = objects.peekLast();
+                            }
                             break;
                         case FIELD_NAME:
                             String fieldName = jp.getText();
@@ -105,29 +112,27 @@ public class JsonIterator implements Iterator<ParseEvent> {
                     if (! objects.isEmpty()) {
                         switch (token) {
                             case VALUE_STRING:
-                                objects.peekLast().put(path.peekLast().toString(), jp.getText());
+                                put(objects.peekLast(), path.peekLast().toString(), jp.getText());
                                 break;
                             case VALUE_NUMBER_INT:
                             case VALUE_NUMBER_FLOAT:
-                                objects.peekLast().put(path.peekLast().toString(), jp.getNumberValue());
+                                put(objects.peekLast(), path.peekLast().toString(), jp.getNumberValue());
                                 break;
                             case VALUE_TRUE:
                             case VALUE_FALSE:
-                                objects.peekLast().put(path.peekLast().toString(), jp.getBooleanValue());
+                                put(objects.peekLast(), path.peekLast().toString(), jp.getBooleanValue());
                                 break;
                             case VALUE_NULL:
-                                objects.peekLast().put(path.peekLast().toString(), null);
+                                put(objects.peekLast(), path.peekLast().toString(), null);
                                 break;
                             case END_OBJECT:
-                                Map<String, Object> object = objects.pollLast();
-                                Map<String, Object> e = objects.peekLast();
+                            case END_ARRAY:
+                                Object object = objects.pollLast();
+                                Object e = objects.peekLast();
                                 if (e != null) {
-                                    e.put(path.peekLast().toString(), object);
+                                    put(e, path.peekLast().toString(), object);
                                 }
                                 break;
-                            case END_ARRAY:
-                                break;
-
                         }
 
                     }
@@ -158,6 +163,14 @@ public class JsonIterator implements Iterator<ParseEvent> {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    private void put(Object parent, String key, Object value) {
+        if (parent instanceof Map) {
+            ((Map) parent).put(key, value);
+        } else {
+            ((List) parent).add(value);
         }
     }
 

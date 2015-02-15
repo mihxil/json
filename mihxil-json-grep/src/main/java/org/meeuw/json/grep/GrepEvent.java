@@ -1,14 +1,10 @@
 package org.meeuw.json.grep;
 
+import java.io.StringWriter;
+
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
-import org.meeuw.json.PathEntry;
 import org.meeuw.json.Util;
-
-import java.io.StringWriter;
-import java.util.Deque;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Michiel Meeuwissen

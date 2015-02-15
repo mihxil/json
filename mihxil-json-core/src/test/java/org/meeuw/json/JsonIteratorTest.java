@@ -3,6 +3,7 @@ package org.meeuw.json;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -122,20 +123,6 @@ public class JsonIteratorTest {
         assertFalse(iterator.hasNext());
     }
 
-    @Test
-    public void collectObjects1() throws IOException {
-        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: {}}}"),
-                Predicates.<Path>alwaysFalse(),
-                new Predicate<Path>() {
-                    @Override
-                    public boolean test(Path path) {
-                        return path != null && path.size() == 0;
-                    }
-                });
-        while(iterator.hasNext()) {
-            System.out.println(iterator.next().getNode());
-        }
-    }
 
 	@Test
 	public void collectObjects() throws IOException {
@@ -168,6 +155,34 @@ public class JsonIteratorTest {
 		assertEquals(null, lastout.getKeys());
 		assertFalse(iterator.hasNext());
 	}
+
+    @Test
+    public void collectArray() throws IOException {
+        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: [1, 2.0, 3]}"),
+                Predicates.<Path>alwaysFalse(),
+                new Predicate<Path>() {
+                    @Override
+                    public boolean test(Path path) {
+                        return path != null && path.size() == 1 && path.peekLast().toString().equals("b");
+                    }
+                });
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
+        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
+        assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
+        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "1");
+        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_FLOAT, 2, "2.0");
+        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "3");
+        ParseEvent last = iterator.next();
+        assertEvent(last, JsonToken.END_ARRAY, 1);
+        List<Object> expected = Arrays.<Object>asList(1, 2.0, 3);
+        assertEquals(expected, last.getNode());
+        ParseEvent lastout = iterator.next();
+        assertEvent(lastout, JsonToken.END_OBJECT, 0);
+        assertEquals(null, lastout.getKeys());
+        assertFalse(iterator.hasNext());
+    }
 
 
     @Test

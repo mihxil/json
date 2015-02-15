@@ -15,7 +15,7 @@ public class ParseEvent {
     private final Path path;
     private final String value;
     private final List<String> keys;
-	private final Map<String, Object> node;
+	private final Object node;
 
 
     public ParseEvent(JsonToken token, Path path, String value) {
@@ -26,7 +26,7 @@ public class ParseEvent {
         this(token, path, value, keys, null);
     }
 
-	public ParseEvent(JsonToken token, Path path, String value, List<String> keys, Map<String, Object> node) {
+	public ParseEvent(JsonToken token, Path path, String value, List<String> keys, Object node) {
 		this.token = token;
 		this.path = path;
 		this.value = value;
@@ -50,7 +50,7 @@ public class ParseEvent {
         return keys;
     }
 
-	public Map<String, Object> getNode() {
+	public Object getNode() {
 		return node;
 	}
 

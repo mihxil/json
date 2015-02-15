@@ -13,6 +13,11 @@ public class Parser {
 
     // Parse methods for the command line
 
+    public static PathMatcher parsePathMatcherChain(String arg) {
+        return parsePathMatcherChain(arg, false);
+    }
+
+
     public static PathMatcher parsePathMatcherChain(String arg, boolean ignoreArrays) {
         String[] split = arg.split(",");
         if (split.length == 1) {

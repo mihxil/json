@@ -65,7 +65,7 @@ public class GrepMainTest {
 	@Test
 	public void grepTitle() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.*.value", false), out);
+		GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.*.value"), out);
 		grep.setOutputFormat(GrepMain.Output.VALUE);
 		grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
 		assertEquals("title1\ntitle2\n", new String(out.toByteArray()));
@@ -77,7 +77,7 @@ public class GrepMainTest {
     @Test
     public void grepOutputFullValue() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles[0]", false), out);
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles[0]"), out);
         grep.setOutputFormat(GrepMain.Output.FULLVALUE);
         grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
         assertEquals("{\"value\":\"title1\"}\n", new String(out.toByteArray()));
@@ -85,20 +85,19 @@ public class GrepMainTest {
 
 
     @Test
-    @Ignore("TODO")
     public void grepOutputFullArray() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles", false), out);
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles"), out);
         grep.setOutputFormat(GrepMain.Output.FULLVALUE);
         grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
-        assertEquals("{\"value\":\"title1\"}\n", new String(out.toByteArray()));
+        assertEquals("[{\"value\":\"title1\"},{\"value\":\"title2\"}]\n", new String(out.toByteArray()));
     }
 
 
     @Test
 	public void grepNotContainsKey() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.* ! contains a", false), out);
+		GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.* ! contains a"), out);
 		grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
 		grep.read(new StringReader("{titles: [{a: 'A'}, {b: 'B'}]}"));
 		assertEquals("titles[1]={...}\n", new String(out.toByteArray()));
@@ -110,7 +109,7 @@ public class GrepMainTest {
     @Test
     public void grepArrays() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.[*]", false), out);
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.[*]"), out);
         grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
         grep.read(new StringReader("{titles: [{a: 'A'}, {b: 'B'}]}"));
         assertEquals("titles[0]={...}\n" +
@@ -122,7 +121,7 @@ public class GrepMainTest {
     @Test
     public void grepArrays2() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items.[*]", false), out);
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items.[*]"), out);
         grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
         grep.read(getClass().getResourceAsStream("/items.json"));
         assertEquals("items[0]={...}\n" +
@@ -133,7 +132,7 @@ public class GrepMainTest {
     @Test
     public void grepArrays3() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*]", false), out);
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*]"), out);
         grep.read(getClass().getResourceAsStream("/big.json"));
 
         assertEquals("items[0]={...}\n" +
@@ -150,7 +149,7 @@ public class GrepMainTest {
     @Test
     public void grepJavascript1() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("c function(doc) { return doc.b1 == 1}", false),
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("c function(doc) { return doc.b1 == 1}"),
                 out);
         PathMatcherAndChain matcher = (PathMatcherAndChain) grep.getMatcher();
         assertTrue(matcher.getPatterns()[0] instanceof SinglePathMatcher);
@@ -165,7 +164,7 @@ public class GrepMainTest {
     @Test
     public void grepJavascript() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*] function(doc) { return doc.score < 1.9;}", false),
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*] function(doc) { return doc.score < 1.9;}"),
                 out);
         grep.read(getClass().getResourceAsStream("/big.json"));
 

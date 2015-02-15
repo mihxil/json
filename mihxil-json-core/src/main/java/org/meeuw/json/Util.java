@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonParser;
 
 import java.io.*;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,7 +31,7 @@ public class Util {
         return getJsonParser(new StringReader(string));
     }
 
-    public static void write(Map<String, Object> map, Writer writer) {
+    public static void write(Object map, Writer writer) {
         try {
             JsonFactory factory = new JsonFactory();
             JsonGenerator gen = factory.createGenerator(writer);
@@ -49,7 +50,7 @@ public class Util {
         gen.writeEndObject();
     }
 
-    private static  void write(Object[] os, JsonGenerator gen) throws IOException {
+    private static  void write(List<Object> os, JsonGenerator gen) throws IOException {
         gen.writeStartArray();
         for (Object o : os) {
             write(o, gen);
@@ -61,8 +62,8 @@ public class Util {
             gen.writeNull();
         } else if (o instanceof Map) {
             write((Map) o, gen);
-        } else if (o.getClass().isArray()) {
-            write((Object[]) o, gen);
+        } else if (o instanceof List) {
+            write((List) o, gen);
         } else if (o instanceof Integer) {
             gen.writeNumber((Integer) o);
         } else if (o instanceof Double) {
