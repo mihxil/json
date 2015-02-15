@@ -36,12 +36,12 @@ public class GrepMain {
     private String recordsep = "\n";
 
 
-    private final PathMatcher pathMatcher;
+    private final PathMatcher matcher;
     private PathMatcher recordMatcher;
 
 
     public GrepMain(PathMatcher pathMatcher, OutputStream output) {
-        this.pathMatcher = pathMatcher;
+        this.matcher = pathMatcher;
         this.output = new PrintStream(output);
     }
 
@@ -80,8 +80,12 @@ public class GrepMain {
         this.recordMatcher = recordMatcher;
     }
 
+    public PathMatcher getMatcher() {
+        return matcher;
+    }
+
     public void read(JsonParser in) throws IOException {
-        Grep grep = new Grep(pathMatcher, in);
+        Grep grep = new Grep(matcher, in);
         if (recordMatcher != null) {
             grep.setRecordMatcher(recordMatcher);
         }
@@ -189,7 +193,7 @@ public class GrepMain {
         }
 
         if (cl.hasOption("debug")) {
-            System.out.println(String.valueOf(grep.pathMatcher));
+            System.out.println(String.valueOf(grep.matcher));
             return;
         }
 

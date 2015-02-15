@@ -95,11 +95,20 @@ public class ParserTest {
 
     @Test
     public void javascript() {
-        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b function(doc) {}", false);
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcherChain("a[*].b function(doc) { return doc.b1 == 1}", false);
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
         assertTrue(result.getPatterns()[1] instanceof JavascriptMatcher);
-        assertEquals(" function(doc) {}", result.getPatterns()[1].toString());
+        assertEquals("function(doc) { return doc.b1 == 1}", result.getPatterns()[1].toString());
+    }
+
+    @Test
+    public void javascript2() {
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcherChain("c function(doc) {}", false);
+        assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
+        assertEquals("c", result.getPatterns()[0].toString());
+        assertTrue(result.getPatterns()[1] instanceof JavascriptMatcher);
+        assertEquals("function(doc) {}", result.getPatterns()[1].toString());
     }
 
     @Test

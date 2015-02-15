@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.*;
 
+import com.sun.prism.impl.Disposer;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -135,12 +137,32 @@ public class GrepTest {
 	}
 
     @Test
-    public void grepJsonMatch() throws IOException {
+    public void grepJavascriptMatch() throws IOException {
         Grep grep = new Grep(new PathMatcherAndChain(
                 new SinglePathMatcher(new PreciseMatch("c")),
-                new JavascriptMatcher("function(doc) {return doc.b1 != null;}")),
+                new JavascriptMatcher("function(doc) {return doc.b1 == 1;}")),
                 Util.getJsonParser("{c: {b1: 1, b3: 2}}"));
         assertEquals("c={...}", grep.next().toString());
+        assertFalse(grep.hasNext());
+    }
+
+    @Test
+    public void grepJavascriptNotMatch() throws IOException {
+        Grep grep = new Grep(new PathMatcherAndChain(
+                new SinglePathMatcher(new PreciseMatch("c")),
+                new JavascriptMatcher("function(doc) {return doc.b1 == 2;}")),
+                Util.getJsonParser("{c: {b1: 1, b3: 2}}"));
+        assertFalse(grep.hasNext());
+    }
+
+
+    @Test
+    public void grepJavascriptArrayMatch() throws IOException {
+        Grep grep = new Grep(new PathMatcherAndChain(
+                new SinglePathMatcher(new PreciseMatch("c"), new ArrayEntryMatch()),
+                new JavascriptMatcher("function(doc) {return doc.b1 == 1;}")),
+                Util.getJsonParser("{c: [{b1: 1, b3: {}}, {b1: 2, b3: {}}]}"));
+        assertEquals("c[0]={...}", grep.next().toString());
         assertFalse(grep.hasNext());
     }
 
@@ -164,6 +186,18 @@ public class GrepTest {
                         new PreciseMatch("result")),
                 Util.getJsonParser("{\"items\" : [{ \"result\" : {\"a\" : {}, \"b\" : 1 }} ]}"));
         assertEquals("items[0].result={...}", grep.next().toString());
+    }
+
+    @Test
+    public void recordMatcher() throws IOException {
+        Grep grep = new Grep(
+                null,
+                Util.getJsonParser("{\"items\" : [5, 6]}")
+        );
+        grep.setRecordMatcher(new SinglePathMatcher(new PreciseMatch("items"), new ArrayEntryMatch()));
+        assertEquals(GrepEvent.Type.RECORD, grep.next().getType());
+        assertEquals(GrepEvent.Type.RECORD, grep.next().getType());
+        assertFalse(grep.hasNext());
     }
 
 

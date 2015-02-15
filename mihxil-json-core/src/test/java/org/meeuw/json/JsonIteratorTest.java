@@ -122,16 +122,31 @@ public class JsonIteratorTest {
         assertFalse(iterator.hasNext());
     }
 
+    @Test
+    public void collectObjects1() throws IOException {
+        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: {}}}"),
+                Predicates.<Path>alwaysFalse(),
+                new Predicate<Path>() {
+                    @Override
+                    public boolean test(Path path) {
+                        return path != null && path.size() == 0;
+                    }
+                });
+        while(iterator.hasNext()) {
+            System.out.println(iterator.next().getNode());
+        }
+    }
+
 	@Test
 	public void collectObjects() throws IOException {
-		JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: 2}}"),
+		JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: {}}}"),
 				Predicates.<Path>alwaysFalse(),
 				new Predicate<Path>() {
-			@Override
-			public boolean test(Path path) {
-				return path != null && path.size() == 1 && path.peekLast().toString().equals("b");
-			}
-		});
+                    @Override
+                    public boolean test(Path path) {
+                        return path != null && path.size() == 1 && path.peekLast().toString().equals("b");
+                    }
+                });
 		assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
 		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
@@ -140,12 +155,13 @@ public class JsonIteratorTest {
 		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "c");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "1");
 		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "d");
-		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "2");
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
 		ParseEvent last = iterator.next();
 		assertEvent(last, JsonToken.END_OBJECT, 1);
         Map<String, Object> expected = new HashMap<String, Object>();
         expected.put("c", Integer.valueOf(1));
-        expected.put("d", Integer.valueOf(2));
+        expected.put("d", new HashMap<String, Object>());
 		assertEquals(expected, last.getNode());
 		ParseEvent lastout = iterator.next();
 		assertEvent(lastout, JsonToken.END_OBJECT, 0);

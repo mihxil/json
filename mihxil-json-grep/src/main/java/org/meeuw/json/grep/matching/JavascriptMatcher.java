@@ -35,12 +35,7 @@ public class JavascriptMatcher extends ObjectMatcher {
         Scriptable that = context.newObject(scope);
         Function fct = context.compileFunction(scope, script, "script", 1, null);
 
-        NativeObject nobj = new NativeObject();
-        if (event.getNode() != null) {
-            for (Map.Entry<String, Object> entry : event.getNode().entrySet()) {
-                nobj.defineProperty(entry.getKey(), entry.getValue(), NativeObject.READONLY);
-            }
-        }
+        NativeObject nobj = getNativeObject(event);
 
         Object result = fct.call(
                 context, scope, that, new Object[]{nobj});
@@ -51,6 +46,18 @@ public class JavascriptMatcher extends ObjectMatcher {
         } else {
             return (Boolean) result;
         }
+    }
+
+    private NativeObject getNativeObject(ParseEvent event) {
+        NativeObject nobj = new NativeObject();
+        if (event.getNode() != null) {
+            for (Map.Entry<String, Object> entry : event.getNode().entrySet()) {
+                nobj.defineProperty(entry.getKey(), entry.getValue(), NativeObject.READONLY);
+            }
+        } else {
+            throw new IllegalStateException("No node found in " + event);
+        }
+        return nobj;
     }
 
     @Override
@@ -65,6 +72,6 @@ public class JavascriptMatcher extends ObjectMatcher {
 
     @Override
     public String toString() {
-        return " " + script;
+        return script;
     }
 }

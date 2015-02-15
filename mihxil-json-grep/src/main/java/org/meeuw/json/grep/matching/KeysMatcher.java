@@ -14,7 +14,8 @@ import org.meeuw.util.Predicate;
 public abstract class KeysMatcher implements PathMatcher {
     @Override
     final public boolean matches(ParseEvent event, String value) {
-        return matches(event.getPath());
+        boolean result = matches(event.getPath());
+        return result;
     }
     protected abstract  boolean matches(List<PathEntry> path);
 

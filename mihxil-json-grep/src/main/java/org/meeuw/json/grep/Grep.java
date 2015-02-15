@@ -9,6 +9,7 @@ import org.meeuw.json.JsonIterator;
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.grep.matching.NeverPathMatcher;
 import org.meeuw.json.grep.matching.PathMatcher;
+import org.meeuw.json.grep.matching.PathMatchers;
 
 import com.fasterxml.jackson.core.JsonParser;
 
@@ -28,8 +29,10 @@ public class Grep implements Iterator<GrepEvent> {
     private final List<GrepEvent> next = new ArrayList<GrepEvent>();
 
     public Grep(PathMatcher matcher, JsonParser jp) {
-        this.matcher = matcher;
-        this.wrapped = new JsonIterator(jp, matcher.needsKeyCollection(), matcher.needsObjectCollection());
+        this.matcher = matcher == null ? new NeverPathMatcher() : matcher;
+        this.wrapped = new JsonIterator(jp,
+                this.matcher.needsKeyCollection(),
+                this.matcher.needsObjectCollection());
     }
 
     @Override
@@ -86,5 +89,8 @@ public class Grep implements Iterator<GrepEvent> {
         this.recordMatcher = recordMatcher;
     }
 
+    public PathMatcher getMatcher() {
+        return matcher;
+    }
 
 }

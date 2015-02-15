@@ -6,12 +6,11 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import org.junit.Test;
-import org.meeuw.json.grep.matching.PreciseMatch;
-import org.meeuw.json.grep.matching.SinglePathMatcher;
-import org.meeuw.json.grep.matching.Wildcard;
+import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GrepMainTest {
 
@@ -112,7 +111,7 @@ public class GrepMainTest {
     @Test
     public void grepArrays3() throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items.[*]", false), out);
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*]", false), out);
         grep.read(getClass().getResourceAsStream("/big.json"));
 
         assertEquals("items[0]={...}\n" +
@@ -123,6 +122,36 @@ public class GrepMainTest {
             "items[5]={...}\n" +
             "items[6]={...}\n" +
             "items[7]={...}\n", new String(out.toByteArray()));
+    }
+
+
+    @Test
+    public void grepJavascript1() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("c function(doc) { return doc.b1 == 1}", false),
+                out);
+        PathMatcherAndChain matcher = (PathMatcherAndChain) grep.getMatcher();
+        assertTrue(matcher.getPatterns()[0] instanceof SinglePathMatcher);
+        assertEquals("c", matcher.getPatterns()[0].toString());
+        assertTrue(matcher.getPatterns()[1] instanceof JavascriptMatcher);
+        assertEquals("function(doc) { return doc.b1 == 1}", matcher.getPatterns()[1].toString());
+        grep.read(new StringReader("{c: {b1: 1, b3: 2}}"));
+
+        assertEquals("c={...}\n", new String(out.toByteArray()));
+    }
+
+    @Test
+    public void grepJavascript() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*] function(doc) { return doc.score < 1.9;}", false),
+                out);
+        grep.read(getClass().getResourceAsStream("/big.json"));
+
+        assertEquals(
+                "items[4]={...}\n" +
+                "items[5]={...}\n" +
+                "items[6]={...}\n" +
+                "items[7]={...}\n", new String(out.toByteArray()));
     }
 
 }
