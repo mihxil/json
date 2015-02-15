@@ -24,7 +24,8 @@ public class GrepMain {
         KEYANDVALUE,
 		PATH,
 		KEY,
-        VALUE
+        VALUE,
+        FULLVALUE
     }
 
     private Output outputFormat = Output.PATHANDVALUE;
@@ -116,7 +117,10 @@ public class GrepMain {
                             break;
                         case VALUE:
                             output.print(match.getValue());
-                        break;
+                            break;
+                        case FULLVALUE:
+                            output.print(match.getNode());
+                            break;
                     }
                     needsSeperator = true;
                     break;
@@ -150,7 +154,7 @@ public class GrepMain {
         Options options = new Options().addOption(new Option("help", "print this message"));
         options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
         options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
-        options.addOption(new Option("record", true, "Record pattern (default to no matching at all)"));
+        options.addOption(new Option("record", true, "Record pattern (default to no matching at all). On match, a record separator will be outputted."));
         options.addOption(new Option("recordsep", true, "Record separator"));
         options.addOption(new Option("version", false, "Output version"));
         options.addOption(new Option("ignoreArrays", false, "Ignore arrays (no need to match those)"));
@@ -178,28 +182,28 @@ public class GrepMain {
         if (cl.hasOption("ignoreArrays")) {
             ignoreArrays = true;
         }
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain(args[0], ignoreArrays), System.out);
+        GrepMain main = new GrepMain(Parser.parsePathMatcherChain(args[0], ignoreArrays), System.out);
         if (cl.hasOption("output")) {
-            grep.setOutputFormat(Output.valueOf(cl.getOptionValue("output").toUpperCase()));
+            main.setOutputFormat(Output.valueOf(cl.getOptionValue("output").toUpperCase()));
         }
         if (cl.hasOption("sep")) {
-            grep.setSep(cl.getOptionValue("sep"));
+            main.setSep(cl.getOptionValue("sep"));
         }
         if (cl.hasOption("recordsep")) {
-            grep.setRecordsep(cl.getOptionValue("recordsep"));
+            main.setRecordsep(cl.getOptionValue("recordsep"));
         }
         if (cl.hasOption("record")) {
-            grep.setRecordMatcher(Parser.parsePathMatcherChain(cl.getOptionValue("record"), false));
+            main.setRecordMatcher(Parser.parsePathMatcherChain(cl.getOptionValue("record"), false));
         }
 
         if (cl.hasOption("debug")) {
-            System.out.println(String.valueOf(grep.matcher));
+            System.out.println(String.valueOf(main.matcher));
             return;
         }
 
 		List<String> argList = cl.getArgList();
 		InputStream in = Util.getInput(argList.toArray(new String[argList.size()]), 1);
-        grep.read(in);
+        main.read(in);
         in.close();
     }
 }

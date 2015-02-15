@@ -3,9 +3,12 @@ package org.meeuw.json.grep;
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
 import org.meeuw.json.PathEntry;
+import org.meeuw.json.Util;
 
+import java.io.StringWriter;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Michiel Meeuwissen
@@ -42,6 +45,20 @@ public class GrepEvent {
                 return event.getValue();
         }
     }
+
+    public String  getNode() {
+        switch (event.getToken()) {
+            case END_OBJECT:
+            case END_ARRAY: {
+                StringWriter writer = new StringWriter();
+                Util.write(event.getNode(), writer);
+                return writer.toString();
+            }
+            default:
+                return event.getValue();
+        }
+    }
+
 
     public Type getType() {
         return type;

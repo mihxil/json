@@ -7,8 +7,6 @@ import org.junit.Test;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.*;
 
-import com.sun.prism.impl.Disposer;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 

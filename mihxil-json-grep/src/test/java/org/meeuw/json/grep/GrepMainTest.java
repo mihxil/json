@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
@@ -73,7 +74,28 @@ public class GrepMainTest {
 	}
 
 
-	@Test
+    @Test
+    public void grepOutputFullValue() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles[0]", false), out);
+        grep.setOutputFormat(GrepMain.Output.FULLVALUE);
+        grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
+        assertEquals("{\"value\":\"title1\"}\n", new String(out.toByteArray()));
+    }
+
+
+    @Test
+    @Ignore("TODO")
+    public void grepOutputFullArray() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles", false), out);
+        grep.setOutputFormat(GrepMain.Output.FULLVALUE);
+        grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
+        assertEquals("{\"value\":\"title1\"}\n", new String(out.toByteArray()));
+    }
+
+
+    @Test
 	public void grepNotContainsKey() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.* ! contains a", false), out);
