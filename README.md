@@ -9,7 +9,7 @@ streams, and everything needs to happen streaming.
 
 I tried several tools imlemented in python (python -m json.tool,
 'jsongrep'), but those consumed very much memory when I fed them a
-json stream of a Gigabyte or so, and seemed not useable for that, so I implemented similar tools based on 
+json stream of a Gigabyte or so, and seemed not useable for that, so I implemented similar tools based on
 jackson2 in java. They are streaming and don't need much memory, and can deal with huge streams of json.
 
 All tools support a -help argument for an overview of all supported options.
@@ -53,7 +53,6 @@ This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used t
 
 
 
-
 Example
 ```sh
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[1].e
@@ -82,6 +81,14 @@ y.arr=[...]
 y={...}
 ```
 
+Unless you specify a different output format:
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep -output PATHANDFULLVALUE y.arr,y
+y.arr=[{"d":"y"},{"e":"z"}]
+y={"c":"x","arr":[{"d":"y"},{"e":"z"}]}
+```
+
+
 It is also possible to match certain values:
 ```sh
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].*=z
@@ -95,15 +102,32 @@ y.arr[1].e=z
 ```
 
 You can find objects missing a certain key
-
 ```sh
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  'y.arr[*] ! contains d'
 y.arr[1]={...}
 ```
+
 You can match directly inside the tree ('...' means 'an abitrary path)
 ```sh
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...e'
 y.arr[1].e=z
+```
+
+It's possible to match on object containing a certain key:
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...arr[*] contains d'
+y.arr[0]={...}
+```
+or the inverse
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...arr[*] ! contains d'
+y.arr[1]={...}
+```
+
+Matching can be implemented with a javascript function as well:
+```sh
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep -output KEYANDFULLVALUE '...arr[*] function(doc) { return doc.d == "y"; }'
+[0]={"d":"y"}
 ```
 
 
