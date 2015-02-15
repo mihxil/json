@@ -77,7 +77,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                                 keys.add(new ArrayList<String>());
                             }
                             if (needsJsonCollection.test(path) || ! objects.isEmpty()) {
-                                objects.add(new HashMap<String, Object>());
+                                objects.add(new LinkedHashMap<String, Object>());
                             }
                             break;
                         case START_ARRAY:

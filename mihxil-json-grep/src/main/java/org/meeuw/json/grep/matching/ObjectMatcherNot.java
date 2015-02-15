@@ -33,6 +33,6 @@ public class ObjectMatcherNot extends ObjectMatcher {
 
 	@Override
 	public String toString() {
-		return "!" + wrapped.toString();
+		return "! " + wrapped.toString();
 	}
 }

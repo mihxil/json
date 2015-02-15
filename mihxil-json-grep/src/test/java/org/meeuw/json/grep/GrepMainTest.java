@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
@@ -26,8 +25,6 @@ public class GrepMainTest {
 
         grep.read(new StringReader("{c: [{b1: 1}, {b3: 2}]}"));
         assertEquals("", new String(out.toByteArray()));
-
-
     }
 
 
@@ -43,8 +40,6 @@ public class GrepMainTest {
 
         grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
         assertEquals("title1\ntitle2\n", new String(out.toByteArray()));
-
-
     }
 
 
@@ -58,8 +53,6 @@ public class GrepMainTest {
 
         grep.read(new StringReader("{}"));
         assertEquals("", new String(out.toByteArray()));
-
-
     }
 
 	@Test
@@ -93,6 +86,16 @@ public class GrepMainTest {
         assertEquals("[{\"value\":\"title1\"},{\"value\":\"title2\"}]\n", new String(out.toByteArray()));
     }
 
+    @Test
+    public void grepOutputFullValueMultiple() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles[0],titles"), out);
+        grep.setOutputFormat(GrepMain.Output.FULLVALUE);
+        grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
+        assertEquals("{\"value\":\"title1\"}\n" +
+                "[{\"value\":\"title1\"},{\"value\":\"title2\"}]\n", new String(out.toByteArray()));
+    }
+
 
     @Test
 	public void grepNotContainsKey() throws IOException {
@@ -114,8 +117,6 @@ public class GrepMainTest {
         grep.read(new StringReader("{titles: [{a: 'A'}, {b: 'B'}]}"));
         assertEquals("titles[0]={...}\n" +
             "titles[1]={...}\n", new String(out.toByteArray()));
-
-
     }
 
     @Test
@@ -135,14 +136,16 @@ public class GrepMainTest {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*]"), out);
         grep.read(getClass().getResourceAsStream("/big.json"));
 
-        assertEquals("items[0]={...}\n" +
-            "items[1]={...}\n" +
-            "items[2]={...}\n" +
-            "items[3]={...}\n" +
-            "items[4]={...}\n" +
-            "items[5]={...}\n" +
-            "items[6]={...}\n" +
-            "items[7]={...}\n", new String(out.toByteArray()));
+        assertEquals(
+                "items[0]={...}\n" +
+                "items[1]={...}\n" +
+                "items[2]={...}\n" +
+                "items[3]={...}\n" +
+                "items[4]={...}\n" +
+                "items[5]={...}\n" +
+                "items[6]={...}\n" +
+                "items[7]={...}\n",
+                new String(out.toByteArray()));
     }
 
 
@@ -173,6 +176,17 @@ public class GrepMainTest {
                 "items[5]={...}\n" +
                 "items[6]={...}\n" +
                 "items[7]={...}\n", new String(out.toByteArray()));
+    }
+
+    @Test // Tests NeedsObjectObjectMatcher...
+    public void grepContains() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GrepMain.Output output = GrepMain.Output.FULLVALUE;
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("...arr[*] contains d", false, output.needsObject()), out);
+        grep.setOutputFormat(output);
+        grep.read(new StringReader("{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"));
+
+        assertEquals("{\"d\":\"y\"}\n", new String(out.toByteArray()));
     }
 
 }

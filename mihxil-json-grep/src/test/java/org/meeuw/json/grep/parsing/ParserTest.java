@@ -1,9 +1,12 @@
 package org.meeuw.json.grep.parsing;
 
 import org.junit.Test;
+import org.meeuw.json.KeyEntry;
+import org.meeuw.json.Path;
 import org.meeuw.json.grep.matching.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -58,7 +61,7 @@ public class ParserTest {
 
     @Test
     public void value() {
-        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b=c", false);
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b=c", false, false);
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
         assertTrue(result.getPatterns()[1] instanceof ValueEqualsMatcher);
@@ -67,7 +70,7 @@ public class ParserTest {
 
     @Test
     public void regexp() {
-        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b~.*", false);
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b~.*", false, false);
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
         assertTrue(result.getPatterns()[1] instanceof ValueRegexpMatcher);
@@ -76,16 +79,16 @@ public class ParserTest {
 
 	@Test
 	public void contains() {
-		PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b contains c", false);
+		PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b contains c", false, false);
 		assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
 		assertEquals("a[*].b", result.getPatterns()[0].toString());
 		assertTrue(result.getPatterns()[1] instanceof ObjectHasKeyMatcher);
-		assertEquals(" contains c", result.getPatterns()[1].toString());
+		assertEquals("contains c", result.getPatterns()[1].toString());
 	}
 
 	@Test
 	public void notcontains() {
-		PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b ! contains c", false);
+		PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b ! contains c", false, false);
 		assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
 		assertEquals("a[*].b", result.getPatterns()[0].toString());
 		assertTrue(result.getPatterns()[1] instanceof ObjectMatcherNot);
@@ -95,7 +98,7 @@ public class ParserTest {
 
     @Test
     public void javascript() {
-        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcherChain("a[*].b function(doc) { return doc.b1 == 1}", false);
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcherChain("a[*].b function(doc) { return doc.b1 == 1}");
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
         assertTrue(result.getPatterns()[1] instanceof JavascriptMatcher);
@@ -104,7 +107,7 @@ public class ParserTest {
 
     @Test
     public void javascript2() {
-        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcherChain("c function(doc) {}", false);
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcherChain("c function(doc) {}");
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("c", result.getPatterns()[0].toString());
         assertTrue(result.getPatterns()[1] instanceof JavascriptMatcher);
@@ -116,6 +119,21 @@ public class ParserTest {
         SinglePathMatcher result = Parser.parseKeysMatcher("...b", false);
         assertTrue(result.getPatterns()[0] instanceof AnyDepthMatcher);
         assertTrue(result.getPatterns()[1] instanceof PreciseMatch);
+
+
+    }
+
+    @Test
+    public void multiple() {
+        PathMatcherOrChain result = (PathMatcherOrChain) Parser.parsePathMatcherChain("a.b,a");
+        assertTrue(result.getMatchers()[0] instanceof SinglePathMatcher);
+        assertTrue(result.getMatchers()[0].needsObjectCollection().test(new Path(new KeyEntry("a"), new KeyEntry("b"))));
+        assertFalse(result.getMatchers()[0].needsObjectCollection().test(new Path(new KeyEntry("a"))));
+        assertTrue(result.getMatchers()[1] instanceof SinglePathMatcher);
+        assertFalse(result.getMatchers()[1].needsObjectCollection().test(new Path(new KeyEntry("a"), new KeyEntry("b"))));
+        assertTrue(result.getMatchers()[1].needsObjectCollection().test(new Path(new KeyEntry("a"))));
+        assertTrue(result.needsObjectCollection().test(new Path(new KeyEntry("a"), new KeyEntry("b"))));
+        assertTrue(result.needsObjectCollection().test(new Path(new KeyEntry("a"))));
 
 
     }

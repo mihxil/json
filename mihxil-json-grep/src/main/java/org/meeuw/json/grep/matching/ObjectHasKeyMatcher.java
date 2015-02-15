@@ -34,7 +34,7 @@ public class ObjectHasKeyMatcher extends ObjectMatcher {
 
 	@Override
 	public String toString() {
-		return " contains " + key;
+		return "contains " + key;
 	}
 
 }

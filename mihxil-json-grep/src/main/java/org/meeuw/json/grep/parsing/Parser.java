@@ -9,29 +9,29 @@ import org.meeuw.json.grep.matching.*;
  * @author Michiel Meeuwissen
  * @since 0.4
  */
-public class Parser {
+public abstract class Parser {
 
     // Parse methods for the command line
 
     public static PathMatcher parsePathMatcherChain(String arg) {
-        return parsePathMatcherChain(arg, false);
+        return parsePathMatcherChain(arg, false, false);
     }
 
 
-    public static PathMatcher parsePathMatcherChain(String arg, boolean ignoreArrays) {
+    public static PathMatcher parsePathMatcherChain(String arg, boolean ignoreArrays, boolean needsObject) {
         String[] split = arg.split(",");
         if (split.length == 1) {
-            return parsePathMatcher(arg, ignoreArrays);
+            return parsePathMatcher(arg, ignoreArrays, needsObject);
         }
         ArrayList<PathMatcher> list = new ArrayList<PathMatcher>(split.length);
         for (String s : split) {
-            list.add(parsePathMatcher(s, ignoreArrays));
+            list.add(parsePathMatcher(s, ignoreArrays, needsObject));
         }
         return new PathMatcherOrChain(list.toArray(new PathMatcher[list.size()]));
 
     }
 
-    protected static PathMatcher parsePathMatcher(String arg, boolean ignoreArrays) {
+    protected static PathMatcher parsePathMatcher(String arg, boolean ignoreArrays, boolean needsObject) {
         String[] split = arg.split("~", 2);
         if (split.length == 2) {
             return new PathMatcherAndChain(
@@ -43,13 +43,13 @@ public class Parser {
 		if (split.length == 2) {
 			return new PathMatcherAndChain(
 					parseKeysMatcher(split[0], ignoreArrays),
-					new ObjectMatcherNot(new ObjectHasKeyMatcher(split[1])));
+					NeedsObjectObjectMatcher.get(new ObjectMatcherNot(new ObjectHasKeyMatcher(split[1])), needsObject));
 		}
 		split = arg.split("\\s+contains\\s+", 2);
 		if (split.length == 2) {
 			return new PathMatcherAndChain(
 					parseKeysMatcher(split[0], ignoreArrays),
-					new ObjectHasKeyMatcher(split[1]));
+					NeedsObjectObjectMatcher.get(new ObjectHasKeyMatcher(split[1]), needsObject));
 		}
         split = arg.split("\\s+function\\(", 2);
         if (split.length == 2) {

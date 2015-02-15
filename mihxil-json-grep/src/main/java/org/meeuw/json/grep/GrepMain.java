@@ -20,12 +20,22 @@ public class GrepMain {
 
 
     public static enum Output {
-        PATHANDVALUE,
-        KEYANDVALUE,
-		PATH,
-		KEY,
-        VALUE,
-        FULLVALUE
+        PATHANDVALUE(false),
+        PATHANDFULLVALUE(true),
+        KEYANDVALUE(false),
+        KEYANDFULLVALUE(true),
+        PATH(false),
+		KEY(false),
+        VALUE(false),
+        FULLVALUE(true);
+        private final boolean needsObject;
+
+        Output(boolean needsObject) {
+            this.needsObject = needsObject;
+        }
+        public boolean needsObject() {
+            return needsObject;
+        }
     }
 
     private Output outputFormat = Output.PATHANDVALUE;
@@ -104,10 +114,20 @@ public class GrepMain {
                             output.print('=');
                             output.print(match.getValue());
                             break;
+                        case PATHANDFULLVALUE:
+                            output.print(match.getPath().toString());
+                            output.print('=');
+                            output.print(match.getNode());
+                            break;
                         case KEYANDVALUE:
                             output.print(match.getPath().peekLast());
                             output.print('=');
                             output.print(match.getValue());
+                            break;
+                        case KEYANDFULLVALUE:
+                            output.print(match.getPath().peekLast());
+                            output.print('=');
+                            output.print(match.getNode());
                             break;
                         case PATH:
                             output.print(match.getPath().toString());
@@ -182,10 +202,14 @@ public class GrepMain {
         if (cl.hasOption("ignoreArrays")) {
             ignoreArrays = true;
         }
-        GrepMain main = new GrepMain(Parser.parsePathMatcherChain(args[0], ignoreArrays), System.out);
+        Output output = Output.PATHANDVALUE;
         if (cl.hasOption("output")) {
-            main.setOutputFormat(Output.valueOf(cl.getOptionValue("output").toUpperCase()));
+            output = Output.valueOf(cl.getOptionValue("output").toUpperCase());
         }
+        GrepMain main = new GrepMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, output.needsObject()), System.out);
+
+        main.setOutputFormat(output);
+
         if (cl.hasOption("sep")) {
             main.setSep(cl.getOptionValue("sep"));
         }
@@ -193,7 +217,7 @@ public class GrepMain {
             main.setRecordsep(cl.getOptionValue("recordsep"));
         }
         if (cl.hasOption("record")) {
-            main.setRecordMatcher(Parser.parsePathMatcherChain(cl.getOptionValue("record"), false));
+            main.setRecordMatcher(Parser.parsePathMatcherChain(cl.getOptionValue("record")));
         }
 
         if (cl.hasOption("debug")) {

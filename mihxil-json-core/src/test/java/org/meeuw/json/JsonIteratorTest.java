@@ -184,6 +184,39 @@ public class JsonIteratorTest {
         assertFalse(iterator.hasNext());
     }
 
+    @Test
+    public void collectObjectsMultiple() throws IOException {
+        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: ['x', 'y']}}"),
+                Predicates.<Path>alwaysFalse(),
+                new Predicate<Path>() {
+                    @Override
+                    public boolean test(Path path) {
+                        return path != null &&
+                                ( (path.size() == 1 && path.peekLast().toString().equals("b")) ||
+                                  (path.size() == 2 && path.peekLast().toString().equals("d"))
+                                );
+                    }
+                });
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
+        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
+        assertEvent(iterator.next(), JsonToken.START_OBJECT, 1);
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "c");
+        assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "1");
+        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "d");
+        assertEvent(iterator.next(), JsonToken.START_ARRAY, 2);
+        assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "x");
+        assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "y");
+        ParseEvent endArray = iterator.next();
+        assertEvent(endArray, JsonToken.END_ARRAY, 2);
+        assertEquals(Arrays.asList("x", "y"), endArray.getNode());
+        ParseEvent endObject = iterator.next();
+        assertEvent(endObject, JsonToken.END_OBJECT, 1);
+        assertEquals("{c=1, d=[x, y]}", endObject.getNode().toString());
+        assertEvent(iterator.next(), JsonToken.END_OBJECT, 0);
+    }
+
 
     @Test
     public void array() throws IOException {
