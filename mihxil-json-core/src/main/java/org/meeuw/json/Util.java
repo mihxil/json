@@ -15,6 +15,8 @@ import java.util.Map;
  */
 public class Util {
 
+    private Util() {}
+
     public static JsonParser getJsonParser(InputStream in) throws IOException {
         JsonParser jp = getJsonFactory().createParser(in);
         setJsonParserOptions(jp);
@@ -33,8 +35,7 @@ public class Util {
 
     public static void write(Object map, Writer writer) {
         try {
-            JsonFactory factory = new JsonFactory();
-            JsonGenerator gen = factory.createGenerator(writer);
+            JsonGenerator gen = getJsonFactory().createGenerator(writer);
             write(map, gen);
             gen.close();
         } catch (IOException ioe) {

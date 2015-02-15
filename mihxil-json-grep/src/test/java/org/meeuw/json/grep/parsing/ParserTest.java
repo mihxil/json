@@ -1,19 +1,29 @@
 package org.meeuw.json.grep.parsing;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import org.junit.Test;
 import org.meeuw.json.KeyEntry;
 import org.meeuw.json.Path;
 import org.meeuw.json.grep.matching.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Michiel Meeuwissen
  * @since 0.4
  */
 public class ParserTest {
+
+    @Test
+    public void constructor() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        final Class<?> cls = Parser.class;
+        final Constructor<?> c = cls.getDeclaredConstructors()[0];
+        assertFalse(c.isAccessible());
+        c.setAccessible(true);
+        c.newInstance((Object[]) null);
+    }
 
     @Test
     public void arrayIndex(){

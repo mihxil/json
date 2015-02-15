@@ -9,7 +9,9 @@ import org.meeuw.json.grep.matching.*;
  * @author Michiel Meeuwissen
  * @since 0.4
  */
-public abstract class Parser {
+public class Parser {
+
+    private Parser() {}
 
     // Parse methods for the command line
 

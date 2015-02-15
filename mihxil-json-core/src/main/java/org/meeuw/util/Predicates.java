@@ -6,6 +6,8 @@ package org.meeuw.util;
  */
 public class Predicates {
 
+    private Predicates() { }
+
 	public static <S> Predicate<S> alwaysFalse() {
 		return new Predicate<S>() {
 			@Override
