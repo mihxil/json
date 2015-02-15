@@ -28,11 +28,15 @@ public class PathMatcherOrChain implements PathMatcher {
 
     @Override
     public Predicate<Path> needsKeyCollection() {
-		return Predicates.and(PathMatchers.needsKeyCollection(matchers));
+		return Predicates.or(PathMatchers.needsKeyCollection(matchers));
 	}
 
     @Override
     public Predicate<Path> needsObjectCollection() {
-        return Predicates.and(PathMatchers.needsObjectCollection(matchers));
+        return Predicates.or(PathMatchers.needsObjectCollection(matchers));
+    }
+
+    public PathMatcher[] getMatchers() {
+        return matchers;
     }
 }
