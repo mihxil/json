@@ -1,13 +1,13 @@
 package org.meeuw.json;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-
 import java.io.*;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 
 /**
  * @author Michiel Meeuwissen
@@ -61,16 +61,22 @@ public class Util {
     private static void write(Object o, JsonGenerator gen) throws IOException {
         if (o == null) {
             gen.writeNull();
+        } else if (o instanceof Long) {
+            gen.writeNumber((Long) o);
+        } else if (o instanceof Double) {
+            gen.writeNumber((Double) o);
+        } else if (o instanceof Boolean) {
+            gen.writeBoolean((Boolean) o);
+        } else if (o instanceof String) {
+            gen.writeString((String) o);
+        } else if (o instanceof Float) {
+            gen.writeNumber((Float) o);
+        } else if (o instanceof Integer) {
+            gen.writeNumber((Integer) o);
         } else if (o instanceof Map) {
             write((Map) o, gen);
         } else if (o instanceof List) {
             write((List) o, gen);
-        } else if (o instanceof Integer) {
-            gen.writeNumber((Integer) o);
-        } else if (o instanceof Double) {
-            gen.writeNumber((Double) o);
-        } else if (o instanceof String) {
-            gen.writeString((String) o);
         }
     }
 
