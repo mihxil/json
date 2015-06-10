@@ -1,4 +1,4 @@
-package org.meeuw;
+package org.meeuw.elasticsearch;
 
 
 import java.io.FileOutputStream;
