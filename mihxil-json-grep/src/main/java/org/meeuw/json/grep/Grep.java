@@ -17,7 +17,7 @@ import com.fasterxml.jackson.core.JsonParser;
  * E.g. 'rows.*.id' will result in only all 'id' values in a json structure.
  * Try the commandline option -help for an overview of all features.
  */
-public class Grep implements Iterator<GrepEvent> {
+public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
 
     // settings
     private final PathMatcher matcher;
@@ -92,4 +92,9 @@ public class Grep implements Iterator<GrepEvent> {
         return matcher;
     }
 
+    @Override
+    public Iterator<GrepEvent> iterator() {
+        return this;
+
+    }
 }
