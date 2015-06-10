@@ -47,12 +47,21 @@ public class DownloadAll {
         Grep grep = new Grep(new PathMatcherOrChain(
             new SinglePathMatcher(new PreciseMatch("_scroll_id")),
             new SinglePathMatcher(new PreciseMatch("hits"), new PreciseMatch("hits"), new ArrayEntryMatch(), new PreciseMatch("_source"))), parser);
+        status.scroll_id = null;
         for (GrepEvent event : grep) {
             if (event.getPath().toString().equals("_scroll_id")) {
-                status.scroll_id = event.getValue();
+                if (! status.scroll_id.equals(event.getValue())) {
+                    status.scroll_id = event.getValue();
+                }
             } else {
                 if (status.count > 0) {
                     out.write(",\n".getBytes());
+                }
+                if (status.count % 1000 == 0) {
+                    System.err.print(".");
+                    if (status.count % 50000 == 0) {
+                        System.err.println("\n");
+                    }
                 }
                 status.count++;
                 out.write(event.getNode().getBytes());
@@ -87,7 +96,7 @@ public class DownloadAll {
         DownloadAll all = new DownloadAll(argv[0], argv[1]);
         all.download(output);
         output.close();
-        System.err.println("ready");
+        System.err.println("\nready");
         System.exit(0);
     }
 }
