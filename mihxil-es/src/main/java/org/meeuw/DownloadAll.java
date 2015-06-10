@@ -40,6 +40,7 @@ public class DownloadAll {
         con.setDoOutput(true);
         con.getOutputStream().write(status.scroll_id.getBytes());
         download(status, con.getInputStream(), out);
+        status.calls++;
     }
 
     private void download(Status status, InputStream is, OutputStream out) throws IOException {
@@ -48,25 +49,29 @@ public class DownloadAll {
             new SinglePathMatcher(new PreciseMatch("_scroll_id")),
             new SinglePathMatcher(new PreciseMatch("hits"), new PreciseMatch("hits"), new ArrayEntryMatch(), new PreciseMatch("_source"))), parser);
         status.scroll_id = null;
+        long subCount = 0;
         for (GrepEvent event : grep) {
             if (event.getPath().toString().equals("_scroll_id")) {
-                if (! status.scroll_id.equals(event.getValue())) {
-                    status.scroll_id = event.getValue();
-                }
+                status.scroll_id = event.getValue();
             } else {
                 if (status.count > 0) {
                     out.write(",\n".getBytes());
                 }
                 if (status.count % 1000 == 0) {
                     System.err.print(".");
-                    if (status.count % 50000 == 0) {
+                    if (status.count > 0 && status.count % 50000 == 0) {
                         System.err.println("\n");
                     }
                 }
                 status.count++;
+                subCount++;
                 out.write(event.getNode().getBytes());
             }
         }
+        if (subCount == 0 && status.calls > 0) {
+            status.ready = true;
+        }
+        status.calls++;
     }
 
     private void download(OutputStream out) throws IOException {
@@ -74,16 +79,18 @@ public class DownloadAll {
         URL url = new URL(elastischSearchServer + elastischSearchDatabase + "/_search?search_type=scan&scroll=10&size=50");
         Status status = new Status();
         download(status, url.openStream(), out);
-        while (status.scroll_id != null) {
+        while (! status.ready) {
             download(status, out);
         }
-        out.write("[".getBytes());
+        out.write("]".getBytes());
 
     }
 
     private static class Status {
         String scroll_id = null;
         long count = 0;
+        long calls = 0;
+        boolean ready = false;
     }
 
     public static void main(String[] argv) throws IOException {
