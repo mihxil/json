@@ -154,8 +154,20 @@ Another example on a couchdb database (find documents where certain field has ce
 $ jsongrep rows.*.doc.workflow=FOR_REPUBLICATION,rows.*.doc.mid  http://couchdbhost/database/_all_docs?include_docs=true  |
                 grep -A 1 workflow
 ```
+separators
+----------
+jsongrep supports the '-sep', '-recordsep' and '-record' parameters. They are intended for example to generate one line abstracts of a bunch of json records.
+E.g. create a file with 3 fields per line, separated by a tab. The 3 fields are 3 different keys from an array of json objects.
+```sh
+$ jsongrep -output VALUE -sep "     "  -record *.mid *.mid,*.publishDate,*.lastModified   es.all.json  | sort > es.txt
+```
+The -record parameter defines what constitutes the start of a new record. If this matches a 'recordsep' will be outputted (this defaults to a newline).
+Normally between matches a newline is outputted, but when you use -record you'd probably don't want that. In this case with -sep a tab is outputted. 
+
 
 TODO
 ----
 Currently only precise and * matches on the keys are implemented, but it would be simple to think up
 some other matches. E.g. regular expression matching in keys too.
+
+When using separators with jsongrep it would be nice if you could sort the resulting record, and perhaps also fill in the not found keys with e.g. an empty string.
