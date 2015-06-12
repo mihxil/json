@@ -159,7 +159,7 @@ separators
 jsongrep supports the '-sep', '-recordsep' and '-record' parameters. They are intended for example to generate one line abstracts of a bunch of json records.
 E.g. create a file with 3 fields per line, separated by a tab. The 3 fields are 3 different keys from an array of json objects.
 ```sh
-$ jsongrep -output VALUE -sep "     "  -record *.mid *.mid,*.publishDate,*.lastModified   es.all.json  | sort > es.txt
+$ jsongrep -output VALUE -sep "     "  -record '*' '*.mid,*.publishDate,*.lastModified'  es.all.json  | sort > es.txt
 ```
 The -record parameter defines what constitutes the start of a new record. If this matches a 'recordsep' will be outputted (this defaults to a newline).
 Normally between matches a newline is outputted, but when you use -record you'd probably don't want that. In this case with -sep a tab is outputted. 
