@@ -13,6 +13,8 @@
     <module>mihxil-json-formatter</module>
     <module>mihxil-json-grep</module>
     <module>mihxil-json</module>
+    <module>mihxil-es</module>
+
   </modules>
 
   <properties>
