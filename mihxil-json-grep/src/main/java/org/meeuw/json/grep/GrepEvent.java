@@ -18,13 +18,17 @@ public class GrepEvent {
     }
 
     private final Type type;
-    public GrepEvent(ParseEvent result) {
+    private final int weight;
+
+    public GrepEvent(ParseEvent result, int weight) {
         this.event = result;
         this.type = Type.VALUE;
+        this.weight = weight;
     }
-    public GrepEvent(ParseEvent event, Type type) {
+    public GrepEvent(ParseEvent event, Type type, int weight) {
         this.event = event;
         this.type = type;
+        this.weight = weight;
     }
 
     public Path getPath() {
@@ -58,6 +62,9 @@ public class GrepEvent {
 
     public Type getType() {
         return type;
+    }
+    public int getWeight() {
+        return weight;
     }
 
     @Override

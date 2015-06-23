@@ -9,7 +9,13 @@ import org.meeuw.util.Predicate;
  */
 public interface PathMatcher {
 
-    boolean matches(ParseEvent event, String value);
+    default boolean matches(ParseEvent event, String value) {
+        return matchWeight(event, value) > 0;
+    }
+
+    default int matchWeight(ParseEvent event, String value) {
+        return matches(event, value) ? 1 : 0;
+    }
 
     Predicate<Path> needsKeyCollection();
 

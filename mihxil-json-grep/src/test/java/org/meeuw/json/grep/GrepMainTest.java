@@ -97,6 +97,7 @@ public class GrepMainTest {
     }
 
 
+
     @Test
 	public void grepNotContainsKey() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -125,8 +126,9 @@ public class GrepMainTest {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items.[*]"), out);
         grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
         grep.read(getClass().getResourceAsStream("/items.json"));
-        assertEquals("items[0]={...}\n" +
-            "items[1]={...}\n", new String(out.toByteArray()));
+        assertEquals(
+                "items[0]={...}\n" +
+                "items[1]={...}\n", new String(out.toByteArray()));
     }
 
 
@@ -188,5 +190,12 @@ public class GrepMainTest {
 
         assertEquals("{\"d\":\"y\"}\n", new String(out.toByteArray()));
     }
+
+    @Test
+    public void grepRecordMatcher() {
+
+    }
+
+    
 
 }

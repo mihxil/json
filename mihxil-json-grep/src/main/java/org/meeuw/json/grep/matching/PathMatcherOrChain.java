@@ -17,14 +17,17 @@ public class PathMatcherOrChain implements PathMatcher {
     }
 
     @Override
-    public boolean matches(ParseEvent event, String value) {
+    public int matchWeight(ParseEvent event, String value) {
+        int count = 0;
         for (PathMatcher matcher : matchers) {
+            count++;
             if (matcher.matches(event, value)) {
-                return true;
+                return count;
             }
         }
-        return false;
+        return 0;
     }
+
 
     @Override
     public Predicate<Path> needsKeyCollection() {

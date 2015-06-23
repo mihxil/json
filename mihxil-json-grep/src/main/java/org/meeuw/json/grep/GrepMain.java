@@ -1,8 +1,11 @@
 package org.meeuw.json.grep;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.*;
 import org.meeuw.json.Util;
@@ -20,14 +23,62 @@ public class GrepMain {
 
 
     public static enum Output {
-        PATHANDVALUE(false),
-        PATHANDFULLVALUE(true),
-        KEYANDVALUE(false),
-        KEYANDFULLVALUE(true),
-        PATH(false),
-		KEY(false),
-        VALUE(false),
-        FULLVALUE(true);
+        PATHANDVALUE(false) {
+            @Override
+            void toBuilder(StringBuilder builder, GrepEvent match) {
+                builder.append(match.getPath().toString());
+                builder.append('=');
+                builder.append(match.getValue());
+            }
+        },
+        PATHANDFULLVALUE(true) {
+            @Override
+            void toBuilder(StringBuilder builder, GrepEvent match) {
+                builder.append(match.getPath().toString());
+                builder.append('=');
+                builder.append(match.getNode());
+            }
+        },
+        KEYANDVALUE(false) {
+            @Override
+            void toBuilder(StringBuilder builder, GrepEvent match) {
+                builder.append(match.getPath().peekLast());
+                builder.append('=');
+                builder.append(match.getValue());
+            }
+        },
+        KEYANDFULLVALUE(true) {
+            @Override
+            void toBuilder(StringBuilder builder, GrepEvent match) {
+                builder.append(match.getPath().peekLast());
+                builder.append('=');
+                builder.append(match.getNode());
+            }
+        },
+        PATH(false) {
+            @Override
+            void toBuilder(StringBuilder builder, GrepEvent match) {
+                builder.append(match.getPath().toString());
+            }
+        },
+		KEY(false) {
+            @Override
+            void toBuilder(StringBuilder builder, GrepEvent match) {
+                builder.append(match.getPath().peekLast());
+            }
+        },
+        VALUE(false) {
+            @Override
+            void toBuilder(StringBuilder builder, GrepEvent match) {
+                builder.append(match.getValue());
+            }
+        },
+        FULLVALUE(true) {
+            @Override
+            void toBuilder(StringBuilder builder, GrepEvent match) {
+                builder.append(match.getNode());
+            }
+        };
         private final boolean needsObject;
 
         Output(boolean needsObject) {
@@ -36,6 +87,7 @@ public class GrepMain {
         public boolean needsObject() {
             return needsObject;
         }
+        abstract void toBuilder(StringBuilder builder, GrepEvent event);
     }
 
     private Output outputFormat = Output.PATHANDVALUE;
@@ -49,6 +101,7 @@ public class GrepMain {
 
     private final PathMatcher matcher;
     private PathMatcher recordMatcher;
+    private boolean sortFields = true;
 
 
     public GrepMain(PathMatcher pathMatcher, OutputStream output) {
@@ -91,70 +144,62 @@ public class GrepMain {
         this.recordMatcher = recordMatcher;
     }
 
+
+    public void setSortFields(boolean sortFields) {
+        this.sortFields = sortFields;
+    }
+
     public PathMatcher getMatcher() {
         return matcher;
     }
+    private class ResultField implements Comparable<ResultField> {
+        final int weight;
+        final String value;
 
+        private ResultField(int weight, String value) {
+            this.weight = weight;
+            this.value = value;
+        }
+
+        @Override
+        public int compareTo(ResultField o) {
+            return weight - o.weight;
+        }
+    }
     public void read(JsonParser in) throws IOException {
         Grep grep = new Grep(matcher, in);
         if (recordMatcher != null) {
             grep.setRecordMatcher(recordMatcher);
         }
-        boolean needsSeperator = false;
+        List<ResultField> fields = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
         while (grep.hasNext()) {
             GrepEvent match = grep.next();
             switch (match.getType()) {
                 case VALUE:
-                    if (needsSeperator) {
-                        output.print(sep);
-                    }
-                    switch (outputFormat) {
-                        case PATHANDVALUE:
-                            output.print(match.getPath().toString());
-                            output.print('=');
-                            output.print(match.getValue());
-                            break;
-                        case PATHANDFULLVALUE:
-                            output.print(match.getPath().toString());
-                            output.print('=');
-                            output.print(match.getNode());
-                            break;
-                        case KEYANDVALUE:
-                            output.print(match.getPath().peekLast());
-                            output.print('=');
-                            output.print(match.getValue());
-                            break;
-                        case KEYANDFULLVALUE:
-                            output.print(match.getPath().peekLast());
-                            output.print('=');
-                            output.print(match.getNode());
-                            break;
-                        case PATH:
-                            output.print(match.getPath().toString());
-                            break;
-                        case KEY:
-                            output.print(match.getPath().peekLast());
-                            break;
-                        case VALUE:
-                            output.print(match.getValue());
-                            break;
-                        case FULLVALUE:
-                            output.print(match.getNode());
-                            break;
-                    }
-                    needsSeperator = true;
+                    builder.setLength(0);
+                    outputFormat.toBuilder(builder, match);
                     break;
                 case RECORD:
-                    if (needsSeperator) {
+                    if (fields.size() > 0) {
+                        output.print(sort(fields).stream().map(f -> f.value).collect(Collectors.joining(this.getSep())));
                         output.print(recordsep);
-                        needsSeperator = false;
+                        fields.clear();
                     }
             }
+            fields.add(new ResultField(match.getWeight(), builder.toString()));
         }
-        if (needsSeperator) {
+        if (fields.size() > 0) {
+            output.print(sort(fields).stream().map(f -> f.value).collect(Collectors.joining(this.getSep())));
             output.print(recordsep);
         }
         output.close();
+    }
+    private List<ResultField> sort(List<ResultField> fields) {
+        if (recordMatcher != null && sortFields) {
+            Collections.sort(fields);
+        }
+        return fields;
     }
 
     public void read(Reader in) throws IOException {
@@ -176,6 +221,7 @@ public class GrepMain {
         options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
         options.addOption(new Option("record", true, "Record pattern (default to no matching at all). On match, a record separator will be outputted."));
         options.addOption(new Option("recordsep", true, "Record separator"));
+        options.addOption(new Option("sortfields", true, "Sort the fields of a found 'record', according to the order of the matchers."));
         options.addOption(new Option("version", false, "Output version"));
         options.addOption(new Option("ignoreArrays", false, "Ignore arrays (no need to match those)"));
         options.addOption(new Option("debug", false, "Debug"));
@@ -218,6 +264,10 @@ public class GrepMain {
         }
         if (cl.hasOption("record")) {
             main.setRecordMatcher(Parser.parsePathMatcherChain(cl.getOptionValue("record")));
+        }
+
+        if (cl.hasOption("sortfields")) {
+            main.setSortFields(Boolean.valueOf(cl.getOptionValue("sortfields")));
         }
 
         if (cl.hasOption("debug")) {

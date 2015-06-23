@@ -25,7 +25,7 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
     private PathMatcher recordMatcher = new NeverPathMatcher();
 
     final JsonIterator wrapped;
-    private final List<GrepEvent> next = new ArrayList<GrepEvent>();
+    private final List<GrepEvent> next = new ArrayList<>();
 
     public Grep(PathMatcher matcher, JsonParser jp) {
         this.matcher = matcher == null ? new NeverPathMatcher() : matcher;
@@ -53,7 +53,7 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
     }
 
     protected void findNext() {
-        if( next.isEmpty()) {
+        if(next.isEmpty()) {
             while (wrapped.hasNext() && next.isEmpty()) {
                 ParseEvent event = wrapped.next();
                 switch (event.getToken()) {
@@ -66,11 +66,13 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
                     case END_ARRAY:
                     case END_OBJECT:
                         String value = event.getValue();
-                        if (recordMatcher.matches(event, value)) {
-                            next.add(new GrepEvent(event, GrepEvent.Type.RECORD));
+                        int recordWeight = recordMatcher.matchWeight(event, value);
+                        if (recordWeight > 0) {
+                            next.add(new GrepEvent(event, GrepEvent.Type.RECORD, recordWeight));
                         }
-                        if (matcher.matches(event, value)) {
-                            next.add(new GrepEvent(event));
+                        int weight = matcher.matchWeight(event, value);
+                        if (weight > 0) {
+                            next.add(new GrepEvent(event, weight));
                         }
                 }
             }
@@ -97,4 +99,5 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
         return this;
 
     }
+
 }
