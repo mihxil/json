@@ -73,7 +73,7 @@ You can use wildcards in the path:
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].e
 y.arr[1].e=z
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.*[*].d
-y.arr[1].d=z
+y.arr[0].d=y
 ```
 
 If it does not match a value but an object or an array, it will be reported like this:
