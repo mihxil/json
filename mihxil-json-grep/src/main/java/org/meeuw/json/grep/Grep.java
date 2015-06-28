@@ -66,9 +66,11 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
                     case END_ARRAY:
                     case END_OBJECT:
                         String value = event.getValue();
-                        int recordWeight = recordMatcher.matchWeight(event, value);
-                        if (recordWeight > 0) {
-                            next.add(new GrepEvent(event, GrepEvent.Type.RECORD, recordWeight));
+                        if (recordMatcher != null) {
+                            int recordWeight = recordMatcher.matchWeight(event, value);
+                            if (recordWeight > 0) {
+                                next.add(new GrepEvent(event, GrepEvent.Type.RECORD, recordWeight));
+                            }
                         }
                         int weight = matcher.matchWeight(event, value);
                         if (weight > 0) {

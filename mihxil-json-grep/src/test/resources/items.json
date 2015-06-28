@@ -1,1 +1,6 @@
-{ "items" : [ { "a" : [], "result" :"value" }, {"a" : [ ], "result" : "value2" }]}
+{ "items" :
+    [
+        { "a" : [], "result" :"value" },
+        {"a" : [ ], "result" : "value2" }
+    ]
+}

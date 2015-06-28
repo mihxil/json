@@ -158,8 +158,6 @@ public class JsonIterator implements Iterator<ParseEvent> {
 
                     }
                 }
-            } catch (JsonParseException e) {
-                throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
