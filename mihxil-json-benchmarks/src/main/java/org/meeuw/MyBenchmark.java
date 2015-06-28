@@ -31,8 +31,8 @@ public class MyBenchmark {
     @Benchmark
     public void grepMain() throws IOException {
         JsonParser parser = Util.getJsonParser(getClass().getResourceAsStream("/test.json"));
-        GrepMain main = new GrepMain(Parser.parsePathMatcherChain("a,b"), System.out);
-        main.read(parser);
+        GrepMain main = new GrepMain(Parser.parsePathMatcherChain("a,b"));
+        main.read(parser, System.out);
     }
 
 }
