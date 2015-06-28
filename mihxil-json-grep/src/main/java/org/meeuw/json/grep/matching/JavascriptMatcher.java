@@ -4,10 +4,10 @@ package org.meeuw.json.grep.matching;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
-import org.meeuw.util.Predicate;
 import org.meeuw.util.Predicates;
 import org.mozilla.javascript.*;
 

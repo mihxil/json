@@ -1,5 +1,7 @@
 package org.meeuw.util;
 
+import java.util.function.Predicate;
+
 /**
  * @author Michiel Meeuwissen
  * @since 0.6
@@ -9,21 +11,11 @@ public class Predicates {
     private Predicates() { }
 
 	public static <S> Predicate<S> alwaysFalse() {
-		return new Predicate<S>() {
-			@Override
-			public boolean test(S t) {
-				return false;
-			}
-		};
+		return t -> false;
 	}
 
 	public static <S> Predicate<S> alwaysTrue() {
-		return new Predicate<S>() {
-			@Override
-			public boolean test(S t) {
-				return true;
-			}
-		};
+		return t -> true;
 	}
 
 	public static <S> Predicate<S> and(final Predicate<S>... predicates) {

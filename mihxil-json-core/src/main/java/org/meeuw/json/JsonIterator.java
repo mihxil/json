@@ -2,11 +2,9 @@ package org.meeuw.json;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 
-import org.meeuw.util.Predicate;
-import org.meeuw.util.Predicates;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
@@ -18,9 +16,9 @@ public class JsonIterator implements Iterator<ParseEvent> {
     private final Path path = new Path();
     private ParseEvent next;
     private final JsonParser jp;
-    private final Deque<List<String>> keys = new ArrayDeque<List<String>>();
+    private final Deque<List<String>> keys = new ArrayDeque<>();
 
-    private final Deque<Object> objects = new ArrayDeque<Object>();
+    private final Deque<Object> objects = new ArrayDeque<>();
 
 	private final Predicate<Path> needsKeyCollection;
 
@@ -28,7 +26,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
 
 
     public  JsonIterator(JsonParser jp) {
-        this(jp, Predicates.<Path>alwaysFalse(), Predicates.<Path>alwaysFalse());
+        this(jp, p -> false, p -> false);
     }
 
     public JsonIterator(JsonParser jp, Predicate<Path> needsKeyCollection, Predicate<Path> needsJsonCollection) {
@@ -74,7 +72,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                     switch (token) {
                         case START_OBJECT:
                             if (needsKeyCollection.test(path)) {
-                                keys.add(new ArrayList<String>());
+                                keys.add(new ArrayList<>());
                             }
                             if (needsJsonCollection.test(path) || ! objects.isEmpty()) {
                                 objects.add(new LinkedHashMap<String, Object>());
@@ -82,7 +80,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                             break;
                         case START_ARRAY:
                             if (needsJsonCollection.test(path) || !objects.isEmpty()) {
-                                objects.add(new ArrayList<Object>());
+                                objects.add(new ArrayList<>());
                             }
                             break;
                         case END_ARRAY:

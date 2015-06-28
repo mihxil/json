@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.junit.Test;
-import org.meeuw.util.Predicate;
 import org.meeuw.util.Predicates;
 
 import com.fasterxml.jackson.core.JsonToken;
@@ -99,12 +99,8 @@ public class JsonIteratorTest {
 
     @Test
     public void collectKeys() throws IOException {
-        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: 2}}"), new Predicate<Path>() {
-			@Override
-			public boolean test(Path path) {
-				return 	path.size() == 1 && path.peekLast().toString().equals("b");
-			}
-		}, Predicates.<Path>alwaysFalse());
+        JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: 2}}"),
+                path -> path.size() == 1 && path.peekLast().toString().equals("b"), Predicates.<Path>alwaysFalse());
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
 		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");

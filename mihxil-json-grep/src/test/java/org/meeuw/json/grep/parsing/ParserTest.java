@@ -148,4 +148,14 @@ public class ParserTest {
 
     }
 
+
+    @Test
+    public void regexpKey() {
+        SinglePathMatcher result = Parser.parseKeysMatcher("~[ab]", false);
+        assertTrue(result.getPatterns()[0] instanceof RegexpKeyMatch);
+
+
+
+    }
+
 }

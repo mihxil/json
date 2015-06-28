@@ -25,7 +25,7 @@ public class Parser {
         if (split.length == 1) {
             return parsePathMatcher(arg, ignoreArrays, needsObject);
         }
-        ArrayList<PathMatcher> list = new ArrayList<PathMatcher>(split.length);
+        ArrayList<PathMatcher> list = new ArrayList<>(split.length);
         for (String s : split) {
             list.add(parsePathMatcher(s, ignoreArrays, needsObject));
         }
@@ -74,7 +74,7 @@ public class Parser {
 
     public static SinglePathMatcher parseKeysMatcher(String arg, boolean ignoreArrays) {
         String[] split = arg.split("[\\.\\[]");
-        ArrayList<KeysPattern> list = new ArrayList<KeysPattern>(split.length);
+        ArrayList<KeysPattern> list = new ArrayList<>(split.length);
         boolean foundEmpty = false;
         for (String s : split) {
             if (s.isEmpty()) {
@@ -102,9 +102,12 @@ public class Parser {
         }
         if (arg.endsWith("]")) {
             return new ArrayIndexMatch(Integer.parseInt(arg.substring(0, arg.length() - 1)));
-        } else {
-            return new PreciseMatch(arg);
         }
+        if (arg.startsWith("~")) {
+            return new RegexpKeyMatch(Pattern.compile(arg.substring(1)));
+        }
+        return new PreciseMatch(arg);
+
     }
 
 
