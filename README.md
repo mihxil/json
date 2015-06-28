@@ -19,36 +19,9 @@ Download
 The executable jars are packaged in a zip, which can be downloaded
 [here](https://oss.sonatype.org/content/repositories/releases/org/meeuw/mihxil-json/0.7/mihxil-json-0.7-all.zip).
 
-This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your path.
+This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your path. Typing this install in the current directory:
 ```shell
-michiel@belono:~/bin$  curl -o json.zip  https://oss.sonatype.org/content/repositories/releases/org/meeuw/mihxil-json/0.7/mihxil-json-0.7-all.zip ; unzip -o json.zip ; rm json.zip
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100 1621k  100 1621k    0     0   124k      0  0:00:13  0:00:13 --:--:--  167k
-Archive:  json.zip
-  inflating: jsonformat              
-  inflating: mihxil-json-grep-0.7-executable.jar  
-  inflating: jsongrep                
-  inflating: mihxil-json-formatter-0.7-executable.jar  
-michiel@belono:~/bin$ cd ..
-michiel@belono:~$ bin/jsongrep -help
-jsongrep - 0.7 - See https://github.com/mihxil/json
-usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]
- -debug              Debug
- -help               print this message
- -ignoreArrays       Ignore arrays (no need to match those)
- -max                Max number of records
- -output <arg>       Output format, one of [PATHANDVALUE,
-                     PATHANDFULLVALUE, KEYANDVALUE, KEYANDFULLVALUE, PATH,
-                     KEY, VALUE, FULLVALUE]
- -record <arg>       Record pattern (default to no matching at all). On
-                     match, a record separator will be outputted.
- -recordsep <arg>    Record separator
- -sep <arg>          Separator (defaults to newline)
- -sortfields <arg>   Sort the fields of a found 'record', according to the
-                     order of the matchers.
- -version            Print version
-michiel@belono:~$ 
+curl -o json.zip  https://oss.sonatype.org/content/repositories/releases/org/meeuw/mihxil-json/0.7/mihxil-json-0.7-all.zip ; unzip -o json.zip ; rm json.zip
 ```
 
 Formatter
