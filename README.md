@@ -164,10 +164,9 @@ E.g. create a file with 3 fields per line, separated by a tab. The 3 fields are 
 $ jsongrep -output VALUE -sep "     "  -record '*' '*.mid,*.publishDate,*.lastModified'  es.all.json  | sort > es.txt
 ```
 The -record parameter defines what constitutes the start of a new record. If this matches a 'recordsep' will be outputted (this defaults to a newline).
-Normally between matches a newline is outputted, but when you use -record you'd probably don't want that. In this case with -sep a tab is outputted. 
+Normally between matches a newline is outputted, but when you use -record you'd probably don't want that. In this example using the -sep argument a tab character is outputted between matches.
 
-Normally, when using this 'record' functionality, the output record will be implicitely sorted like the matches ar esorted. With the '-sortfields' parameter you can disable this behaviour.
-
+Normally, when using this 'record' functionality, the output record will be implicitely sorted like the matches. So in this case first the 'mid', then 'publishDate' then 'lastModified', independent from the order they appeared in the json document. With the '-sortfields' parameter you can disable this behaviour, and simply output in the original order.
 
 
 TODO
