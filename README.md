@@ -17,7 +17,7 @@ All tools support a -help argument for an overview of all supported options.
 Download
 --------
 The executable jars are packaged in a zip, which can be downloaded
-[here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.5/mihxil-json-0.5-package.zip).
+[here](https://oss.sonatype.org/content/repositories/releases/org/meeuw/mihxil-json/0.7/mihxil-json-0.7-all.zip).
 
 This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your path.
 
@@ -164,10 +164,11 @@ $ jsongrep -output VALUE -sep "     "  -record '*' '*.mid,*.publishDate,*.lastMo
 The -record parameter defines what constitutes the start of a new record. If this matches a 'recordsep' will be outputted (this defaults to a newline).
 Normally between matches a newline is outputted, but when you use -record you'd probably don't want that. In this case with -sep a tab is outputted. 
 
+Normally, when using this 'record' functionality, the output record will be implicitely sorted like the matches ar esorted. With the '-sortfields' parameter you can disable this behaviour.
+
+
 
 TODO
 ----
 Currently only precise and * matches on the keys are implemented, but it would be simple to think up
 some other matches. E.g. regular expression matching in keys too.
-
-When using separators with jsongrep it would be nice if you could sort the resulting record, and perhaps also fill in the not found keys with e.g. an empty string.
