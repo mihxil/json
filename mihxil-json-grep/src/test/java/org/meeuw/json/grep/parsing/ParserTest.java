@@ -129,8 +129,6 @@ public class ParserTest {
         SinglePathMatcher result = Parser.parseKeysMatcher("...b", false);
         assertTrue(result.getPatterns()[0] instanceof AnyDepthMatcher);
         assertTrue(result.getPatterns()[1] instanceof PreciseMatch);
-
-
     }
 
     @Test
@@ -144,8 +142,6 @@ public class ParserTest {
         assertTrue(result.getMatchers()[1].needsObjectCollection().test(new Path(new KeyEntry("a"))));
         assertTrue(result.needsObjectCollection().test(new Path(new KeyEntry("a"), new KeyEntry("b"))));
         assertTrue(result.needsObjectCollection().test(new Path(new KeyEntry("a"))));
-
-
     }
 
 
