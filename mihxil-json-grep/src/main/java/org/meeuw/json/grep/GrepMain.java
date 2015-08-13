@@ -1,21 +1,22 @@
 package org.meeuw.json.grep;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.cli.*;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.PathMatcher;
 import org.meeuw.json.grep.parsing.Parser;
 import org.meeuw.util.Manifests;
+import org.meeuw.util.MaxOffsetIterator;
 
 import com.fasterxml.jackson.core.JsonParser;
 
 /**
+ * GrepMain is a wrapper around {@link Grep}, it arranges output,and record collection and sorting.
+ *
  * @author Michiel Meeuwissen
  * @since 0.4
  */
@@ -90,9 +91,7 @@ public class GrepMain {
         abstract void toBuilder(StringBuilder builder, GrepEvent event);
     }
 
-    private Output outputFormat = Output.PATHANDVALUE;
-
-    private final PrintStream output;
+    Output outputFormat = Output.PATHANDVALUE;
 
     private String sep = "\n";
 
@@ -100,13 +99,13 @@ public class GrepMain {
 
 
     private final PathMatcher matcher;
-    private PathMatcher recordMatcher;
-    private boolean sortFields = true;
+    PathMatcher recordMatcher;
+    boolean sortFields = true;
+    private Long max = null;
 
 
-    public GrepMain(PathMatcher pathMatcher, OutputStream output) {
+    public GrepMain(PathMatcher pathMatcher) {
         this.matcher = pathMatcher;
-        this.output = new PrintStream(output);
     }
 
     public Output getOutputFormat() {
@@ -149,65 +148,50 @@ public class GrepMain {
         this.sortFields = sortFields;
     }
 
+    public Long getMax() {
+        return max;
+    }
+
+    public void setMax(Long max) {
+        this.max = max;
+    }
+
     public PathMatcher getMatcher() {
         return matcher;
     }
-    private class ResultField implements Comparable<ResultField> {
-        final int weight;
-        final String value;
 
-        private ResultField(int weight, String value) {
-            this.weight = weight;
-            this.value = value;
-        }
-
-        @Override
-        public int compareTo(ResultField o) {
-            return weight - o.weight;
-        }
+    public Iterator<GrepMainRecord> iterate(JsonParser in) {
+        return new MaxOffsetIterator<>(new GrepMainIterator(this, in), max);
     }
-    public void read(JsonParser in) throws IOException {
-        Grep grep = new Grep(matcher, in);
-        if (recordMatcher != null) {
-            grep.setRecordMatcher(recordMatcher);
-        }
-        List<ResultField> fields = new ArrayList<>();
-        StringBuilder builder = new StringBuilder();
-        while (grep.hasNext()) {
-            GrepEvent match = grep.next();
-            switch (match.getType()) {
-                case VALUE:
-                    builder.setLength(0);
-                    outputFormat.toBuilder(builder, match);
-                    break;
-                case RECORD:
-                    if (fields.size() > 0) {
-                        output.print(sort(fields).stream().map(f -> f.value).collect(Collectors.joining(this.getSep())));
-                        output.print(recordsep);
-                        fields.clear();
-                    }
-            }
-            fields.add(new ResultField(match.getWeight(), builder.toString()));
-        }
-        if (fields.size() > 0) {
-            output.print(sort(fields).stream().map(f -> f.value).collect(Collectors.joining(this.getSep())));
+    public <T extends OutputStream> T read(JsonParser in, T out) throws IOException {
+        PrintStream output = new PrintStream(out);
+        iterate(in).forEachRemaining((record) -> {
+            output.print(record.toString());
             output.print(recordsep);
-        }
+        });
         output.close();
-    }
-    private List<ResultField> sort(List<ResultField> fields) {
-        if (recordMatcher != null && sortFields) {
-            Collections.sort(fields);
-        }
-        return fields;
+        return out;
     }
 
-    public void read(Reader in) throws IOException {
-        read(Util.getJsonParser(in));
+
+    public <T extends OutputStream> T read(Reader in, T out) throws IOException {
+        return read(Util.getJsonParser(in), out);
     }
-    public void read(InputStream in) throws IOException {
-        read(Util.getJsonParser(in));
+    public <T extends OutputStream> T read(InputStream in, T out) throws IOException {
+        return read(Util.getJsonParser(in), out);
     }
+
+    public String read(Reader in) throws IOException {
+        return new String(read(Util.getJsonParser(in), new ByteArrayOutputStream()).toByteArray());
+    }
+
+    public String read(InputStream in) throws IOException {
+        return new String(read(Util.getJsonParser(in), new ByteArrayOutputStream()).toByteArray());
+    }
+    public Iterator<GrepMainRecord> iterate(InputStream in) throws IOException {
+        return iterate(Util.getJsonParser(in));
+    }
+
 
 
     public static String version() throws IOException {
@@ -222,8 +206,10 @@ public class GrepMain {
         options.addOption(new Option("record", true, "Record pattern (default to no matching at all). On match, a record separator will be outputted."));
         options.addOption(new Option("recordsep", true, "Record separator"));
         options.addOption(new Option("sortfields", true, "Sort the fields of a found 'record', according to the order of the matchers."));
-        options.addOption(new Option("version", false, "Output version"));
+        options.addOption(new Option("max", false, "Max number of records"));
+        options.addOption(new Option("version", false, "Print version"));
         options.addOption(new Option("ignoreArrays", false, "Ignore arrays (no need to match those)"));
+
         options.addOption(new Option("debug", false, "Debug"));
         CommandLine cl = parser.parse(options, argv, true);
         String[] args = cl.getArgs();
@@ -252,7 +238,7 @@ public class GrepMain {
         if (cl.hasOption("output")) {
             output = Output.valueOf(cl.getOptionValue("output").toUpperCase());
         }
-        GrepMain main = new GrepMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, output.needsObject()), System.out);
+        GrepMain main = new GrepMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, output.needsObject()));
 
         main.setOutputFormat(output);
 
@@ -269,6 +255,10 @@ public class GrepMain {
         if (cl.hasOption("sortfields")) {
             main.setSortFields(Boolean.valueOf(cl.getOptionValue("sortfields")));
         }
+        if (cl.hasOption("max")) {
+            main.setMax(Long.valueOf(cl.getOptionValue("max")));
+        }
+
 
         if (cl.hasOption("debug")) {
             System.out.println(String.valueOf(main.matcher));
@@ -277,7 +267,7 @@ public class GrepMain {
 
 		List<String> argList = cl.getArgList();
 		InputStream in = Util.getInput(argList.toArray(new String[argList.size()]), 1);
-        main.read(in);
+        main.read(in, System.out);
         in.close();
     }
 }

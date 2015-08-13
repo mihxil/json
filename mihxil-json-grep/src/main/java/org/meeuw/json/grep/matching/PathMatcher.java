@@ -1,8 +1,9 @@
 package org.meeuw.json.grep.matching;
 
+import java.util.function.Predicate;
+
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
-import org.meeuw.util.Predicate;
 
 /**
  * A Patch matcher defines matches on an entire json path and value.

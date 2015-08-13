@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.meeuw</groupId>
     <artifactId>mihxil-json-parent</artifactId>
-    <version>0.7-SNAPSHOT</version>
+    <version>0.8-SNAPSHOT</version>
   </parent>
   <artifactId>mihxil-json</artifactId>
   <packaging>pom</packaging>
@@ -30,7 +30,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
+        <version>2.7</version>
         <executions>
           <execution>
             <id>copy-resources</id>
@@ -53,7 +53,7 @@
 
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2-beta-2</version>
+        <version>2.5.5</version>
         <executions>
           <execution>
             <id>create-zip</id>

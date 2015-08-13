@@ -1,6 +1,8 @@
 package org.meeuw.json.grep.parsing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.meeuw.json.grep.matching.*;
@@ -25,7 +27,7 @@ public class Parser {
         if (split.length == 1) {
             return parsePathMatcher(arg, ignoreArrays, needsObject);
         }
-        ArrayList<PathMatcher> list = new ArrayList<PathMatcher>(split.length);
+        ArrayList<PathMatcher> list = new ArrayList<>(split.length);
         for (String s : split) {
             list.add(parsePathMatcher(s, ignoreArrays, needsObject));
         }
@@ -73,8 +75,8 @@ public class Parser {
     }
 
     public static SinglePathMatcher parseKeysMatcher(String arg, boolean ignoreArrays) {
-        String[] split = arg.split("[\\.\\[]");
-        ArrayList<KeysPattern> list = new ArrayList<KeysPattern>(split.length);
+        String[] split = arg.split("\\.");
+        List<KeysPattern> list = new ArrayList<>(split.length);
         boolean foundEmpty = false;
         for (String s : split) {
             if (s.isEmpty()) {
@@ -87,24 +89,36 @@ public class Parser {
 
             } else {
                 foundEmpty = false;
-                list.add(parseKeyPattern(s));
+                parseKeyPattern(list, s);
             }
         }
         return new SinglePathMatcher(ignoreArrays, list.toArray(new KeysPattern[list.size()]));
     }
 
-    protected static KeyPattern parseKeyPattern(String arg) {
-        if ("*".equals(arg)) {
-            return new Wildcard();
+
+    protected static void parseKeyPattern(List<KeysPattern> list, String arg) {
+        if (arg.startsWith("~")) {
+            list.add(new RegexpKeyMatch(Pattern.compile(arg.substring(1))));
+            return;
         }
-        if ("*]".equals(arg)) {
-            return new ArrayEntryMatch();
+        for (String s : arg.split("\\[")) {
+            if ("*".equals(s)) {
+                list.add(new Wildcard());
+                continue;
+            }
+            if ("*]".equals(s)) {
+                list.add(new ArrayEntryMatch());
+                continue;
+            }
+            if (s.endsWith("]")) {
+                list.add(new ArrayIndexMatch(Integer.parseInt(s.substring(0, s.length() - 1))));
+                continue;
+            }
+            if (s.length() > 0) {
+                list.add(new PreciseMatch(s));
+            }
         }
-        if (arg.endsWith("]")) {
-            return new ArrayIndexMatch(Integer.parseInt(arg.substring(0, arg.length() - 1)));
-        } else {
-            return new PreciseMatch(arg);
-        }
+
     }
 
 

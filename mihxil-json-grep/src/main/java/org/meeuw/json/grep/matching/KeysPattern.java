@@ -10,8 +10,6 @@ import org.meeuw.json.PathEntry;
  */
 public interface KeysPattern {
 
-
     int matchCounts(List<PathEntry> entries);
-
 
 }

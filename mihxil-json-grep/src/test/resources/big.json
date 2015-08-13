@@ -207,11 +207,12 @@
     "highlights" : [ ],
     "result" : {
       "objectType" : "program",
+       "urn": "urn:vpro:media:program:29384619",
       "mid" : "WO_VPRO_400672",
       "creationDate" : 1378663075895,
       "lastModified" : 1421122346108,
       "sortDate" : 1378663075895,
-      "urn" : "urn:vpro:media:program:29384619",
+
       "embeddable" : true,
       "broadcasters" : [ {
         "id" : "VPRO",

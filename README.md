@@ -17,10 +17,12 @@ All tools support a -help argument for an overview of all supported options.
 Download
 --------
 The executable jars are packaged in a zip, which can be downloaded
-[here](https://github.com/mihxil/mvn-repo/raw/master/releases/org/meeuw/mihxil-json/0.5/mihxil-json-0.5-package.zip).
+[here](https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.7/mihxil-json-0.7-all.zip).
 
-This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your path.
-
+This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your path. Typing this install in the current directory:
+```shell
+curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.7/mihxil-json-0.7-all.zip ; unzip -o json.zip ; rm json.zip
+```
 
 Formatter
 --------
@@ -71,7 +73,7 @@ You can use wildcards in the path:
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].e
 y.arr[1].e=z
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.*[*].d
-y.arr[1].d=z
+y.arr[0].d=y
 ```
 
 If it does not match a value but an object or an array, it will be reported like this:
@@ -162,12 +164,12 @@ E.g. create a file with 3 fields per line, separated by a tab. The 3 fields are 
 $ jsongrep -output VALUE -sep "     "  -record '*' '*.mid,*.publishDate,*.lastModified'  es.all.json  | sort > es.txt
 ```
 The -record parameter defines what constitutes the start of a new record. If this matches a 'recordsep' will be outputted (this defaults to a newline).
-Normally between matches a newline is outputted, but when you use -record you'd probably don't want that. In this case with -sep a tab is outputted. 
+Normally between matches a newline is outputted, but when you use -record you'd probably don't want that. In this example using the -sep argument a tab character is outputted between matches.
+
+Normally, when using this 'record' functionality, the output record will be implicitely sorted like the matches. So in this case first the 'mid', then 'publishDate' then 'lastModified', independent from the order they appeared in the json document. With the '-sortfields' parameter you can disable this behaviour, and simply output in the original order.
 
 
 TODO
 ----
 Currently only precise and * matches on the keys are implemented, but it would be simple to think up
 some other matches. E.g. regular expression matching in keys too.
-
-When using separators with jsongrep it would be nice if you could sort the resulting record, and perhaps also fill in the not found keys with e.g. an empty string.
