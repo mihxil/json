@@ -52,7 +52,7 @@ class GrepMainIteratorImpl implements GrepMainIterator {
 
     private void findNext() {
         if (hasNext == null) {
-            maxRecordSize = Math.max(maxRecordSize, next.fields.size());
+
             next.fields.clear();
             while (grep.hasNext()) {
                 GrepEvent match = grep.next();
@@ -74,6 +74,7 @@ class GrepMainIteratorImpl implements GrepMainIterator {
             }
             if (next.fields.size() > 0) {
                 sort(next.fields);
+                maxRecordSize = Math.max(maxRecordSize, next.fields.size());
                 hasNext = true;
             } else {
                 hasNext = false;

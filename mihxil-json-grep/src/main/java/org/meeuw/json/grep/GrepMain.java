@@ -102,6 +102,7 @@ public class GrepMain {
     PathMatcher recordMatcher;
     boolean sortFields = true;
     private Long max = null;
+    private Long previousMaxRecordSize = null;
 
 
     public GrepMain(PathMatcher pathMatcher) {
@@ -180,12 +181,17 @@ public class GrepMain {
     }
     public <T extends OutputStream> T read(JsonParser in, T out) throws IOException {
         PrintStream output = new PrintStream(out);
-        iterate(in).forEachRemaining((record) -> {
+        GrepMainIterator iterator = iterate(in);
+        iterator.forEachRemaining((record) -> {
             output.print(record.toString());
             output.print(recordsep);
         });
         output.close();
+        previousMaxRecordSize =  iterator.getMaxRecordSize();
         return out;
+    }
+    public Long  getPreviousMaxRecordSize() {
+        return previousMaxRecordSize;
     }
 
 
