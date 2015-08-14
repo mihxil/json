@@ -160,8 +160,23 @@ public class GrepMain {
         return matcher;
     }
 
-    public Iterator<GrepMainRecord> iterate(JsonParser in) {
-        return new MaxOffsetIterator<>(new GrepMainIterator(this, in), max);
+    public GrepMainIterator iterate(JsonParser in) {
+        final GrepMainIteratorImpl wrapped = new GrepMainIteratorImpl(this, in);
+        final Iterator<GrepMainRecord> maxoffset = new MaxOffsetIterator<>(wrapped, max);
+        return new GrepMainIterator() {
+            @Override
+            public long getMaxRecordSize() {
+                return wrapped.getMaxRecordSize();
+            }
+            @Override
+            public boolean hasNext() {
+                return maxoffset.hasNext();
+            }
+            @Override
+            public GrepMainRecord next() {
+                return maxoffset.next();
+            }
+        };
     }
     public <T extends OutputStream> T read(JsonParser in, T out) throws IOException {
         PrintStream output = new PrintStream(out);
