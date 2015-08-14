@@ -17,11 +17,11 @@ All tools support a -help argument for an overview of all supported options.
 Download
 --------
 The executable jars are packaged in a zip, which can be downloaded
-[here](https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.7/mihxil-json-0.7-all.zip).
+[here](https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.8/mihxil-json-0.8-all.zip).
 
 This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your path. Typing this install in the current directory:
 ```shell
-curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.7/mihxil-json-0.7-all.zip ; unzip -o json.zip ; rm json.zip
+curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.8/mihxil-json-0.8-all.zip ; unzip -o json.zip ; rm json.zip
 ```
 
 Formatter
