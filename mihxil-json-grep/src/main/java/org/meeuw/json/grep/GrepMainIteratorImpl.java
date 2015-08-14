@@ -71,6 +71,10 @@ class GrepMainIteratorImpl implements GrepMainIterator {
 
                 }
                 next.fields.add(new GrepMainRecord.Field(match.getWeight(), builder.toString()));
+                if (grep.getRecordMatcher() == null) {
+                    // no RECORD events will be produced
+                    break;
+                }
             }
             if (next.fields.size() > 0) {
                 sort(next.fields);
