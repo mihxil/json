@@ -28,6 +28,7 @@ public class GrepMainTest {
         String result = grep.read(new StringReader("{c: [{b1: 1}, {b3: 2}]}"));
 
         assertEquals("", result);
+        assertEquals(0l, grep.getPreviousMaxRecordSize().longValue());
     }
 
 
@@ -43,6 +44,7 @@ public class GrepMainTest {
 
         String result = grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
         assertEquals("title1\ntitle2\n", result);
+        assertEquals(1l, grep.getPreviousMaxRecordSize().longValue());
     }
 
 
