@@ -247,13 +247,27 @@ public class GrepMainTest {
         grep.setMax(4l);
 
         Iterator<GrepMainRecord> i = grep.iterate(getClass().getResourceAsStream("/big.json"));
-
         i.next();
         i.next();
         i.next();
         i.next();
         assertThat(i.hasNext(), equalTo(false));
 
+    }
+
+
+    @Test
+    public void grepRegex() throws IOException {
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*].result.~[mid|urn]"));
+        grep.setRecordMatcher(Parser.parsePathMatcherChain("items[*].result"));
+        grep.setMax(4l);
+
+        Iterator<GrepMainRecord> i = grep.iterate(getClass().getResourceAsStream("/big.json"));
+        i.next();
+        i.next();
+        i.next();
+        i.next();
+        assertThat(i.hasNext(), equalTo(false));
 
     }
 

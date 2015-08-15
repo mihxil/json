@@ -154,4 +154,12 @@ public class ParserTest {
 
     }
 
+
+    @Test
+    public void regexppath() {
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcherChain("~[ab].b", false, true);
+        assertTrue(result.getPatterns()[0] instanceof RegexpKeyMatch);
+
+    }
+
 }
