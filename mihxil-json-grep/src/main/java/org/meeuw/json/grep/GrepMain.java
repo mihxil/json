@@ -259,7 +259,12 @@ public class GrepMain {
         if (cl.hasOption("output")) {
             output = Output.valueOf(cl.getOptionValue("output").toUpperCase());
         }
-        GrepMain main = new GrepMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, output.needsObject()));
+        String record = null;
+        if (cl.hasOption("record")) {
+            record = cl.getOptionValue("record");
+        }
+
+        GrepMain main = new GrepMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, output.needsObject(), record));
 
         main.setOutputFormat(output);
 
@@ -269,8 +274,8 @@ public class GrepMain {
         if (cl.hasOption("recordsep")) {
             main.setRecordsep(cl.getOptionValue("recordsep"));
         }
-        if (cl.hasOption("record")) {
-            main.setRecordMatcher(Parser.parsePathMatcherChain(cl.getOptionValue("record")));
+        if (record != null) {
+            main.setRecordMatcher(Parser.parsePathMatcherChain(record));
         }
 
         if (cl.hasOption("sortfields")) {
