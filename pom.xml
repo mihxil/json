@@ -39,6 +39,7 @@
     <module>mihxil-json-grep</module>
     <module>mihxil-json</module>
     <module>mihxil-es</module>
+    <module>mihxil-json-xml</module>
     <module>mihxil-json-benchmarks</module>
   </modules>
 

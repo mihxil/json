@@ -116,7 +116,7 @@ public class Util {
         jp.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
     }
 
-    protected static JsonFactory getJsonFactory() {
+    public static JsonFactory getJsonFactory() {
         return new JsonFactory();
     }
 }
