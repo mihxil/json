@@ -3,10 +3,14 @@ package org.meeuw.json.grep.parsing;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+
 import org.junit.Test;
 import org.meeuw.json.KeyEntry;
 import org.meeuw.json.Path;
 import org.meeuw.json.grep.matching.*;
+
+
+import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
@@ -14,7 +18,7 @@ import static org.junit.Assert.*;
  * @author Michiel Meeuwissen
  * @since 0.4
  */
-public class ParserTest {
+public class ParregexserTest {
 
     @Test
     public void constructor() throws IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -147,18 +151,16 @@ public class ParserTest {
 
     @Test
     public void regexpKey() {
-        SinglePathMatcher result = Parser.parseKeysMatcher("~[ab]", false);
-        assertTrue(result.getPatterns()[0] instanceof RegexpKeyMatch);
-
-
-
+        SinglePathMatcher result = Parser.parseKeysMatcher("/[ab]/", false);
+        assertThat(result.getPatterns()[0], is(instanceOf(RegexpKeyMatch.class)));
     }
 
 
     @Test
     public void regexppath() {
-        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcherChain("~[ab].b", false, true);
-        assertTrue(result.getPatterns()[0] instanceof RegexpKeyMatch);
+        SinglePathMatcher result = Parser.parseKeysMatcher("/[ab]/.b", false);
+        assertThat(result.getPatterns()[0], is(instanceOf(RegexpKeyMatch.class)));
+        assertThat(result.getPatterns()[1], is(instanceOf(PreciseMatch.class)));
 
     }
 
