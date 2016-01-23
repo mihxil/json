@@ -185,7 +185,7 @@ public class GrepMainTest {
     @Test // Tests NeedsObjectObjectMatcher...
     public void grepContains() throws IOException {
         GrepMain.Output output = GrepMain.Output.FULLVALUE;
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("...arr[*] contains d", false, output.needsObject()));
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("...arr[*] contains d", false, output.needsObject(), null));
         grep.setOutputFormat(output);
 
         String result = grep.read(new StringReader("{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"));

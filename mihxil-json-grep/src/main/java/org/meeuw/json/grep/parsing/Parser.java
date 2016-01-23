@@ -1,7 +1,6 @@
 package org.meeuw.json.grep.parsing;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -18,12 +17,17 @@ public class Parser {
     // Parse methods for the command line
 
     public static PathMatcher parsePathMatcherChain(String arg) {
-        return parsePathMatcherChain(arg, false, false);
+        return parsePathMatcherChain(arg, false, false, null);
     }
 
 
-    public static PathMatcher parsePathMatcherChain(String arg, boolean ignoreArrays, boolean needsObject) {
+    public static PathMatcher parsePathMatcherChain(String arg, boolean ignoreArrays, boolean needsObject, String recordPrefix) {
         String[] split = arg.split(",");
+        for (int i = 0 ; i < split.length; i++) {
+            if (split[i].startsWith(".") && recordPrefix != null) {
+                split[i] = recordPrefix + split[i];
+            }
+        }
         if (split.length == 1) {
             return parsePathMatcher(arg, ignoreArrays, needsObject);
         }

@@ -3,14 +3,10 @@ package org.meeuw.json.grep.parsing;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-
 import org.junit.Test;
 import org.meeuw.json.KeyEntry;
 import org.meeuw.json.Path;
 import org.meeuw.json.grep.matching.*;
-
-
-import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.*;
 
@@ -18,7 +14,7 @@ import static org.junit.Assert.*;
  * @author Michiel Meeuwissen
  * @since 0.4
  */
-public class ParregexserTest {
+public class ParserTest {
 
     @Test
     public void constructor() throws IllegalAccessException, InvocationTargetException, InstantiationException {
@@ -151,8 +147,11 @@ public class ParregexserTest {
 
     @Test
     public void regexpKey() {
-        SinglePathMatcher result = Parser.parseKeysMatcher("/[ab]/", false);
-        assertThat(result.getPatterns()[0], is(instanceOf(RegexpKeyMatch.class)));
+        SinglePathMatcher result = Parser.parseKeysMatcher("~[ab]", false);
+        assertTrue(result.getPatterns()[0] instanceof RegexpKeyMatch);
+
+
+
     }
 
 
