@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.Grep;
@@ -30,9 +31,38 @@ public class DownloadAll {
     private final String elastischSearchServer;
     private final String elastischSearchDatabase;
 
+    private String sort = null;
+    private Long max= null;
+    private Long offset = null;
+
+
     public DownloadAll(String elastischSearchServer, String elastischSearchDatabase) throws MalformedURLException {
         this.elastischSearchServer = elastischSearchServer;
         this.elastischSearchDatabase = elastischSearchDatabase;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public Long getMax() {
+        return max;
+    }
+
+    public void setMax(Long max) {
+        this.max = max;
+    }
+
+    public Long getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Long offset) {
+        this.offset = offset;
     }
 
     private void download(Status status, OutputStream out) throws IOException {
@@ -66,11 +96,18 @@ public class DownloadAll {
                     }
                 }
                 status.count++;
+                if (offset != null && status.count < offset) {
+                    continue;
+                }
+
                 subCount++;
                 byte[] bytes = event.getNode().getBytes();
                 status.byteCount += bytes.length;
                 out.write(bytes);
             }
+        }
+        if (max != null && status.count > max) {
+            status.ready = true;
         }
         if (subCount == 0 && status.calls > 0) {
             status.ready = true;
@@ -80,7 +117,12 @@ public class DownloadAll {
 
     private Status download(OutputStream out) throws IOException {
         out.write("[".getBytes());
-        URL url = new URL(elastischSearchServer + elastischSearchDatabase + "/_search?search_type=scan&scroll=10&size=50");
+        String u = elastischSearchServer + elastischSearchDatabase + "/_search?search_type=scan&scroll=10&size=50";
+        if (sort != null) {
+            u += "&sort=" + sort;
+        }
+        System.err.println("Using " + u);
+        URL url = new URL(u);
         Status status = new Status();
         status.byteCount++;
         download(status, url.openStream(), out);
@@ -101,14 +143,28 @@ public class DownloadAll {
         long byteCount = 0;
     }
 
+    private static void handleSetting(String name, Consumer<String> value) {
+        if (System.getenv().containsKey(name)) {
+            value.accept(System.getenv().get(name));
+        }
+        if (System.getProperty(name) != null) {
+            value.accept(System.getProperty(name));
+        }
+    }
+
     public static void main(String[] argv) throws IOException {
         if (argv.length < 2) {
             System.err.println("usage: <elastic search server> <elastic database> [<output file>]");
             System.exit(1);
         }
+
         OutputStream output = argv.length == 2 ? System.out : new FileOutputStream(argv[2]);
 
         DownloadAll all = new DownloadAll(argv[0], argv[1]);
+        handleSetting("SORT", all::setSort);
+        handleSetting("MAX", v -> all.setMax(Long.parseLong(v)));
+        handleSetting("OFFSET", v -> all.setOffset(Long.parseLong(v)));
+
         Status status = all.download(output);
         output.close();
         System.err.println("\nready "+ status.byteCount + " in "  + TimeUnit.SECONDS.convert(System.currentTimeMillis() - status.startTime, TimeUnit.MILLISECONDS) + " s");
