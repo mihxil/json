@@ -8,6 +8,8 @@ import org.meeuw.json.KeyEntry;
 import org.meeuw.json.Path;
 import org.meeuw.json.grep.matching.*;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -147,18 +149,16 @@ public class ParserTest {
 
     @Test
     public void regexpKey() {
-        SinglePathMatcher result = Parser.parseKeysMatcher("~[ab]", false);
-        assertTrue(result.getPatterns()[0] instanceof RegexpKeyMatch);
-
-
-
+        SinglePathMatcher result = Parser.parseKeysMatcher("/[ab]/", false);
+        assertThat(result.getPatterns()[0], is(instanceOf(RegexpKeyMatch.class)));
     }
 
 
     @Test
     public void regexppath() {
-        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcherChain("~[ab].b", false, true, null);
-        assertTrue(result.getPatterns()[0] instanceof RegexpKeyMatch);
+        SinglePathMatcher result = Parser.parseKeysMatcher("/[ab]/.b", false);
+        assertThat(result.getPatterns()[0], is(instanceOf(RegexpKeyMatch.class)));
+        assertThat(result.getPatterns()[1], is(instanceOf(PreciseMatch.class)));
 
     }
 

@@ -101,8 +101,8 @@ public class Parser {
 
 
     protected static void parseKeyPattern(List<KeysPattern> list, String arg) {
-        if (arg.startsWith("~")) {
-            list.add(new RegexpKeyMatch(Pattern.compile(arg.substring(1))));
+        if (arg.startsWith("/") && arg.endsWith("/")) {
+            list.add(new RegexpKeyMatch(Pattern.compile(arg.substring(1, arg.length() - 1))));
             return;
         }
         for (String s : arg.split("\\[")) {

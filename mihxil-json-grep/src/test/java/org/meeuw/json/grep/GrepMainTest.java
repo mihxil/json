@@ -260,9 +260,9 @@ public class GrepMainTest {
 
     @Test
     public void grepRegex() throws IOException {
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*].result.~[mid|urn]"));
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*].result./(mid|urn)/"));
         grep.setRecordMatcher(Parser.parsePathMatcherChain("items[*].result"));
-        grep.setMax(4l);
+        grep.setMax(4L);
 
         Iterator<GrepMainRecord> i = grep.iterate(getClass().getResourceAsStream("/big.json"));
         i.next();
