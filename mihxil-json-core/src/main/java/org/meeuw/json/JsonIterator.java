@@ -9,6 +9,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
 /**
+ * Represents a json object as an iterator of {@link ParseEvent}s.
+ * 
  * @author Michiel Meeuwissen
  * @since 0.4
  */

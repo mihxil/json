@@ -28,7 +28,7 @@ public class GrepMainTest {
         String result = grep.read(new StringReader("{c: [{b1: 1}, {b3: 2}]}"));
 
         assertEquals("", result);
-        assertEquals(0l, grep.getPreviousMaxRecordSize().longValue());
+        assertEquals(0L, grep.getPreviousMaxRecordSize().longValue());
     }
 
 
@@ -44,7 +44,7 @@ public class GrepMainTest {
 
         String result = grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
         assertEquals("title1\ntitle2\n", result);
-        assertEquals(1l, grep.getPreviousMaxRecordSize().longValue());
+        assertEquals(1L, grep.getPreviousMaxRecordSize().longValue());
     }
 
 
@@ -246,7 +246,7 @@ public class GrepMainTest {
     public void grepMax() throws IOException {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*].result.mid,items[*].result.urn"));
         grep.setRecordMatcher(Parser.parsePathMatcherChain("items[*].result"));
-        grep.setMax(4l);
+        grep.setMax(4L);
 
         Iterator<GrepMainRecord> i = grep.iterate(getClass().getResourceAsStream("/big.json"));
         i.next();

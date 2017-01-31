@@ -220,7 +220,7 @@ public class GrepMain {
     }
 
     public static void main(String[] argv) throws IOException, ParseException {
-        CommandLineParser parser = new BasicParser();
+        CommandLineParser parser = new DefaultParser();
         Options options = new Options().addOption(new Option("help", "print this message"));
         options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
         options.addOption(new Option("sep", true, "Separator (defaults to newline)"));

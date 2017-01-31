@@ -11,7 +11,6 @@ import com.fasterxml.jackson.core.JsonParser;
 
 /**
  * @author Michiel Meeuwissen
- * @since ...
  */
 public class Util {
 
@@ -23,7 +22,7 @@ public class Util {
         return jp;
     }
 
-    public static JsonParser getJsonParser(Reader in) throws IOException {
+    public static JsonParser getJsonParser(Reader in)  {
         JsonParser jp = getJsonFactory().createParser(in);
         setJsonParserOptions(jp);
         return jp;

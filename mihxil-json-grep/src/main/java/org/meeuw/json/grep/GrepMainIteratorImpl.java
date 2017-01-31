@@ -16,7 +16,7 @@ class GrepMainIteratorImpl implements GrepMainIterator {
     private final Grep grep;
     private final GrepMainRecord next;
     private Boolean hasNext = null;
-    private long maxRecordSize = 0l;
+    private long maxRecordSize = 0L;
 
     GrepMainIteratorImpl(GrepMain grepMain, JsonParser in) {
         this.grepMain = grepMain;

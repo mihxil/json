@@ -19,27 +19,21 @@ public class Predicates {
 	}
 
 	public static <S> Predicate<S> and(final Predicate<S>... predicates) {
-		return new Predicate<S>() {
-			@Override
-			public boolean test(S t) {
-				for (Predicate<S> p : predicates) {
-					if (! p.test(t)) return false;
-				}
-				return true;
-			}
-		};
+		return t -> {
+            for (Predicate<S> p : predicates) {
+                if (! p.test(t)) return false;
+            }
+            return true;
+        };
 	}
 
 	public static <S> Predicate<S> or(final Predicate<S>... predicates) {
-		return new Predicate<S>() {
-			@Override
-			public boolean test(S t) {
-				for (Predicate<S> p : predicates) {
-					if (p.test(t)) return true;
-				}
-				return false;
-			}
-		};
+		return t -> {
+            for (Predicate<S> p : predicates) {
+                if (p.test(t)) return true;
+            }
+            return false;
+        };
 	}
 
 }

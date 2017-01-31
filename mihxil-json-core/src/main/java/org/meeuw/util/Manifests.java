@@ -19,7 +19,7 @@ public class Manifests {
 
 
     public static String read(String value) throws IOException {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         Enumeration<URL> urls = Thread.currentThread().getContextClassLoader()
                     .getResources("META-INF/MANIFEST.MF");
         while (urls.hasMoreElements()) {
@@ -30,7 +30,7 @@ public class Manifests {
 
     private static Map<String, String> load(final InputStream stream) throws IOException {
         final Map<String, String> props =
-                new HashMap<String, String>();
+                new HashMap<>();
         final Manifest manifest = new Manifest(stream);
         final Attributes attrs = manifest.getMainAttributes();
         for (final Object key : attrs.keySet()) {
