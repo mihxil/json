@@ -22,7 +22,7 @@ public class Util {
         return jp;
     }
 
-    public static JsonParser getJsonParser(Reader in)  {
+    public static JsonParser getJsonParser(Reader in) throws IOException {
         JsonParser jp = getJsonFactory().createParser(in);
         setJsonParserOptions(jp);
         return jp;

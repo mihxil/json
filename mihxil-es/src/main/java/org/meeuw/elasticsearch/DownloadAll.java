@@ -8,9 +8,12 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
+import org.apache.commons.cli.*;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.Grep;
 import org.meeuw.json.grep.GrepEvent;
@@ -34,6 +37,7 @@ public class DownloadAll {
     private String sort = null;
     private Long max= null;
     private Long offset = null;
+    private List<String> types = null;
 
 
     public DownloadAll(String elastischSearchServer, String elastischSearchDatabase) throws MalformedURLException {
@@ -65,7 +69,23 @@ public class DownloadAll {
         this.offset = offset;
     }
 
+    public List<String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<String> types) {
+        this.types = types;
+    }
+    private String getTypesString() {
+        String typesString = "";
+        if (types != null && types.size() > 0) {
+            typesString = types.stream().collect(Collectors.joining(",")) + "/";
+        }
+        return typesString;
+    }
+
     private void download(Status status, OutputStream out) throws IOException {
+
         URL url = new URL(elastischSearchServer + "_search/scroll?scroll=1m");
         URLConnection con = url.openConnection();
         con.setDoOutput(true);
@@ -117,7 +137,7 @@ public class DownloadAll {
 
     private Status download(OutputStream out) throws IOException {
         out.write("[".getBytes());
-        String u = elastischSearchServer + elastischSearchDatabase + "/_search?search_type=scan&scroll=10&size=50";
+        String u = elastischSearchServer + elastischSearchDatabase + "/" + getTypesString() + "_search?search_type=scan&scroll=10&size=50";
         if (sort != null) {
             u += "&sort=" + sort;
         }
@@ -143,28 +163,53 @@ public class DownloadAll {
         long byteCount = 0;
     }
 
-    private static void handleSetting(String name, Consumer<String> value) {
-        if (System.getenv().containsKey(name)) {
-            value.accept(System.getenv().get(name));
-        }
-        if (System.getProperty(name) != null) {
-            value.accept(System.getProperty(name));
-        }
+    private static void printHelp(Options options) {
+        HelpFormatter formatter = new HelpFormatter();
+
+        formatter.printHelp("downloadall <elastic search server> <elastic database> [<output file>]", options);
     }
 
-    public static void main(String[] argv) throws IOException {
-        if (argv.length < 2) {
-            System.err.println("usage: <elastic search server> <elastic database> [<output file>]");
+    public static void main(String[] args) throws IOException, ParseException {
+        Options options =
+            new Options()
+                .addOption(Option.builder("types").hasArg().build())
+                .addOption("sort", true, "sort")
+                .addOption("max", true, "max")
+                .addOption("offset", true, "offset");
+
+
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd;
+
+        try {
+            cmd = parser.parse(options, args);
+            if (cmd.getArgList().size() < 2) {
+                printHelp(options);
+                System.exit(1);
+            }
+
+        } catch (ParseException pe) {
+            System.err.println(pe.getMessage());
+            printHelp(options);
             System.exit(1);
+            return;
         }
 
-        OutputStream output = argv.length == 2 ? System.out : new FileOutputStream(argv[2]);
+        OutputStream output = cmd.getArgs().length == 2 ? System.out : new FileOutputStream(cmd.getArgs()[2]);
+        DownloadAll all = new DownloadAll(cmd.getArgs()[0], cmd.getArgs()[1]);
 
-        DownloadAll all = new DownloadAll(argv[0], argv[1]);
-        handleSetting("SORT", all::setSort);
-        handleSetting("MAX", v -> all.setMax(Long.parseLong(v)));
-        handleSetting("OFFSET", v -> all.setOffset(Long.parseLong(v)));
-
+        if (cmd.hasOption("sort")) {
+            all.setSort(cmd.getOptionValue("sort"));
+        }
+        if (cmd.hasOption("max")) {
+            all.setMax(Long.parseLong(cmd.getOptionValue("max")));
+        }
+        if (cmd.hasOption("offset")) {
+            all.setOffset(Long.parseLong(cmd.getOptionValue("offset")));
+        }
+        if (cmd.hasOption("types")) {
+            all.setTypes(Arrays.asList(cmd.getOptionValue("types").split(",")));
+        }
         Status status = all.download(output);
         output.close();
         System.err.println("\nready "+ status.byteCount + " in "  + TimeUnit.SECONDS.convert(System.currentTimeMillis() - status.startTime, TimeUnit.MILLISECONDS) + " s");
