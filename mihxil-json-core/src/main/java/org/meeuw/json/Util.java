@@ -16,16 +16,24 @@ public class Util {
 
     private Util() {}
 
-    public static JsonParser getJsonParser(InputStream in) throws IOException {
-        JsonParser jp = getJsonFactory().createParser(in);
-        setJsonParserOptions(jp);
-        return jp;
+    public static JsonParser getJsonParser(InputStream in)  {
+        try {
+            JsonParser jp = getJsonFactory().createParser(in);
+            setJsonParserOptions(jp);
+            return jp;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static JsonParser getJsonParser(Reader in) throws IOException {
-        JsonParser jp = getJsonFactory().createParser(in);
-        setJsonParserOptions(jp);
-        return jp;
+    public static JsonParser getJsonParser(Reader in) {
+        try {
+            JsonParser jp = getJsonFactory().createParser(in);
+            setJsonParserOptions(jp);
+            return jp;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static JsonParser getJsonParser(String string) throws IOException {

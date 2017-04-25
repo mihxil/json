@@ -18,7 +18,10 @@ public class JsonInclude  {
     final JsonIterator wrapped;
 
 
-    public JsonInclude(PathMatcher matcher, JsonIterator wrapped, Function<ParseEvent, JsonParser> replacement) {
+    public JsonInclude(
+        PathMatcher matcher,
+        JsonIterator wrapped,
+        Function<ParseEvent, JsonParser> replacement) {
         this.wrapped = wrapped;
     }
 }
