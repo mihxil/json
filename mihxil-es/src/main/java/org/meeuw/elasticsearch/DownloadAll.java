@@ -1,16 +1,18 @@
 package org.meeuw.elasticsearch;
 
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.cli.*;
@@ -29,10 +31,15 @@ import com.fasterxml.jackson.core.JsonParser;
  * @author Michiel Meeuwissen
  * @since 3.0
  */
+@Data
+@Slf4j
 public class DownloadAll {
 
-    private final String elastischSearchServer;
-    private final String elastischSearchDatabase;
+    public static final String ID = "_id";
+    public static final String SOURCE = "_source";
+
+    private final String elasticSearchServer;
+    private final String elasticSearchDatabase;
 
     private String sort = null;
     private Long max= null;
@@ -40,42 +47,27 @@ public class DownloadAll {
     private List<String> types = null;
 
 
-    public DownloadAll(String elastischSearchServer, String elastischSearchDatabase) throws MalformedURLException {
-        this.elastischSearchServer = elastischSearchServer;
-        this.elastischSearchDatabase = elastischSearchDatabase;
+    public DownloadAll(String elasticSearchServer, String elasticSearchDatabase) throws MalformedURLException {
+        this.elasticSearchServer = elasticSearchServer;
+        this.elasticSearchDatabase = elasticSearchDatabase;
     }
 
-    public String getSort() {
-        return sort;
-    }
-
-    public void setSort(String sort) {
+    @lombok.Builder(builderClassName = "Builder")
+    private  DownloadAll(
+        String elasticSearchServer,
+        String elasticSearchDatabase,
+        String sort,
+        Long max,
+        Long offset,
+        List<String> types
+    ) throws MalformedURLException {
+        this(elasticSearchServer, elasticSearchDatabase);
         this.sort = sort;
-    }
-
-    public Long getMax() {
-        return max;
-    }
-
-    public void setMax(Long max) {
         this.max = max;
-    }
-
-    public Long getOffset() {
-        return offset;
-    }
-
-    public void setOffset(Long offset) {
-        this.offset = offset;
-    }
-
-    public List<String> getTypes() {
-        return types;
-    }
-
-    public void setTypes(List<String> types) {
+        this. offset = offset;
         this.types = types;
     }
+
     private String getTypesString() {
         String typesString = "";
         if (types != null && types.size() > 0) {
@@ -84,46 +76,57 @@ public class DownloadAll {
         return typesString;
     }
 
-    private void download(Status status, OutputStream out) throws IOException {
 
-        URL url = new URL(elastischSearchServer + "_search/scroll?scroll=1m");
-        URLConnection con = url.openConnection();
-        con.setDoOutput(true);
-        con.getOutputStream().write(status.scroll_id.getBytes());
-        download(status, con.getInputStream(), out);
-        status.calls++;
+
+    private void download(Status status, InputStream is, final OutputStream out) throws IOException {
+        iterate(status, is, (node) -> {
+            ByteArrayOutputStream writer = new ByteArrayOutputStream();
+            Util.write(node.get(SOURCE), writer);
+            byte[] bytes = writer.toByteArray();
+            status.byteCount += bytes.length;
+            try {
+                out.write(bytes);
+            } catch (IOException ioe) {
+                throw new RuntimeException(ioe);
+            }
+
+        }, (stat) -> {
+            if (stat.count > 0) {
+                try {
+                    out.write(",\n".getBytes());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                status.byteCount += 2;
+            }
+            if (stat.count % 1000 == 0) {
+                System.err.print(".");
+                if (status.count > 0 && status.count % 50000 == 0) {
+                    System.err.println("\n");
+                }
+            }});
     }
 
-    private void download(Status status, InputStream is, OutputStream out) throws IOException {
+    private void iterate(Status status, InputStream is, Consumer<Map<String, Object>> consumer, Consumer<Status> separate) throws IOException {
         JsonParser parser = Util.getJsonParser(is);
         Grep grep = new Grep(new PathMatcherOrChain(
             new SinglePathMatcher(new PreciseMatch("_scroll_id")),
-            new SinglePathMatcher(new PreciseMatch("hits"), new PreciseMatch("hits"), new ArrayEntryMatch(), new PreciseMatch("_source"))), parser);
+            new SinglePathMatcher(new PreciseMatch("hits"), new PreciseMatch("hits"), new ArrayEntryMatch())), parser);
         status.scroll_id = null;
         long subCount = 0;
         for (GrepEvent event : grep) {
             if (event.getPath().toString().equals("_scroll_id")) {
                 status.scroll_id = event.getValue();
             } else {
-                if (status.count > 0) {
-                    out.write(",\n".getBytes());
-                    status.byteCount += 2;
-                }
-                if (status.count % 1000 == 0) {
-                    System.err.print(".");
-                    if (status.count > 0 && status.count % 50000 == 0) {
-                        System.err.println("\n");
-                    }
-                }
+                separate.accept(status);
                 status.count++;
                 if (offset != null && status.count < offset) {
                     continue;
                 }
 
                 subCount++;
-                byte[] bytes = event.getNode().getBytes();
-                status.byteCount += bytes.length;
-                out.write(bytes);
+                Map<String, Object> node = (Map<String, Object>) event.getEvent().getNode();
+                consumer.accept(node);
             }
         }
         if (max != null && status.count > max) {
@@ -135,22 +138,49 @@ public class DownloadAll {
         status.calls++;
     }
 
-    private Status download(OutputStream out) throws IOException {
-        out.write("[".getBytes());
-        String u = elastischSearchServer + elastischSearchDatabase + "/" + getTypesString() + "_search?search_type=scan&scroll=10&size=50";
-        if (sort != null) {
-            u += "&sort=" + sort;
+    protected InputStream openStream(Status status) throws IOException {
+        if (status.scroll_id != null) {
+            URL url = new URL(elasticSearchServer + "_search/scroll?scroll=1m");
+            URLConnection con = url.openConnection();
+            con.setDoOutput(true);
+            con.getOutputStream().write(status.scroll_id.getBytes());
+            status.calls++;
+            return con.getInputStream();
+        } else {
+            String u = elasticSearchServer + elasticSearchDatabase + "/" + getTypesString() + "_search?search_type=scan&scroll=10&size=50";
+            if (sort != null) {
+                u += "&sort=" + sort;
+            }
+            log.info("Using " + u);
+            URL url = new URL(u);
+            return url.openStream();
         }
-        System.err.println("Using " + u);
-        URL url = new URL(u);
+    }
+
+
+    public Status download(OutputStream out) throws IOException {
+        out.write("[".getBytes());
         Status status = new Status();
         status.byteCount++;
-        download(status, url.openStream(), out);
+        download(status, openStream(status), out);
         while (! status.ready) {
-            download(status, out);
+            download(status, openStream(status), out);
         }
         status.byteCount++;
         out.write("]".getBytes());
+        return status;
+    }
+
+    public Status iterate(Consumer<Map<String, Object>> consumer) throws IOException {
+        return iterate(consumer, (status) -> {});
+    }
+
+    public  Status iterate(Consumer<Map<String, Object>> consumer, Consumer<Status> separate) throws IOException {
+        Status status = new Status();
+        iterate(status, openStream(status), consumer, separate);
+        while (!status.ready) {
+            iterate(status, openStream(status), consumer, separate);
+        }
         return status;
     }
 

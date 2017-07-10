@@ -1,5 +1,7 @@
 package org.meeuw.json.grep;
 
+import lombok.Getter;
+
 import java.io.StringWriter;
 
 import org.meeuw.json.ParseEvent;
@@ -10,9 +12,10 @@ import org.meeuw.json.Util;
  * @author Michiel Meeuwissen
  * @since 0.4
  */
+@Getter
 public class GrepEvent {
     private final ParseEvent event;
-    public static enum Type {
+    public enum Type {
         VALUE,
         RECORD
     }
@@ -46,7 +49,7 @@ public class GrepEvent {
         }
     }
 
-    public String  getNode() {
+    public String getNode() {
         switch (event.getToken()) {
             case END_OBJECT:
             case END_ARRAY: {
@@ -59,13 +62,6 @@ public class GrepEvent {
         }
     }
 
-
-    public Type getType() {
-        return type;
-    }
-    public int getWeight() {
-        return weight;
-    }
 
     @Override
     public String toString() {

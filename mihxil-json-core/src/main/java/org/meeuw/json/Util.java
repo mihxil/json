@@ -49,6 +49,16 @@ public class Util {
             System.err.println(ioe.getMessage());
         }
     }
+
+    public static void write(Object map, OutputStream writer) {
+        try {
+            JsonGenerator gen = getJsonFactory().createGenerator(writer);
+            write(map, gen);
+            gen.close();
+        } catch (IOException ioe) {
+            System.err.println(ioe.getMessage());
+        }
+    }
     public static void write(Map<String, Object> map, JsonGenerator gen) throws IOException {
         gen.writeStartObject();
         for (Map.Entry<String, Object> e : map.entrySet()) {
