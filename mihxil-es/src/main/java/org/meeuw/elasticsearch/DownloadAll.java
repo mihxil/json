@@ -36,7 +36,9 @@ import com.fasterxml.jackson.core.JsonParser;
 public class DownloadAll {
 
     public static final String ID = "_id";
+    public static final String TYPE = "_type";
     public static final String SOURCE = "_source";
+    public static final String SCORE = "_score";
 
     private final String elasticSearchServer;
     private final String elasticSearchDatabase;
@@ -81,7 +83,7 @@ public class DownloadAll {
     private void download(Status status, InputStream is, final OutputStream out) throws IOException {
         iterate(status, is, (node) -> {
             ByteArrayOutputStream writer = new ByteArrayOutputStream();
-            Util.write(node.get(SOURCE), writer);
+            Util.write(node.getSource(), writer);
             byte[] bytes = writer.toByteArray();
             status.byteCount += bytes.length;
             try {
@@ -107,7 +109,7 @@ public class DownloadAll {
             }});
     }
 
-    private void iterate(Status status, InputStream is, Consumer<Map<String, Object>> consumer, Consumer<Status> separate) throws IOException {
+    private void iterate(Status status, InputStream is, Consumer<ESObject> consumer, Consumer<Status> separate) throws IOException {
         JsonParser parser = Util.getJsonParser(is);
         Grep grep = new Grep(new PathMatcherOrChain(
             new SinglePathMatcher(new PreciseMatch("_scroll_id")),
@@ -126,7 +128,14 @@ public class DownloadAll {
 
                 subCount++;
                 Map<String, Object> node = (Map<String, Object>) event.getEvent().getNode();
-                consumer.accept(node);
+                ESObject esObject = ESObject.builder()
+                    .id((String) node.get(ID))
+                    .type((String) node.get(TYPE))
+                    .score((Double) node.get(SCORE))
+                    .source((Map<String, Object>) node.get(SOURCE))
+                    .build();
+
+                consumer.accept(esObject);
             }
         }
         if (max != null && status.count > max) {
@@ -171,11 +180,11 @@ public class DownloadAll {
         return status;
     }
 
-    public Status iterate(Consumer<Map<String, Object>> consumer) throws IOException {
+    public Status iterate(Consumer<ESObject> consumer) throws IOException {
         return iterate(consumer, (status) -> {});
     }
 
-    public  Status iterate(Consumer<Map<String, Object>> consumer, Consumer<Status> separate) throws IOException {
+    public  Status iterate(Consumer<ESObject> consumer, Consumer<Status> separate) throws IOException {
         Status status = new Status();
         iterate(status, openStream(status), consumer, separate);
         while (!status.ready) {
@@ -183,6 +192,8 @@ public class DownloadAll {
         }
         return status;
     }
+
+
 
     private static class Status {
         long startTime = System.currentTimeMillis();
