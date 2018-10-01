@@ -1,7 +1,5 @@
 package org.meeuw.json;
 
-import lombok.SneakyThrows;
-
 import java.io.*;
 import java.net.URL;
 import java.util.List;
@@ -9,7 +7,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
 /**
@@ -19,17 +16,24 @@ public class Util {
 
     private Util() {}
 
-    public static JsonParser getJsonParser(InputStream in) throws IOException {
-        JsonParser jp = getJsonFactory().createParser(in);
-        setJsonParserOptions(jp);
-        return jp;
+    public static JsonParser getJsonParser(InputStream in)  {
+        try {
+            JsonParser jp = getJsonFactory().createParser(in);
+            setJsonParserOptions(jp);
+            return jp;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @SneakyThrows({JsonParseException.class, IOException.class})
-    public static JsonParser getJsonParser(Reader in)  {
-        JsonParser jp = getJsonFactory().createParser(in);
-        setJsonParserOptions(jp);
-        return jp;
+    public static JsonParser getJsonParser(Reader in) {
+        try {
+            JsonParser jp = getJsonFactory().createParser(in);
+            setJsonParserOptions(jp);
+            return jp;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static JsonParser getJsonParser(String string) throws IOException {
@@ -37,6 +41,16 @@ public class Util {
     }
 
     public static void write(Object map, Writer writer) {
+        try {
+            JsonGenerator gen = getJsonFactory().createGenerator(writer);
+            write(map, gen);
+            gen.close();
+        } catch (IOException ioe) {
+            System.err.println(ioe.getMessage());
+        }
+    }
+
+    public static void write(Object map, OutputStream writer) {
         try {
             JsonGenerator gen = getJsonFactory().createGenerator(writer);
             write(map, gen);
