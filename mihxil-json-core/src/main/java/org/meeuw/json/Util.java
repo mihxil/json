@@ -1,5 +1,7 @@
 package org.meeuw.json;
 
+import lombok.SneakyThrows;
+
 import java.io.*;
 import java.net.URL;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
 /**
@@ -22,6 +25,7 @@ public class Util {
         return jp;
     }
 
+    @SneakyThrows({JsonParseException.class, IOException.class})
     public static JsonParser getJsonParser(Reader in)  {
         JsonParser jp = getJsonFactory().createParser(in);
         setJsonParserOptions(jp);
