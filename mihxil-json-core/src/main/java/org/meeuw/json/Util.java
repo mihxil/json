@@ -1,5 +1,7 @@
 package org.meeuw.json;
 
+import lombok.SneakyThrows;
+
 import java.io.*;
 import java.net.URL;
 import java.util.List;
@@ -16,38 +18,29 @@ public class Util {
 
     private Util() {}
 
+    @SneakyThrows({IOException.class})
     public static JsonParser getJsonParser(InputStream in)  {
-        try {
-            JsonParser jp = getJsonFactory().createParser(in);
-            setJsonParserOptions(jp);
-            return jp;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        JsonParser jp = getJsonFactory().createParser(in);
+        setJsonParserOptions(jp);
+        return jp;
     }
 
+    @SneakyThrows({IOException.class})
     public static JsonParser getJsonParser(Reader in) {
-        try {
-            JsonParser jp = getJsonFactory().createParser(in);
-            setJsonParserOptions(jp);
-            return jp;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        JsonParser jp = getJsonFactory().createParser(in);
+        setJsonParserOptions(jp);
+        return jp;
     }
 
     public static JsonParser getJsonParser(String string) throws IOException {
         return getJsonParser(new StringReader(string));
     }
 
+    @SneakyThrows({IOException.class})
     public static void write(Object map, Writer writer) {
-        try {
-            JsonGenerator gen = getJsonFactory().createGenerator(writer);
-            write(map, gen);
-            gen.close();
-        } catch (IOException ioe) {
-            System.err.println(ioe.getMessage());
-        }
+        JsonGenerator gen = getJsonFactory().createGenerator(writer);
+        write(map, gen);
+        gen.close();
     }
 
     public static void write(Object map, OutputStream writer) {
