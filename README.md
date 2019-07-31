@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/mihxil/json.svg?)](https://travis-ci.org/mihxil/svg)
 [![Maven Central](https://img.shields.io/maven-central/v/org.meeuw/mihxil-json.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.meeuw%22%20AND%20a:%22mihxil-json%22)
+[![javadoc](http://www.javadoc.io/badge/org.meeuw/mihxil-json.svg?color=blue)](http://www.javadoc.io/doc/org.meeuw/mihxil-json)
+
 
 Json Tools
 ==========
