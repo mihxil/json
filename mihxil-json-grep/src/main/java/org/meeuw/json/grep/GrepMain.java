@@ -23,7 +23,7 @@ import com.fasterxml.jackson.core.JsonParser;
 public class GrepMain {
 
 
-    public static enum Output {
+    public enum Output {
         PATHANDVALUE(false) {
             @Override
             void toBuilder(StringBuilder builder, GrepEvent match) {

@@ -89,6 +89,15 @@ public class ParserTest {
         assertEquals(".*", result.getPatterns()[1].toString());
     }
 
+    @Test
+    public void regexp2() {
+        PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b~(a|b)", false, false);
+        assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
+        assertEquals("a[*].b", result.getPatterns()[0].toString());
+        assertTrue(result.getPatterns()[1] instanceof ValueRegexpMatcher);
+        assertEquals(".*", result.getPatterns()[1].toString());
+    }
+
 	@Test
 	public void contains() {
 		PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b contains c", false, false);

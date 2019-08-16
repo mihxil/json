@@ -81,7 +81,7 @@ public class Formatter extends AbstractJsonReader {
     }
 
     public static void main(String[] argv) throws IOException, ParseException {
-        CommandLineParser parser = new BasicParser();
+        CommandLineParser parser = new DefaultParser();
         Options options = new Options().addOption(new Option("help", "print this message"));
         options.addOption(new Option("version", false, "Output version"));
         CommandLine cl = parser.parse(options, argv, true);

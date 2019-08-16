@@ -179,10 +179,10 @@ public class GrepTest {
     public void nonpe() throws IOException {
         Grep grep = new Grep(
                 new SinglePathMatcher(
-                        new PreciseMatch("items"),
-                        new ArrayEntryMatch(),
-                        new PreciseMatch("result")),
-                Util.getJsonParser("{\"items\" : [{ \"result\" : {\"a\" : {}, \"b\" : 1 }} ]}"));
+                    new PreciseMatch("items"),
+                    new ArrayEntryMatch(),
+                    new PreciseMatch("result")),
+            Util.getJsonParser("{\"items\" : [{ \"result\" : {\"a\" : {}, \"b\" : 1 }} ]}"));
         assertEquals("items[0].result={...}", grep.next().toString());
     }
 
@@ -195,6 +195,22 @@ public class GrepTest {
         grep.setRecordMatcher(new SinglePathMatcher(new PreciseMatch("items"), new ArrayEntryMatch()));
         assertEquals(GrepEvent.Type.RECORD, grep.next().getType());
         assertEquals(GrepEvent.Type.RECORD, grep.next().getType());
+        assertFalse(grep.hasNext());
+    }
+
+
+    @Test
+    public void grepFromArray() throws IOException {
+        Grep grep = new Grep(
+            new PathMatcherAndChain(
+                new SinglePathMatcher(
+                    new ArrayEntryMatch(),
+                    new PreciseMatch("a"))
+            ),
+            Util.getJsonParser("[ { \"a\" : \"b\"}, { \"a\" : \"c\"} ]"));
+
+        grep.setRecordMatcher(new SinglePathMatcher(new ArrayEntryMatch()));
+        assertEquals("[0]={...}", grep.next().toString());
         assertFalse(grep.hasNext());
     }
 

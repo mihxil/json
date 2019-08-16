@@ -27,6 +27,7 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
     final JsonIterator wrapped;
     private final List<GrepEvent> next = new ArrayList<>();
 
+    @lombok.Builder
     public Grep(PathMatcher matcher, JsonParser jp) {
         this.matcher = matcher == null ? new NeverPathMatcher() : matcher;
         this.wrapped = new JsonIterator(jp,

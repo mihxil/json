@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import org.apache.commons.cli.*;
 import org.meeuw.json.Util;
@@ -49,7 +47,7 @@ public class DownloadAll {
     private List<String> types = null;
 
 
-    public DownloadAll(String elasticSearchServer, String elasticSearchDatabase) throws MalformedURLException {
+    public DownloadAll(String elasticSearchServer, String elasticSearchDatabase) {
         this.elasticSearchServer = elasticSearchServer;
         this.elasticSearchDatabase = elasticSearchDatabase;
     }
@@ -62,7 +60,7 @@ public class DownloadAll {
         Long max,
         Long offset,
         List<String> types
-    ) throws MalformedURLException {
+    ) {
         this(elasticSearchServer, elasticSearchDatabase);
         this.sort = sort;
         this.max = max;
@@ -73,14 +71,14 @@ public class DownloadAll {
     private String getTypesString() {
         String typesString = "";
         if (types != null && types.size() > 0) {
-            typesString = types.stream().collect(Collectors.joining(",")) + "/";
+            typesString = String.join(",", types) + "/";
         }
         return typesString;
     }
 
 
 
-    private void download(Status status, InputStream is, final OutputStream out) throws IOException {
+    private void download(Status status, InputStream is, final OutputStream out) {
         iterate(status, is, (node) -> {
             ByteArrayOutputStream writer = new ByteArrayOutputStream();
             Util.write(node.getSource(), writer);
@@ -109,7 +107,7 @@ public class DownloadAll {
             }});
     }
 
-    private void iterate(Status status, InputStream is, Consumer<ESObject> consumer, Consumer<Status> separate) throws IOException {
+    private void iterate(Status status, InputStream is, Consumer<ESObject> consumer, Consumer<Status> separate) {
         JsonParser parser = Util.getJsonParser(is);
         Grep grep = new Grep(new PathMatcherOrChain(
             new SinglePathMatcher(new PreciseMatch("_scroll_id")),
@@ -210,7 +208,7 @@ public class DownloadAll {
         formatter.printHelp("downloadall <elastic search server> <elastic database> [<output file>]", options);
     }
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
         Options options =
             new Options()
                 .addOption(Option.builder("types").hasArg().build())
@@ -236,7 +234,7 @@ public class DownloadAll {
             return;
         }
 
-        OutputStream output = cmd.getArgs().length == 2 ? System.out : new FileOutputStream(cmd.getArgs()[2]);
+        OutputStream output = cmd.getArgs().length == 2 || cmd.getArgs()[2].equals("-") ? System.out : new FileOutputStream(cmd.getArgs()[2]);
         DownloadAll all = new DownloadAll(cmd.getArgs()[0], cmd.getArgs()[1]);
 
         if (cmd.hasOption("sort")) {
