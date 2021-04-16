@@ -4,14 +4,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.junit.Test;
-import org.meeuw.json.ArrayEntry;
-import org.meeuw.json.KeyEntry;
-import org.meeuw.json.Path;
-import org.meeuw.json.PathEntry;
+import org.junit.jupiter.api.Test;
+import org.meeuw.json.*;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 

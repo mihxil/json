@@ -1,12 +1,10 @@
 package org.meeuw.json;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
 
@@ -19,7 +17,7 @@ public class StructureTest {
         Structure structure = new Structure(out);
         structure.read(new StringReader("{b: {b1: 5}, c:5, d: [3, 2, {x: 'blabla'}, {y: 'bloebloe'}], e: 'EEE'}"));
 
-        String[] result = (new String(out.toByteArray())).split("\n");
+        String[] result = (out.toString()).split("\n");
         assertEquals("b.b1",  result[0]);
         assertEquals("c",     result[1]);
         assertEquals("d[0]",   result[2]);
@@ -37,7 +35,7 @@ public class StructureTest {
         Structure structure = new Structure(out);
         structure.read(new StringReader("{d: [{x: 'blabla'}, {y: 'bloebloe'}], e: 'bla'}"));
 
-        String[] result = (new String(out.toByteArray())).split("\n");
+        String[] result = (out.toString()).split("\n");
         assertEquals("d[0].x", result[0]);
         assertEquals("d[1].y", result[1]);
         assertEquals("e",      result[2]);
@@ -48,7 +46,7 @@ public class StructureTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Structure structure = new Structure(out);
         structure.read(new StringReader("{ \"items\" : [ { \"a\":['A']}]}"));
-        String[] result = (new String(out.toByteArray())).split("\n");
+        String[] result = (out.toString()).split("\n");
         assertEquals("items[0].a[0]", result[0]);
     }
 }

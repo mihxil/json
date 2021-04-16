@@ -1,12 +1,10 @@
 package org.meeuw.json.grep.matching;
 
-import org.junit.Test;
-import org.meeuw.json.ArrayEntry;
-import org.meeuw.json.KeyEntry;
-import org.meeuw.json.Path;
+import org.junit.jupiter.api.Test;
+import org.meeuw.json.*;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Michiel Meeuwissen

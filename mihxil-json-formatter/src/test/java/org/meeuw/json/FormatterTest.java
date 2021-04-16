@@ -1,12 +1,10 @@
 package org.meeuw.json;
 
-import org.junit.Test;
+import java.io.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Michiel Meeuwissen

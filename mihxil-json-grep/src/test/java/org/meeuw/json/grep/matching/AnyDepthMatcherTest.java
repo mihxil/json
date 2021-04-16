@@ -2,10 +2,10 @@ package org.meeuw.json.grep.matching;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.meeuw.json.PathEntry;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 public class AnyDepthMatcherTest {

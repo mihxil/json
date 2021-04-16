@@ -1,19 +1,18 @@
 package org.meeuw.json.grep;
 
 
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
 
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GrepMainTest {
 

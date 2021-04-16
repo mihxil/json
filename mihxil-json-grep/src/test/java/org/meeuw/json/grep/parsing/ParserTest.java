@@ -3,14 +3,15 @@ package org.meeuw.json.grep.parsing;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.meeuw.json.KeyEntry;
 import org.meeuw.json.Path;
 import org.meeuw.json.grep.matching.*;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Michiel Meeuwissen

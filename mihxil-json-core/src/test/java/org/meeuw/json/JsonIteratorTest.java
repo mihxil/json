@@ -1,18 +1,16 @@
 package org.meeuw.json;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.meeuw.util.Predicates;
 
 import com.fasterxml.jackson.core.JsonToken;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.meeuw.util.Predicates.alwaysFalse;
 
 /**
  * @author Michiel Meeuwissen
@@ -115,21 +113,17 @@ public class JsonIteratorTest {
 		assertEquals(Arrays.asList("c", "d"), last.getKeys());
 		ParseEvent lastout = iterator.next();
 		assertEvent(lastout, JsonToken.END_OBJECT, 0);
-		assertEquals(null, lastout.getKeys());
+        assertNull(lastout.getKeys());
         assertFalse(iterator.hasNext());
     }
 
 
 	@Test
-	public void collectObjects() throws IOException {
+    public void collectObjects() throws IOException {
 		JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: {}}}"),
-				Predicates.<Path>alwaysFalse(),
-				new Predicate<Path>() {
-                    @Override
-                    public boolean test(Path path) {
-                        return path != null && path.size() == 1 && path.peekLast().toString().equals("b");
-                    }
-                });
+            alwaysFalse(),
+            path -> path != null && path.size() == 1 && path.peekLast().toString().equals("b")
+        );
 		assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
 		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
@@ -143,19 +137,19 @@ public class JsonIteratorTest {
 		ParseEvent last = iterator.next();
 		assertEvent(last, JsonToken.END_OBJECT, 1);
         Map<String, Object> expected = new HashMap<String, Object>();
-        expected.put("c", Integer.valueOf(1));
+        expected.put("c", 1);
         expected.put("d", new HashMap<String, Object>());
 		assertEquals(expected, last.getNode());
 		ParseEvent lastout = iterator.next();
 		assertEvent(lastout, JsonToken.END_OBJECT, 0);
-		assertEquals(null, lastout.getKeys());
+        assertNull(lastout.getKeys());
 		assertFalse(iterator.hasNext());
 	}
 
     @Test
     public void collectArray() throws IOException {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: [1, 2.0, 3]}"),
-                Predicates.<Path>alwaysFalse(),
+                Predicates.alwaysFalse(),
                 new Predicate<Path>() {
                     @Override
                     public boolean test(Path path) {
@@ -172,11 +166,11 @@ public class JsonIteratorTest {
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "3");
         ParseEvent last = iterator.next();
         assertEvent(last, JsonToken.END_ARRAY, 1);
-        List<Object> expected = Arrays.<Object>asList(1, 2.0, 3);
+        List<Object> expected = Arrays.asList(1, 2.0, 3);
         assertEquals(expected, last.getNode());
         ParseEvent lastout = iterator.next();
         assertEvent(lastout, JsonToken.END_OBJECT, 0);
-        assertEquals(null, lastout.getKeys());
+        assertNull(lastout.getKeys());
         assertFalse(iterator.hasNext());
     }
 
@@ -271,7 +265,7 @@ public class JsonIteratorTest {
     }
 
     protected void assertEvent(ParseEvent event, JsonToken token, int depth, String value) {
-        assertTrue(event.getToken() == token);
+        assertSame(event.getToken(), token);
         assertEquals(depth, event.getPath().size());
         assertEquals(value, event.getValue());
     }
