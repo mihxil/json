@@ -2,4 +2,4 @@
 .PHONY: release
 release:
 	mvn release:prepare
-	mvn -Pdeploy release:perfomr
+	mvn -Pdeploy release:perform
