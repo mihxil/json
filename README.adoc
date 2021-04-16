@@ -25,7 +25,7 @@ This zip also contain executable scripts to call them with `java -jar`, which wi
 
 [source,shell]
 ----
-curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.8/mihxil-json-0.8-all.zip ; unzip -o json.zip ; rm json.zip
+curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.9/mihxil-json-0.9-all.zip ; unzip -o json.zip ; rm json.zip
 ----
 
 == Formatter
