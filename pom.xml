@@ -52,7 +52,7 @@
     <mockito.version>4.0.0</mockito.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <lombok.version>1.18.22</lombok.version>
-    <slf4j.version>1.7.25</slf4j.version>
+    <slf4j.version>1.7.32</slf4j.version>
   </properties>
 
   <scm>
