@@ -46,12 +46,12 @@
   </modules>
 
   <properties>
-    <jmh.version>1.29</jmh.version>
-    <jackson.version>2.12.3</jackson.version>
-    <junit.version>5.8.0-M1</junit.version>
-    <mockito.version>3.9.0</mockito.version>
-    <commons-cli.version>1.4</commons-cli.version>
-    <lombok.version>1.18.20</lombok.version>
+    <jmh.version>1.33</jmh.version>
+    <jackson.version>2.13.0</jackson.version>
+    <junit.version>5.8.1</junit.version>
+    <mockito.version>4.0.0</mockito.version>
+    <commons-cli.version>1.5.0</commons-cli.version>
+    <lombok.version>1.18.22</lombok.version>
     <slf4j.version>1.7.25</slf4j.version>
   </properties>
 
