@@ -180,6 +180,9 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <append>true</append>
+        </configuration>
       </plugin>
 
     </plugins>
