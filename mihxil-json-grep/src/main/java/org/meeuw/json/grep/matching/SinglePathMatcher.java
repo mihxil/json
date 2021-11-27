@@ -13,7 +13,7 @@ import org.meeuw.json.PathEntry;
 public class SinglePathMatcher extends KeysMatcher {
     private final KeysPattern[] pathPattern;
 
-    private boolean ignoreArrays;
+    private final boolean ignoreArrays;
 
     public SinglePathMatcher(KeysPattern... pathPattern) {
         this(false, pathPattern);
@@ -72,11 +72,10 @@ public class SinglePathMatcher extends KeysMatcher {
             if (builder.length() > 0 && ! (p instanceof ArrayEntryMatch)) {
                 builder.append(".");
             }
-            builder.append(String.valueOf(p));
+            builder.append(p);
         }
         return builder.toString();
     }
-
 
     public KeysPattern[] getPatterns() {
         return pathPattern;

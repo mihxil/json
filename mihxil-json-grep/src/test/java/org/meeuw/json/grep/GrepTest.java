@@ -4,9 +4,11 @@ package org.meeuw.json.grep;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
+
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -20,7 +22,6 @@ public class GrepTest {
         Grep grep = new Grep(matcher, Util.getJsonParser("{a:1, b: {b1: 5}, c: [ {d: 4, e:5 }]}"));
         assertEquals("b.b1=5", grep.next().toString());
         assertFalse(grep.hasNext());
-
     }
 
 
@@ -207,11 +208,14 @@ public class GrepTest {
                     new ArrayEntryMatch(),
                     new PreciseMatch("a"))
             ),
-            Util.getJsonParser("[ { \"a\" : \"b\"}, { \"a\" : \"c\"} ]"));
+            Util.getJsonParser(
+                "[ { \"a\" : \"b\"}, { \"a\" : \"c\"} ]"));
 
         grep.setRecordMatcher(new SinglePathMatcher(new ArrayEntryMatch()));
+        assertEquals("[0].a=b", grep.next().toString());
+        assertThat(grep.hasNext()).isTrue();
         assertEquals("[0]={...}", grep.next().toString());
-        assertFalse(grep.hasNext());
+        //assertThat(grep.hasNext()).isFalse();
     }
 
 

@@ -2,12 +2,15 @@ package org.meeuw.json.grep.parsing;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
+
 import org.meeuw.json.KeyEntry;
 import org.meeuw.json.Path;
 import org.meeuw.json.grep.matching.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Michiel Meeuwissen
@@ -92,7 +95,7 @@ public class ParserTest {
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
         assertTrue(result.getPatterns()[1] instanceof ValueRegexpMatcher);
-        assertEquals(".*", result.getPatterns()[1].toString());
+        assertEquals("(a|b)", result.getPatterns()[1].toString());
     }
 
 	@Test
