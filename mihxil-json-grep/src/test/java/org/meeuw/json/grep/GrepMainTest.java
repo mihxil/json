@@ -1,16 +1,17 @@
 package org.meeuw.json.grep;
 
 
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
+import java.security.Permission;
 import java.util.Iterator;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -29,8 +30,6 @@ public class GrepMainTest {
         assertEquals("", result);
         assertEquals(0L, grep.getPreviousMaxRecordSize().longValue());
     }
-
-
 
 
     @Test
@@ -192,7 +191,7 @@ public class GrepMainTest {
     }
 
     @Test
-    public void grepRecordMatcherNoSortFields() throws IOException {
+    public void grepRecordMatcherNoSortFields() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*].result.urn,items[*].result.mid"));
         grep.setRecordMatcher(Parser.parsePathMatcherChain("items[*].result"));
         grep.setSep("\t");
@@ -207,7 +206,7 @@ public class GrepMainTest {
     }
 
     @Test
-    public void grepRecordMatcherSortFields() throws IOException {
+    public void grepRecordMatcherSortFields() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*].result.mid,items[*].result.urn"));
         grep.setRecordMatcher(Parser.parsePathMatcherChain("items[*].result"));
         grep.setSep("\t");
@@ -236,7 +235,7 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepMax() throws IOException {
+    public void grepMax() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*].result.mid,items[*].result.urn"));
         grep.setRecordMatcher(Parser.parsePathMatcherChain("items[*].result"));
         grep.setMax(4L);
@@ -251,7 +250,7 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepRegex() throws IOException {
+    public void grepRegex() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*].result./(mid|urn)/"));
         grep.setRecordMatcher(Parser.parsePathMatcherChain("items[*].result"));
         grep.setMax(4L);
@@ -263,5 +262,73 @@ public class GrepMainTest {
         i.next();
         assertThat(i.hasNext()).isFalse();
     }
+
+    public static class Main {
+
+        private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+
+        private final PrintStream originalOut = System.out;
+        private final PrintStream originalErr = System.err;
+        private SecurityManager securityManager = System.getSecurityManager();
+
+
+
+        @BeforeEach
+        public void setUpStreams() {
+            System.setOut(new PrintStream(outContent));
+            System.setErr(new PrintStream(errContent));
+            System.setSecurityManager(new NoExitSecurityManager());
+        }
+        @AfterEach
+        public void restoreStreams() {
+            System.setOut(originalOut);
+            System.out.println(outContent);
+            System.setErr(originalErr);
+            System.err.println(errContent);
+            System.setSecurityManager(securityManager);
+        }
+
+        protected static class ExitException extends SecurityException {
+            private static final long serialVersionUID = -1982617086752946683L;
+            public final int status;
+
+            public ExitException(int status) {
+                super("status:" + status);
+                this.status = status;
+            }
+        }
+
+        private static class NoExitSecurityManager extends SecurityManager {
+            @Override
+            public void checkPermission(Permission perm) {
+                // allow anything.
+            }
+
+            @Override
+            public void checkPermission(Permission perm, Object context) {
+                // allow anything.
+            }
+
+            @Override
+            public void checkExit(int status) {
+                super.checkExit(status);
+                throw new ExitException(status);
+            }
+        }
+
+        @Test
+        public void main() {
+            assertThatThrownBy(() -> {
+                GrepMain.main(new String[]{});
+            }).isInstanceOf(ExitException.class).hasMessage("status:1");
+            assertThat(outContent.toString())
+                .startsWith("jsongrep - null - See https://github.com/mihxil/json\n" +
+                    "usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]\n" +
+                    " -debug              Debug");
+        }
+    }
+
+
 
 }
