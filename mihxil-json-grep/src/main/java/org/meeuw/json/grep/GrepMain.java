@@ -32,6 +32,7 @@ public class GrepMain {
                 builder.append(match.getValue());
             }
         },
+
         PATHANDFULLVALUE(true) {
             @Override
             void toBuilder(StringBuilder builder, GrepEvent match) {
@@ -126,8 +127,6 @@ public class GrepMain {
         this.sep = sep;
     }
 
-
-
     public String getRecordsep() {
         return recordsep;
     }
@@ -203,17 +202,16 @@ public class GrepMain {
     }
 
     public String read(Reader in) throws IOException {
-        return new String(read(Util.getJsonParser(in), new ByteArrayOutputStream()).toByteArray());
+        return read(Util.getJsonParser(in), new ByteArrayOutputStream()).toString();
     }
 
     public String read(InputStream in) throws IOException {
-        return new String(read(Util.getJsonParser(in), new ByteArrayOutputStream()).toByteArray());
+        return read(Util.getJsonParser(in), new ByteArrayOutputStream()).toString();
     }
-    public Iterator<GrepMainRecord> iterate(InputStream in) throws IOException {
+
+    public Iterator<GrepMainRecord> iterate(InputStream in) {
         return iterate(Util.getJsonParser(in));
     }
-
-
 
     public static String version() throws IOException {
         return Manifests.read("ProjectVersion");
@@ -251,10 +249,8 @@ public class GrepMain {
         if (args.length < 1) {
             throw new MissingArgumentException("No pathMatcher expression given");
         }
-        boolean ignoreArrays = false;
-        if (cl.hasOption("ignoreArrays")) {
-            ignoreArrays = true;
-        }
+        boolean ignoreArrays = cl.hasOption("ignoreArrays");
+
         Output output = Output.PATHANDVALUE;
         if (cl.hasOption("output")) {
             output = Output.valueOf(cl.getOptionValue("output").toUpperCase());
@@ -279,7 +275,7 @@ public class GrepMain {
         }
 
         if (cl.hasOption("sortfields")) {
-            main.setSortFields(Boolean.valueOf(cl.getOptionValue("sortfields")));
+            main.setSortFields(Boolean.parseBoolean(cl.getOptionValue("sortfields")));
         }
         if (cl.hasOption("max")) {
             main.setMax(Long.valueOf(cl.getOptionValue("max")));
@@ -287,12 +283,12 @@ public class GrepMain {
 
 
         if (cl.hasOption("debug")) {
-            System.out.println(String.valueOf(main.matcher));
+            System.out.println(main.matcher);
             return;
         }
 
 		List<String> argList = cl.getArgList();
-		InputStream in = Util.getInput(argList.toArray(new String[argList.size()]), 1);
+		InputStream in = Util.getInput(argList.toArray(new String[0]), 1);
         main.read(in, System.out);
         in.close();
     }
