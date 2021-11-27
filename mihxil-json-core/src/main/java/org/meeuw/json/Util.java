@@ -97,17 +97,15 @@ public class Util {
     }
 
     public static InputStream getInput(String[] argv, int pos) throws IOException {
-        final InputStream in;
         String arg = argv.length > pos ? argv[pos] : null;
         File file = getFile(arg);
         if (file == null) {
-            in = System.in;
+            return System.in;
         } else if (!file.exists()) {
-            in = new URL(arg).openStream();
+            return new URL(arg).openStream();
         } else {
-            in = new FileInputStream(file);
+            return new FileInputStream(file);
         }
-        return in;
     }
 
     public static OutputStream getOutput(String[] argv, int pos) throws IOException {

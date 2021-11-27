@@ -64,7 +64,7 @@ public class GrepMain {
                 builder.append(match.getPath().toString());
             }
         },
-		KEY(false) {
+        KEY(false) {
             @Override
             void toBuilder(StringBuilder builder, GrepEvent match) {
                 builder.append(match.getPath().peekLast());
@@ -254,10 +254,10 @@ public class GrepMain {
             return;
         }
 
-		List<String> argList = cl.getArgList();
-		InputStream in = Util.getInput(argList.toArray(new String[0]), 1);
-        main.read(in, System.out);
-        in.close();
+        List<String> argList = cl.getArgList();
+        try (InputStream in = Util.getInput(argList.toArray(new String[0]), 1)) {
+            main.read(in, System.out);
+        }
         System.exit(0);
     }
 }

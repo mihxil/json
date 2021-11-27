@@ -299,13 +299,14 @@ public class GrepMainTest {
 
 
         @Test
-        public void main() {
+        public void main() throws IOException {
             assertExitCode(() -> {
                     GrepMain.main(new String[]{});
                 }).isNormal();
 
+            String version = GrepMain.version();
             assertThat(outContent.toString())
-                .startsWith("jsongrep - null - See https://github.com/mihxil/json\n" +
+                .startsWith("jsongrep - " + version + " - See https://github.com/mihxil/json\n" +
                     "usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]\n" +
                     " -debug              Debug");
         }
@@ -316,7 +317,7 @@ public class GrepMainTest {
                     GrepMain.main(new String[]{"-version"});
                 }).isNormal();
             assertThat(outContent.toString())
-                .startsWith("null");
+                .isNotEmpty();
 
         }
 
