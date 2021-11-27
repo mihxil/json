@@ -1,10 +1,15 @@
 package org.meeuw.json;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 
+import org.meeuw.main.AbstractMainTest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.meeuw.main.Assertions.assertExitCode;
 
 /**
  * @author Michiel Meeuwissen
@@ -23,6 +28,29 @@ public class FormatterTest {
                 "  \"a\" : 1,\n" +
                 "  \"b\" : 2\n" +
                 "}", out.toString());
+    }
+
+    public static class Main extends AbstractMainTest {
+
+        @Test
+        public void main() {
+            System.setIn(new ByteArrayInputStream("{'a': 'B'}".getBytes(StandardCharsets.UTF_8)));
+
+            assertExitCode(() -> {
+                Formatter.main(new String[]{});
+            }).isNormal();
+
+            assertThat(outContent.toString()).isEqualTo("{\n" +
+                "  \"a\" : \"B\"\n" +
+                "}");
+        }
+
+        @Test
+        public void help() {
+            assertExitCode(() -> {
+                Formatter.main(new String[]{"-help"});
+            }).isNormal();
+        }
     }
 
 }

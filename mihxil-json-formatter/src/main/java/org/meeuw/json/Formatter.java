@@ -88,7 +88,7 @@ public class Formatter extends AbstractJsonReader {
         String[] args = cl.getArgs();
         if (cl.hasOption("version")) {
             System.out.println(version());
-            System.exit(1);
+            System.exit(0);
         }
         if (cl.hasOption("help")) {
             System.out.println("jsonformat - " + version() + " - See https://github.com/mihxil/json");
@@ -97,7 +97,7 @@ public class Formatter extends AbstractJsonReader {
                     "jsonformat [OPTIONS]  [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
                     options);
 
-            System.exit(1);
+            System.exit(0);
         }
 
 

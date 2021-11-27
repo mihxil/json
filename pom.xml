@@ -42,7 +42,6 @@
     <module>mihxil-json-xml</module>
     <module>mihxil-json-benchmarks</module>
     <module>mihxil-json-include</module>
-
   </modules>
 
   <properties>
@@ -97,6 +96,12 @@
         <artifactId>jmh-generator-annprocess</artifactId>
         <version>${jmh.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.ginsberg</groupId>
+        <artifactId>junit5-system-exit</artifactId>
+        <version>1.1.1</version>
+        <scope>test</scope>
+    </dependency>
     </dependencies>
 
   </dependencyManagement>

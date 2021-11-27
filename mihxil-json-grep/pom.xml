@@ -28,7 +28,12 @@
     <dependency>
       <groupId>com.ginsberg</groupId>
       <artifactId>junit5-system-exit</artifactId>
-      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.meeuw</groupId>
+      <artifactId>mihxil-json-core</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
   </dependencies>
