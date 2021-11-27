@@ -11,12 +11,11 @@
   <packaging>jar</packaging>
 
   <properties>
-    <github.maven.repository>file:///Users/michiel/github/mihxil/mvn-repo/</github.maven.repository>
   </properties>
 
   <scm>
-    <connection>scm:git:git://github.com/mihxil/json.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/mihxil/json.git</developerConnection>
+    <connection>scm:git:${project.scm.url}</connection>
+    <developerConnection>scm:git:${project.scm.url}</developerConnection>
     <url>https://github.com/mihxil/json</url>
     <tag>HEAD</tag>
   </scm>

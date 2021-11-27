@@ -6,11 +6,11 @@ import java.io.StringReader;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
+
 import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -150,7 +150,6 @@ public class GrepMainTest {
                 "items[6]={...}\n" +
                 "items[7]={...}\n",
                 result);
-
     }
 
 
@@ -203,11 +202,8 @@ public class GrepMainTest {
         Iterator<GrepMainRecord> i = grep.iterate(getClass().getResourceAsStream("/big.json"));
 
         GrepMainRecord record = i.next();
-        assertThat(record.toString(),
-                equalTo("items[0].result.mid=WO_VPRO_422287\titems[0].result.urn=urn:vpro:media:program:31357524"));
-
-
-
+        assertThat(record.toString())
+            .isEqualTo("items[0].result.mid=WO_VPRO_422287\titems[0].result.urn=urn:vpro:media:program:31357524");
     }
 
     @Test
@@ -219,25 +215,23 @@ public class GrepMainTest {
 
         Iterator<GrepMainRecord> i = grep.iterate(getClass().getResourceAsStream("/big.json"));
 
-        assertThat(i.next().toString(),
-                equalTo("WO_VPRO_422287\turn:vpro:media:program:31357524"));
-        assertThat(i.next().toString(),
-                equalTo("WO_VPRO_422145\turn:vpro:media:program:31296444"));
-        assertThat(i.next().toString(),
-                equalTo("WO_VPRO_400672\turn:vpro:media:program:29384619"));
-        assertThat(i.next().toString(),
-                equalTo("WO_VPRO_373471\turn:vpro:media:program:26962067"));
-        assertThat(i.next().toString(),
-                equalTo("WO_VPRO_367975\turn:vpro:media:program:26707976"));
-        assertThat(i.next().toString(),
-                equalTo("WO_VPRO_337772\turn:vpro:media:program:24115794"));
-        assertThat(i.next().toString(),
-                equalTo("WO_VPRO_134633\turn:vpro:media:program:22111825"));
-        assertThat(i.next().toString(),
-                equalTo("WO_VPRO_075054\turn:vpro:media:program:17702841"));
-        assertThat(i.hasNext(), equalTo(false));
-
-
+        assertThat(i.next().toString()).isEqualTo(
+            "WO_VPRO_422287\turn:vpro:media:program:31357524");
+        assertThat(i.next().toString()).isEqualTo(
+            "WO_VPRO_422145\turn:vpro:media:program:31296444");
+        assertThat(i.next().toString()).isEqualTo(
+            "WO_VPRO_400672\turn:vpro:media:program:29384619");
+        assertThat(i.next().toString()).isEqualTo(
+            "WO_VPRO_373471\turn:vpro:media:program:26962067");
+        assertThat(i.next().toString()).isEqualTo(
+            "WO_VPRO_367975\turn:vpro:media:program:26707976");
+        assertThat(i.next().toString()).isEqualTo(
+            "WO_VPRO_337772\turn:vpro:media:program:24115794");
+        assertThat(i.next().toString()).isEqualTo(
+            "WO_VPRO_134633\turn:vpro:media:program:22111825");
+        assertThat(i.next().toString()).isEqualTo(
+            "WO_VPRO_075054\turn:vpro:media:program:17702841");
+        assertThat(i.hasNext()).isFalse();
     }
 
 
@@ -252,8 +246,7 @@ public class GrepMainTest {
         i.next();
         i.next();
         i.next();
-        assertThat(i.hasNext(), equalTo(false));
-
+        assertThat(i.hasNext()).isFalse();
     }
 
 
@@ -268,9 +261,7 @@ public class GrepMainTest {
         i.next();
         i.next();
         i.next();
-        assertThat(i.hasNext(), equalTo(false));
-
+        assertThat(i.hasNext()).isFalse();
     }
-
 
 }
