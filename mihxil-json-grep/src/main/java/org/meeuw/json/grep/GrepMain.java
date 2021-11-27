@@ -1,9 +1,10 @@
 package org.meeuw.json.grep;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.*;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.cli.*;
 import org.meeuw.json.Util;
@@ -92,17 +93,32 @@ public class GrepMain {
         abstract void toBuilder(StringBuilder builder, GrepEvent event);
     }
 
+    @Getter
+    @Setter
     Output outputFormat = Output.PATHANDVALUE;
 
+    @Setter
+    @Getter
     private String sep = "\n";
 
+    @Setter
+    @Getter
     private String recordsep = "\n";
 
-
+    @Getter
     private final PathMatcher matcher;
+
+    @Getter
+    @Setter
     PathMatcher recordMatcher;
+
+    @Setter
     boolean sortFields = true;
+
+    @Setter
+    @Getter
     private Long max = null;
+
     private Long previousMaxRecordSize = null;
 
 
@@ -110,55 +126,7 @@ public class GrepMain {
         this.matcher = pathMatcher;
     }
 
-    public Output getOutputFormat() {
-        return outputFormat;
-    }
 
-    public void setOutputFormat(Output outputFormat) {
-        this.outputFormat = outputFormat;
-    }
-
-
-    public String getSep() {
-        return sep;
-    }
-
-    public void setSep(String sep) {
-        this.sep = sep;
-    }
-
-    public String getRecordsep() {
-        return recordsep;
-    }
-
-    public void setRecordsep(String recordsep) {
-        this.recordsep = recordsep;
-    }
-
-    public PathMatcher getRecordMatcher() {
-        return recordMatcher;
-    }
-
-    public void setRecordMatcher(PathMatcher recordMatcher) {
-        this.recordMatcher = recordMatcher;
-    }
-
-
-    public void setSortFields(boolean sortFields) {
-        this.sortFields = sortFields;
-    }
-
-    public Long getMax() {
-        return max;
-    }
-
-    public void setMax(Long max) {
-        this.max = max;
-    }
-
-    public PathMatcher getMatcher() {
-        return matcher;
-    }
 
     public GrepMainIterator iterate(JsonParser in) {
         final GrepMainIteratorImpl wrapped = new GrepMainIteratorImpl(this, in);
@@ -274,6 +242,7 @@ public class GrepMain {
         if (cl.hasOption("sortfields")) {
             main.setSortFields(Boolean.parseBoolean(cl.getOptionValue("sortfields")));
         }
+
         if (cl.hasOption("max")) {
             main.setMax(Long.valueOf(cl.getOptionValue("max")));
         }
@@ -281,6 +250,7 @@ public class GrepMain {
 
         if (cl.hasOption("debug")) {
             System.out.println(main.matcher);
+            System.exit(0);
             return;
         }
 

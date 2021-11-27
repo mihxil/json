@@ -1,17 +1,24 @@
 package org.meeuw.json.grep;
 
 
+import lombok.SneakyThrows;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.assertj.core.api.AbstractAssert;
+import org.assertj.core.api.ThrowableAssert;
 
-import org.apache.commons.cli.ParseException;
 import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
 
-import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
+import com.ginsberg.junit.exit.SystemExitExtension;
+import com.ginsberg.junit.exit.SystemExitPreventedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -265,6 +272,7 @@ public class GrepMainTest {
         assertThat(i.hasNext()).isFalse();
     }
 
+    @ExtendWith(SystemExitExtension.class)
     public static class Main {
 
         private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -291,9 +299,11 @@ public class GrepMainTest {
 
 
         @Test
-        @ExpectSystemExitWithStatus(0)
-        public void main() throws IOException, ParseException {
-            GrepMain.main(new String[]{});
+        public void main() {
+            assertExitCode(() -> {
+                    GrepMain.main(new String[]{});
+                }).isNormal();
+
             assertThat(outContent.toString())
                 .startsWith("jsongrep - null - See https://github.com/mihxil/json\n" +
                     "usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]\n" +
@@ -301,21 +311,78 @@ public class GrepMainTest {
         }
 
         @Test
-        @ExpectSystemExitWithStatus(0)
-        public void version() throws IOException, ParseException {
-            GrepMain.main(new String[]{"-version"});
+        public void version() {
+            assertExitCode(() -> {
+                    GrepMain.main(new String[]{"-version"});
+                }).isNormal();
             assertThat(outContent.toString())
                 .startsWith("null");
 
         }
 
         @Test
-        @ExpectSystemExitWithStatus(0)
-        public void output() throws IOException, ParseException {
+        public void output() {
             System.setIn(new ByteArrayInputStream("{'a': 'B'}".getBytes(StandardCharsets.UTF_8)));
 
-            GrepMain.main(new String[]{"-output", "PATHANDFULLVALUE", "a"});
+            assertExitCode(() -> {
+                GrepMain.main(new String[]{"-output", "PATHANDFULLVALUE", "a"});
+                }).isNormal();
             assertThat(outContent.toString()).isEqualTo("a=B\n");
+        }
+
+        @ParameterizedTest
+        @EnumSource(value = GrepMain.Output.class)
+        public void output(GrepMain.Output output) {
+            System.setIn(new ByteArrayInputStream("{'a': 'B'}".getBytes(StandardCharsets.UTF_8)));
+
+            assertExitCode(() -> {
+                GrepMain.main(new String[]{"-output", output.name(), "a"});
+            }).isNormal();
+
+            assertThat(outContent.toString()).containsAnyOf("a", "B");
+        }
+
+        @Test
+        public void debug() {
+            System.setIn(new ByteArrayInputStream("{'a': 'B'}".getBytes(StandardCharsets.UTF_8)));
+
+            assertExitCode(() -> {
+                    GrepMain.main(new String[]{"-debug", "-output", "PATHANDFULLVALUE", "a,b"});}).isNormal();
+
+            assertThat(outContent.toString()).isEqualTo("a OR b\n");
+        }
+
+        SystemAssert assertExitCode(ThrowableAssert.ThrowingCallable  runnable) {
+            SystemAssert a = new SystemAssert(runnable);
+            return a;
+        }
+        public static class SystemAssert extends AbstractAssert<SystemAssert, ThrowableAssert.ThrowingCallable> {
+
+            SystemExitPreventedException systemExitPreventedException = null;
+            boolean ran = false;
+            protected SystemAssert(ThrowableAssert.ThrowingCallable  runnable) {
+                super(runnable, SystemAssert.class);
+            }
+
+            protected void runIfNeeded() throws Throwable {
+                if (! ran) {
+                    try {
+                        actual.call();
+                    } catch (SystemExitPreventedException spe) {
+                        this.systemExitPreventedException = spe;
+                    }
+                }
+            }
+            @SneakyThrows
+            public SystemAssert isEqualTo(int system)  {
+                runIfNeeded();
+                assertThat(systemExitPreventedException.getStatusCode()).isEqualTo(system);
+                return this;
+            }
+
+            public SystemAssert isNormal() {
+                return isEqualTo(0);
+            }
         }
     }
 

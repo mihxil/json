@@ -3,6 +3,8 @@ package org.meeuw.json.grep.matching;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
+import java.util.stream.Collectors;
+
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
 import org.meeuw.util.Predicates;
@@ -43,6 +45,6 @@ public class PathMatcherAndChain implements PathMatcher {
 
     @Override
     public String toString() {
-        return String.valueOf(Arrays.asList(matchers));
+        return Arrays.stream(matchers).map(Object::toString).collect(Collectors.joining(" AND "));
     }
 }
