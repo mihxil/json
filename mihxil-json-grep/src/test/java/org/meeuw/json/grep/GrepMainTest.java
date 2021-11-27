@@ -2,16 +2,18 @@ package org.meeuw.json.grep;
 
 
 import java.io.*;
-import java.security.Permission;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.*;
 
+import org.apache.commons.cli.ParseException;
 import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
 
+import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -270,7 +272,6 @@ public class GrepMainTest {
 
         private final PrintStream originalOut = System.out;
         private final PrintStream originalErr = System.err;
-        private SecurityManager securityManager = System.getSecurityManager();
 
 
 
@@ -278,7 +279,6 @@ public class GrepMainTest {
         public void setUpStreams() {
             System.setOut(new PrintStream(outContent));
             System.setErr(new PrintStream(errContent));
-            System.setSecurityManager(new NoExitSecurityManager());
         }
         @AfterEach
         public void restoreStreams() {
@@ -286,46 +286,36 @@ public class GrepMainTest {
             System.out.println(outContent);
             System.setErr(originalErr);
             System.err.println(errContent);
-            System.setSecurityManager(securityManager);
         }
 
-        protected static class ExitException extends SecurityException {
-            private static final long serialVersionUID = -1982617086752946683L;
-            public final int status;
 
-            public ExitException(int status) {
-                super("status:" + status);
-                this.status = status;
-            }
-        }
-
-        private static class NoExitSecurityManager extends SecurityManager {
-            @Override
-            public void checkPermission(Permission perm) {
-                // allow anything.
-            }
-
-            @Override
-            public void checkPermission(Permission perm, Object context) {
-                // allow anything.
-            }
-
-            @Override
-            public void checkExit(int status) {
-                super.checkExit(status);
-                throw new ExitException(status);
-            }
-        }
 
         @Test
-        public void main() {
-            assertThatThrownBy(() -> {
-                GrepMain.main(new String[]{});
-            }).isInstanceOf(ExitException.class).hasMessage("status:1");
+        @ExpectSystemExitWithStatus(0)
+        public void main() throws IOException, ParseException {
+            GrepMain.main(new String[]{});
             assertThat(outContent.toString())
                 .startsWith("jsongrep - null - See https://github.com/mihxil/json\n" +
                     "usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]\n" +
                     " -debug              Debug");
+        }
+
+        @Test
+        @ExpectSystemExitWithStatus(0)
+        public void version() throws IOException, ParseException {
+            GrepMain.main(new String[]{"-version"});
+            assertThat(outContent.toString())
+                .startsWith("null");
+
+        }
+
+        @Test
+        @ExpectSystemExitWithStatus(0)
+        public void output() throws IOException, ParseException {
+            System.setIn(new ByteArrayInputStream("{'a': 'B'}".getBytes(StandardCharsets.UTF_8)));
+
+            GrepMain.main(new String[]{"-output", "PATHANDFULLVALUE", "a"});
+            assertThat(outContent.toString()).isEqualTo("a=B\n");
         }
     }
 

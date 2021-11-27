@@ -234,7 +234,7 @@ public class GrepMain {
         String[] args = cl.getArgs();
         if (cl.hasOption("version")) {
             System.out.println(version());
-            System.exit(1);
+            System.exit(0);
         }
         if (cl.hasOption("help") || cl.getArgList().isEmpty()) {
             System.out.println("jsongrep - " + version() + " - See https://github.com/mihxil/json");
@@ -243,12 +243,9 @@ public class GrepMain {
                     "jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]",
                     options);
 
-            System.exit(1);
+            System.exit(0);
         }
 
-        if (args.length < 1) {
-            throw new MissingArgumentException("No pathMatcher expression given");
-        }
         boolean ignoreArrays = cl.hasOption("ignoreArrays");
 
         Output output = Output.PATHANDVALUE;
@@ -291,5 +288,6 @@ public class GrepMain {
 		InputStream in = Util.getInput(argList.toArray(new String[0]), 1);
         main.read(in, System.out);
         in.close();
+        System.exit(0);
     }
 }

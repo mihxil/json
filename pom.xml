@@ -194,6 +194,13 @@
           <version>3.0.0-M5</version>
           <configuration>
             <testFailureIgnore>true</testFailureIgnore>
+            <includes>
+              <include>**/*Test</include>
+              <include>**/*Test$**</include>
+            </includes>
+            <excludes>
+              <exclude/>
+            </excludes>
             <systemPropertyVariables>
               <projectArtifactId>${project.artifactId}</projectArtifactId>
             </systemPropertyVariables>
