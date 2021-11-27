@@ -216,7 +216,11 @@ public class GrepTest {
         assertThat(grep.hasNext()).isTrue();
         assertEquals("[0]={...}", grep.next().toString());
         //assertThat(grep.hasNext()).isFalse();
+
+        assertThat(grep.toString()).isEqualTo("Grep[matcher=[*].a, recordMatcher=[*]]");
     }
+
+
 
 
 }

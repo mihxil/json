@@ -1,5 +1,8 @@
 package org.meeuw.json.grep;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.*;
 
 import org.meeuw.json.JsonIterator;
@@ -17,8 +20,11 @@ import com.fasterxml.jackson.core.JsonParser;
 public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
 
     // settings
+    @Getter
     private final PathMatcher matcher;
 
+    @Getter
+    @Setter
     private PathMatcher recordMatcher = new NeverPathMatcher();
 
     final JsonIterator wrapped;
@@ -80,19 +86,6 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
     }
 
 
-
-
-    public PathMatcher getRecordMatcher() {
-        return recordMatcher;
-    }
-
-    public void setRecordMatcher(PathMatcher recordMatcher) {
-        this.recordMatcher = recordMatcher;
-    }
-
-    public PathMatcher getMatcher() {
-        return matcher;
-    }
 
     @Override
     public Iterator<GrepEvent> iterator() {
