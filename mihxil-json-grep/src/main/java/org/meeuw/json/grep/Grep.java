@@ -1,9 +1,6 @@
 package org.meeuw.json.grep;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import org.meeuw.json.JsonIterator;
 import org.meeuw.json.ParseEvent;
@@ -100,7 +97,13 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
     @Override
     public Iterator<GrepEvent> iterator() {
         return this;
-
     }
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Grep.class.getSimpleName() + "[", "]")
+            .add("matcher=" + matcher)
+            .add("recordMatcher=" + recordMatcher)
+            .toString();
+    }
 }
