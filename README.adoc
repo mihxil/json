@@ -4,6 +4,8 @@
 image:https://github.com/mihxil/json/workflows/build/badge.svg?[Build Status,link=https://github.com/mihxil/json/actions?query=workflow%3Abuild]
 image:https://img.shields.io/maven-central/v/org.meeuw/mihxil-json.svg?label=Maven%20Central[Maven Central,link=https://search.maven.org/search?q=g:%22org.meeuw%22%20AND%20a:%22mihxil-json%22]
 image:http://www.javadoc.io/badge/org.meeuw/mihxil-json.svg?color=blue[javadoc,link=http://www.javadoc.io/doc/org.meeuw/mihxil-json]
+image:https://codecov.io/gh/mihxil/json/branch/main/graph/badge.svg[codecov,link=https://codecov.io/gh/mihxil/json]
+
 
 
 This is provides several JSON-related tools implemented with
