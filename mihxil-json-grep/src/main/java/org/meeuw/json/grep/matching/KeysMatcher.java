@@ -12,7 +12,7 @@ import org.meeuw.json.PathEntry;
  */
 public abstract class KeysMatcher implements PathMatcher {
     @Override
-    final public MatchResult matches(ParseEvent event, String value) {
+    final public MatchResult matches(ParseEvent event) {
         boolean result = matches(event.getPath());
         return new MatchResult(event, result);
     }

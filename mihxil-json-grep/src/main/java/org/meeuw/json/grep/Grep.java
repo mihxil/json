@@ -69,14 +69,13 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
                     case VALUE_NULL:
                     case END_ARRAY:
                     case END_OBJECT:
-                        String value = event.getValue();
                         if (recordMatcher != null) {
-                            int recordWeight = recordMatcher.matches(event, value).getWeight();
+                            int recordWeight = recordMatcher.matches(event).getWeight();
                             if (recordWeight > 0) {
                                 next.add(new GrepEvent(event, GrepEvent.Type.RECORD, recordWeight));
                             }
                         }
-                        PathMatcher.MatchResult result = matcher.matches(event, value);
+                        PathMatcher.MatchResult result = matcher.matches(event);
                         if (result.getWeight() > 0) {
                             next.add(new GrepEvent(result.getEvent(), result.getWeight()));
                         }

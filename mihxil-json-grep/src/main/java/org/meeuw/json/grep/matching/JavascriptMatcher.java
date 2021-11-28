@@ -28,7 +28,7 @@ public class JavascriptMatcher extends ObjectMatcher {
     }
 
     @Override
-    protected MatchResult matches(ParseEvent event) {
+    protected MatchResult matchesObject(ParseEvent event) {
         //ScriptContext context = engine.getContext();
         Context context = Context.enter();
         ScriptableObject scope = context.initStandardObjects();

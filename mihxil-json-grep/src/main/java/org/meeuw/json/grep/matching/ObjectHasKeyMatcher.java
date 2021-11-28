@@ -18,7 +18,7 @@ public class ObjectHasKeyMatcher extends ObjectMatcher {
     }
 
     @Override
-    protected MatchResult matches(ParseEvent event) {
+    protected MatchResult matchesObject(ParseEvent event) {
         return new MatchResult(event, event.getKeys().contains(key));
     }
 

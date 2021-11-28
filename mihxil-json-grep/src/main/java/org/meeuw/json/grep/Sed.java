@@ -52,7 +52,7 @@ public class Sed  implements Iterator<ParseEvent> {
     public ParseEvent next() {
 
         ParseEvent event = wrapped.next();
-        PathMatcher.MatchResult matches = matcher.matches(event, event.getValue());
+        PathMatcher.MatchResult matches = matcher.matches(event);
         if (matches.getAsBoolean()) {
             return matches.getEvent();
         } else {

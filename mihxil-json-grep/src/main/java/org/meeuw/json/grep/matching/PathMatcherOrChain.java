@@ -18,11 +18,11 @@ public class PathMatcherOrChain implements PathMatcher {
     }
 
     @Override
-    public MatchResult matches(ParseEvent event, String value) {
+    public MatchResult matches(ParseEvent event) {
         int count = 0;
         for (PathMatcher matcher : matchers) {
             count++;
-            if (matcher.matches(event, value).getAsBoolean()) {
+            if (matcher.matches(event).getAsBoolean()) {
                 return new MatchResult(event, count);
             }
         }

@@ -11,14 +11,14 @@ import com.fasterxml.jackson.core.JsonToken;
 abstract class  ObjectMatcher implements PathMatcher {
 
     @Override
-    public MatchResult matches(ParseEvent event, String value) {
+    public final MatchResult matches(ParseEvent event) {
         if (event.getToken() != JsonToken.END_OBJECT) {
             return MatchResult.NO;
         } else {
-            return matches(event);
+            return matchesObject(event);
         }
     }
 
-    protected abstract MatchResult matches(ParseEvent event);
+    protected abstract MatchResult matchesObject(ParseEvent event);
 
 }

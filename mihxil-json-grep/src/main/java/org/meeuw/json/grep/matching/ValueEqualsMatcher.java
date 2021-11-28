@@ -13,8 +13,8 @@ public class ValueEqualsMatcher extends ValueMatcher {
     }
 
     @Override
-    public MatchResult matches(ParseEvent event, String value) {
-        return new MatchResult(event, test.equals(value));
+    public MatchResult matches(ParseEvent event) {
+        return new MatchResult(event, test.equals(event.getValue()));
     }
     @Override
     public String toString() {

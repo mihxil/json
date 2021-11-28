@@ -18,9 +18,9 @@ public class PathMatcherAndChain implements PathMatcher {
     }
 
     @Override
-    public MatchResult matches(ParseEvent event, String value) {
+    public MatchResult matches(ParseEvent event) {
         for (PathMatcher matcher : matchers) {
-            MatchResult matches = matcher.matches(event, value);
+            MatchResult matches = matcher.matches(event);
             if (! matches.getAsBoolean()) {
                 return MatchResult.NO;
             } else {

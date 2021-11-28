@@ -25,8 +25,8 @@ public class ValueRegexpMatcher extends ValueMatcher {
     }
 
     @Override
-    public MatchResult matches(ParseEvent event, String value) {
-        Matcher matcher = pattern.matcher(value);
+    public MatchResult matches(ParseEvent event) {
+        Matcher matcher = pattern.matcher(event.getValue());
         if (matcher.matches()) {
             if (replacement != null) {
                 String v = matcher.replaceAll(replacement);

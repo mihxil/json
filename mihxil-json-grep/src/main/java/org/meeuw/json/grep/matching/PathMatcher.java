@@ -13,7 +13,7 @@ import org.meeuw.json.Path;
  */
 public interface PathMatcher {
 
-    MatchResult matches(ParseEvent event, String value);
+    MatchResult matches(ParseEvent event);
 
     Predicate<Path> needsKeyCollection();
 

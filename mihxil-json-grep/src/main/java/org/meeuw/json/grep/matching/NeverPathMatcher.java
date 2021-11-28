@@ -11,7 +11,7 @@ import org.meeuw.json.Path;
 public class NeverPathMatcher implements PathMatcher {
 
     @Override
-    public MatchResult matches(ParseEvent event, String value) {
+    public MatchResult matches(ParseEvent event) {
         return MatchResult.NO;
     }
 

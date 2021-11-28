@@ -18,8 +18,8 @@ public class Not implements PathMatcher {
     }
 
     @Override
-    public MatchResult matches(ParseEvent event, String value) {
-        return new MatchResult(event, ! wrapped.matches(event, value).getAsBoolean());
+    public MatchResult matches(ParseEvent event) {
+        return new MatchResult(event, ! wrapped.matches(event).getAsBoolean());
     }
 
     @Override
