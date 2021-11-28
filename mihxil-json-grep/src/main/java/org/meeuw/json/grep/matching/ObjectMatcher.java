@@ -1,7 +1,8 @@
 package org.meeuw.json.grep.matching;
 
-import com.fasterxml.jackson.core.JsonToken;
 import org.meeuw.json.ParseEvent;
+
+import com.fasterxml.jackson.core.JsonToken;
 
 /**
  * @author Michiel Meeuwissen
@@ -10,10 +11,14 @@ import org.meeuw.json.ParseEvent;
 abstract class  ObjectMatcher implements PathMatcher {
 
     @Override
-    public boolean matches(ParseEvent event, String value) {
-        return event.getToken() == JsonToken.END_OBJECT && matches(event);
+    public MatchResult matches(ParseEvent event, String value) {
+        if (event.getToken() != JsonToken.END_OBJECT) {
+            return MatchResult.NO;
+        } else {
+            return matches(event);
+        }
     }
 
-    protected abstract boolean matches(ParseEvent event);
+    protected abstract MatchResult matches(ParseEvent event);
 
 }

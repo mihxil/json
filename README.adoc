@@ -75,7 +75,8 @@ $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[1].e
 y.arr[1].e=z
 ----
 
-It is possible to specify more then one match
+=== comma matching
+It is possible to specify more than one match
 
 [source,sh]
 ----
@@ -83,6 +84,8 @@ $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[1].e,a
 a=b
 y.arr[1].e=z
 ----
+
+=== wildcard matching
 
 You can use wildcards in the path:
 
@@ -93,6 +96,19 @@ y.arr[1].e=z
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.*[*].d
 y.arr[0].d=y
 ----
+
+=== regex matching
+
+Regex matching on key is also possible, which can be used to output different keys a the same level.
+
+[source]
+----
+echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z', 'f': 'g'}]}}"  | jsongrep -output PATHANDFULLVALUE -ignoreArrays '...arr./d|e/'
+y.arr[0].d=y
+y.arr[1].e=z
+----
+
+=== reporting
 
 If it does not match a value but an object or an array, it will be reported like this:
 
@@ -110,70 +126,6 @@ Unless you specify a different output format:
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep -output PATHANDFULLVALUE y.arr,y
 y.arr=[{"d":"y"},{"e":"z"}]
 y={"c":"x","arr":[{"d":"y"},{"e":"z"}]}
-----
-
-It is also possible to match certain values:
-
-[source,sh]
-----
-$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].*=z
-y.arr[1].e=z
-----
-
-That can also be done using regular expressions
-
-[source,sh]
-----
-$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].*~[xz]
-y.arr[1].e=z
-----
-
-You can find objects missing a certain key
-
-[source,sh]
-----
-$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  'y.arr[*] ! contains d'
-y.arr[1]={...}
-----
-
-You can match directly inside the tree ('…' means 'an abitrary path)
-
-[source,sh]
-----
-$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...e'
-y.arr[1].e=z
-----
-
-It's possible to match on object containing a certain key:
-
-[source,sh]
-----
-$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...arr[*] contains d'
-y.arr[0]={...}
-----
-
-or the inverse
-
-[source,sh]
-----
-$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...arr[*] ! contains d'
-y.arr[1]={...}
-----
-
-Matching can be implemented with a javascript function as well:
-
-[source,sh]
-----
-$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep -output KEYANDFULLVALUE '...arr[*] function(doc) { return doc.d == "y"; }'
-[0]={"d":"y"}
-----
-
-It can also accept a second optional parameter which is a file or an URL:
-
-[source,sh]
-----
-$ jsongrep  y.arr[*].*~[xz] test.json
-y.arr[1].e=z
 ----
 
 It is possible to output less
@@ -197,6 +149,70 @@ Another example on a couchdb database (find documents where certain field has ce
 $ jsongrep rows.*.doc.workflow=FOR_REPUBLICATION,rows.*.doc.mid  http://couchdbhost/database/_all_docs?include_docs=true  |
                 grep -A 1 workflow
 ----
+
+
+=== matching on value
+It is also possible to match certain values:
+
+[source,sh]
+----
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].*=z
+y.arr[1].e=z
+----
+
+That can also be done using regular expressions
+
+[source,sh]
+----
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[*].*~[xz]
+y.arr[1].e=z
+----
+
+
+
+=== arbitrary path
+You can match directly inside the tree ('…' means 'an arbitrary path)
+
+[source,sh]
+----
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...e'
+y.arr[1].e=z
+----
+
+It's possible to match on object containing a certain key:
+
+[source,sh]
+----
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...arr[*] contains d'
+y.arr[0]={...}
+----
+
+or the inverse
+
+[source,sh]
+----
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...arr[*] ! contains d'
+y.arr[1]={...}
+----
+
+=== javascript matching
+
+Matching can be implemented with a javascript function as well:
+
+[source,sh]
+----
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep -output KEYANDFULLVALUE '...arr[*] function(doc) { return doc.d == "y"; }'
+[0]={"d":"y"}
+----
+
+It can also accept a second optional parameter which is a file or an URL:
+
+[source,sh]
+----
+$ jsongrep  y.arr[*].*~[xz] test.json
+y.arr[1].e=z
+----
+
 
 === separators
 

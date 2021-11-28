@@ -1,24 +1,46 @@
 package org.meeuw.json.grep.matching;
 
+import lombok.Getter;
+import lombok.With;
+
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.meeuw.json.ParseEvent;
 
 /**
  * Matches the value with a regular expression.
  */
 public class ValueRegexpMatcher extends ValueMatcher {
+    @Getter
     private final Pattern pattern;
 
-    public ValueRegexpMatcher(Pattern pattern) {
+    @Getter
+    @With
+    private final String replacement;
+
+    public ValueRegexpMatcher(Pattern pattern, String replacement) {
         this.pattern = pattern;
+        this.replacement = replacement;
     }
 
     @Override
-    protected boolean matches(String value) {
-        return pattern.matcher(value).matches();
+    public MatchResult matches(ParseEvent event, String value) {
+        Matcher matcher = pattern.matcher(value);
+        if (matcher.matches()) {
+            if (replacement != null) {
+                String v = matcher.replaceAll(replacement);
+                return new MatchResult(event.withValue(v), true);
+            } else {
+                return new MatchResult(event, true);
+            }
+        } else {
+            return MatchResult.NO;
+        }
     }
 
     @Override
     public String toString() {
-        return String.valueOf(pattern);
+        return "value~" + pattern;
     }
 }

@@ -20,4 +20,9 @@ public class RegexpKeyMatch extends AbstractKeyPattern {
     public boolean matches(PathEntry key) {
         return pattern.matcher(key.toString()).matches();
     }
+
+    @Override
+    public String toString() {
+        return "Regexp(" + pattern + ")";
+    }
 }

@@ -29,52 +29,13 @@ public class Formatter extends AbstractJsonReader {
 
     @Override
     protected void handleToken(ParseEvent event) throws IOException {
-        switch(event.getToken()) {
-            case START_OBJECT:
-                generator.writeStartObject();
-                break;
-            case END_OBJECT:
-                generator.writeEndObject();
-                break;
-            case START_ARRAY:
-                generator.writeStartArray();
-                break;
-            case END_ARRAY:
-                generator.writeEndArray();
-                break;
-            case FIELD_NAME:
-                generator.writeFieldName(event.getValue());
-                break;
-            case VALUE_EMBEDDED_OBJECT:
-                // don't know
-                generator.writeObject(event.getValue());
-                break;
-            case VALUE_STRING:
-                generator.writeString(event.getValue());
-                break;
-            case VALUE_NUMBER_INT:
-                generator.writeNumber(event.getValue());
-                break;
-            case VALUE_NUMBER_FLOAT:
-                generator.writeNumber(event.getValue()); //.getValueAsDouble());
-                break;
-            case VALUE_TRUE:
-                generator.writeBoolean(true);
-                break;
-            case VALUE_FALSE:
-                generator.writeBoolean(false);
-                break;
-            case VALUE_NULL:
-                generator.writeNull();
-                break;
-
-        }
+        event.toGenerator(generator);
     }
+
     @Override
     protected void ready() throws IOException {
         generator.close();
     }
-
 
     public static String version() throws IOException {
         return Manifests.read("ProjectVersion");

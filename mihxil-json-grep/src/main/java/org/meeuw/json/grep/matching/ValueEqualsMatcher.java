@@ -1,8 +1,9 @@
 package org.meeuw.json.grep.matching;
 
+import org.meeuw.json.ParseEvent;
+
 /**
 * @author Michiel Meeuwissen
-* @since ...
 */
 public class ValueEqualsMatcher extends ValueMatcher {
     private final String test;
@@ -12,8 +13,8 @@ public class ValueEqualsMatcher extends ValueMatcher {
     }
 
     @Override
-    protected boolean matches(String value) {
-        return test.equals(value);
+    public MatchResult matches(ParseEvent event, String value) {
+        return new MatchResult(event, test.equals(value));
     }
     @Override
     public String toString() {

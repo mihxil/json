@@ -18,8 +18,8 @@ public class ObjectHasKeyMatcher extends ObjectMatcher {
     }
 
     @Override
-    protected boolean matches(ParseEvent event) {
-        return event.getKeys().contains(key);
+    protected MatchResult matches(ParseEvent event) {
+        return new MatchResult(event, event.getKeys().contains(key));
     }
 
     @Override

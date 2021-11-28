@@ -28,7 +28,7 @@ public class JavascriptMatcher extends ObjectMatcher {
     }
 
     @Override
-    protected boolean matches(ParseEvent event) {
+    protected MatchResult matches(ParseEvent event) {
         //ScriptContext context = engine.getContext();
         Context context = Context.enter();
         ScriptableObject scope = context.initStandardObjects();
@@ -44,7 +44,7 @@ public class JavascriptMatcher extends ObjectMatcher {
                     "" + NativeJSON.stringify(context, scope, result, null, null) +
                             " is not a boolean. Called on " + NativeJSON.stringify(context, scope, nobj, null, null));
         } else {
-            return (Boolean) result;
+            return new MatchResult(event, (Boolean) result);
         }
     }
 

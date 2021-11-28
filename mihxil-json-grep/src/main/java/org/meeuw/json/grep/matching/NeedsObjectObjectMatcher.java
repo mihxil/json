@@ -18,7 +18,7 @@ public class NeedsObjectObjectMatcher extends ObjectMatcher {
     }
 
     @Override
-    protected boolean matches(ParseEvent event) {
+    protected MatchResult matches(ParseEvent event) {
         return wrapped.matches(event);
     }
 

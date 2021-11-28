@@ -40,11 +40,12 @@ public class Parser {
     }
 
     protected static PathMatcher parsePathMatcher(String arg, boolean ignoreArrays, boolean needsObject) {
-        String[] split = arg.split("~", 2);
-        if (split.length == 2) {
+        String[] split = arg.split("~", 3);
+        if (split.length >= 2) {
+            String replacement = split.length == 3 ? split[2] : null;
             return new PathMatcherAndChain(
                     parseKeysMatcher(split[0], ignoreArrays),
-                    new ValueRegexpMatcher(Pattern.compile(split[1])));
+                    new ValueRegexpMatcher(Pattern.compile(split[1]), replacement));
         }
 
 		split = arg.split("\\s+!\\s*contains\\s+", 2);

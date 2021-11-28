@@ -13,4 +13,9 @@ public class AnyDepthMatcher implements KeysPattern {
     public int matchCounts(List<PathEntry> entries) {
         return entries.size();
     }
+
+    @Override
+    public String toString() {
+        return "Anydepth:";
+    }
 }

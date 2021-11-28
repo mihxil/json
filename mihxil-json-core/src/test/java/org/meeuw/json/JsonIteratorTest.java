@@ -22,8 +22,6 @@ public class JsonIteratorTest {
         assertEquals("a", iterator.next().getPath().toString());
         assertEquals("a", iterator.next().getPath().toString());
         assertEquals("", iterator.next().getPath().toString());
-
-
     }
 
     @Test
@@ -133,7 +131,7 @@ public class JsonIteratorTest {
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
 		ParseEvent last = iterator.next();
 		assertEvent(last, JsonToken.END_OBJECT, 1);
-        Map<String, Object> expected = new HashMap<String, Object>();
+        Map<String, Object> expected = new HashMap<>();
         expected.put("c", 1);
         expected.put("d", new HashMap<String, Object>());
 		assertEquals(expected, last.getNode());
@@ -251,7 +249,6 @@ public class JsonIteratorTest {
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 0);
         assertFalse(iterator.hasNext());
         assertFalse(iterator.hasNext());
-
     }
 
     protected void assertEvent(ParseEvent event, JsonToken token, int depth, String value) {
@@ -263,6 +260,5 @@ public class JsonIteratorTest {
     protected void assertEvent(ParseEvent event, JsonToken token, int depth) {
         assertEquals(token, event.getToken());
         assertEquals(depth, event.getPath().size());
-
     }
 }

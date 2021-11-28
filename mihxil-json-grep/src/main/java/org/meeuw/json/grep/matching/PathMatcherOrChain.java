@@ -9,7 +9,6 @@ import org.meeuw.json.Path;
 
 /**
 * @author Michiel Meeuwissen
-* @since ...
 */
 public class PathMatcherOrChain implements PathMatcher {
     private final PathMatcher[] matchers;
@@ -19,15 +18,15 @@ public class PathMatcherOrChain implements PathMatcher {
     }
 
     @Override
-    public int matchWeight(ParseEvent event, String value) {
+    public MatchResult matches(ParseEvent event, String value) {
         int count = 0;
         for (PathMatcher matcher : matchers) {
             count++;
-            if (matcher.matches(event, value)) {
-                return count;
+            if (matcher.matches(event, value).getAsBoolean()) {
+                return new MatchResult(event, count);
             }
         }
-        return 0;
+        return new MatchResult(event, false);
     }
 
 

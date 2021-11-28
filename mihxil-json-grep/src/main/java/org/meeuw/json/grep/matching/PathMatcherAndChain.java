@@ -8,8 +8,8 @@ import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
 
 /**
-* @author Michiel Meeuwissen
-*/
+ * @author Michiel Meeuwissen
+ */
 public class PathMatcherAndChain implements PathMatcher {
     private final PathMatcher[] matchers;
 
@@ -18,13 +18,16 @@ public class PathMatcherAndChain implements PathMatcher {
     }
 
     @Override
-    public boolean matches(ParseEvent event, String value) {
+    public MatchResult matches(ParseEvent event, String value) {
         for (PathMatcher matcher : matchers) {
-            if (! matcher.matches(event, value)) {
-                return false;
+            MatchResult matches = matcher.matches(event, value);
+            if (! matches.getAsBoolean()) {
+                return MatchResult.NO;
+            } else {
+                event = matches.getEvent();
             }
         }
-        return true;
+        return new MatchResult(event, true);
     }
 
     @Override

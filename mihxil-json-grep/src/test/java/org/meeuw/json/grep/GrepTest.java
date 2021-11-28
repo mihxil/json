@@ -3,6 +3,7 @@ package org.meeuw.json.grep;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 
@@ -223,7 +224,20 @@ public class GrepTest {
         assertThat(grep.toString()).isEqualTo("Grep[matcher=[*].a, recordMatcher=[*]]");
     }
 
+    @Test
+    public void valueRegexp() throws IOException {
+        Grep grep = new Grep(
+            new PathMatcherAndChain(
+                new SinglePathMatcher(true,
+                    new PreciseMatch("items"),
+                    new PreciseMatch("a")
+                ),
+                new ValueRegexpMatcher(Pattern.compile("abc\\s*(.*)"), "$1")),
+            Util.getJsonParser("{ \"items\" : [ { \"a\" : 'abc def'},  { \"a\" : 'xyz qwv'}]}"));
 
+        assertEquals("items[0].a=def", grep.next().toString());
+        assertFalse(grep.hasNext());
+    }
 
 
 }

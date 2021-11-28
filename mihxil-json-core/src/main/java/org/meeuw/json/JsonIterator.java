@@ -10,11 +10,12 @@ import com.fasterxml.jackson.core.JsonToken;
 
 /**
  * Represents a json object as an iterator of {@link ParseEvent}s.
- * 
+ *
  * @author Michiel Meeuwissen
  * @since 0.4
  */
 public class JsonIterator implements Iterator<ParseEvent> {
+
     private final Path path = new Path();
     private ParseEvent next;
     private final JsonParser jp;

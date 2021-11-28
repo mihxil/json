@@ -1,5 +1,8 @@
 package org.meeuw.json.grep.matching;
 
+import lombok.Getter;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 
 import org.meeuw.json.ParseEvent;
@@ -10,16 +13,39 @@ import org.meeuw.json.Path;
  */
 public interface PathMatcher {
 
-    default boolean matches(ParseEvent event, String value) {
-        return matchWeight(event, value) > 0;
-    }
-
-    default int matchWeight(ParseEvent event, String value) {
-        return matches(event, value) ? 1 : 0;
-    }
+    MatchResult matches(ParseEvent event, String value);
 
     Predicate<Path> needsKeyCollection();
 
     Predicate<Path> needsObjectCollection();
+
+    class MatchResult implements BooleanSupplier {
+        final boolean matches;
+
+        @Getter
+        final int weight;
+
+        @Getter
+        final ParseEvent event;
+
+
+        public MatchResult(ParseEvent event, boolean matches) {
+            this.matches = matches;
+            this.weight = matches ? 1: 0;
+            this.event = event;
+        }
+        public MatchResult(ParseEvent event, int weigth) {
+            this.matches = true;
+            this.weight = weigth;
+            this.event = event;
+        }
+
+        @Override
+        public boolean getAsBoolean() {
+            return matches;
+        }
+        static final MatchResult NO = new MatchResult(null, false);
+
+    }
 
 }

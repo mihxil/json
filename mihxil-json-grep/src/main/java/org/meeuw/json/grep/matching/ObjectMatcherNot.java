@@ -18,8 +18,8 @@ public class ObjectMatcherNot extends ObjectMatcher {
 	}
 
 	@Override
-	protected boolean matches(ParseEvent event) {
-		return ! wrapped.matches(event);
+	protected MatchResult matches(ParseEvent event) {
+		return new MatchResult(event, ! wrapped.matches(event).getAsBoolean());
 	}
 
 	@Override

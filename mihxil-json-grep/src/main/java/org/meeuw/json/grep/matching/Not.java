@@ -18,19 +18,17 @@ public class Not implements PathMatcher {
     }
 
     @Override
-    public boolean matches(ParseEvent event, String value) {
-        return ! wrapped.matches(event, value);
+    public MatchResult matches(ParseEvent event, String value) {
+        return new MatchResult(event, ! wrapped.matches(event, value).getAsBoolean());
     }
 
     @Override
     public Predicate<Path> needsKeyCollection() {
         return wrapped.needsKeyCollection();
-
     }
 
     @Override
     public Predicate<Path> needsObjectCollection() {
         return wrapped.needsObjectCollection();
-
     }
 }

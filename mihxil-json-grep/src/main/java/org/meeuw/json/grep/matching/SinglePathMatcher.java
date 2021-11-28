@@ -1,8 +1,8 @@
 package org.meeuw.json.grep.matching;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.meeuw.json.ArrayEntry;
 import org.meeuw.json.PathEntry;
@@ -25,19 +25,15 @@ public class SinglePathMatcher extends KeysMatcher {
     }
 
     @Override
-    public boolean matches(List<PathEntry> path) {
+    public boolean matches(final List<PathEntry> path) {
 
         if (ignoreArrays) {
-            List<PathEntry> withoutArrays = new ArrayList<PathEntry>();
-            for (PathEntry e : path) {
-                if (! (e instanceof ArrayEntry)) {
-                    withoutArrays.add(e);
-                }
-            }
+            List<PathEntry> withoutArrays =
+                path.stream().filter(e -> ! (e instanceof ArrayEntry)).collect(Collectors.toList());
             return matches(Arrays.asList(pathPattern), withoutArrays);
+        } else {
+            return matches(Arrays.asList(pathPattern), path);
         }
-
-        return matches(Arrays.asList(pathPattern), path);
     }
 
 
