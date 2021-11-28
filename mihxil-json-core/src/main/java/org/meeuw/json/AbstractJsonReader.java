@@ -1,12 +1,13 @@
 package org.meeuw.json;
 
+import lombok.SneakyThrows;
+
+import java.io.*;
+
 import com.fasterxml.jackson.core.JsonParser;
 
-import java.io.IOException;
-import java.io.Reader;
 
-
-public abstract class AbstractJsonReader {
+public abstract class AbstractJsonReader implements Closeable {
 
 
     public void read(final JsonParser jp) throws IOException {
@@ -26,6 +27,12 @@ public abstract class AbstractJsonReader {
 
     protected void ready() throws IOException {
 
+    }
+
+    @SneakyThrows
+    @Override
+    public void close() {
+        ready();
     }
 
 

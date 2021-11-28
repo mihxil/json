@@ -4,12 +4,10 @@
  */
 package org.meeuw.json;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
-import org.apache.commons.cli.*;
-import org.meeuw.util.Manifests;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.ParseException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -37,39 +35,17 @@ public class Formatter extends AbstractJsonReader {
         generator.close();
     }
 
-    public static String version() throws IOException {
-        return Manifests.read("ProjectVersion");
-    }
 
     public static void main(String[] argv) throws IOException, ParseException {
-        CommandLineParser parser = new DefaultParser();
-        Options options = new Options().addOption(new Option("help", "print this message"));
-        options.addOption(new Option("version", false, "Output version"));
-        CommandLine cl = parser.parse(options, argv, true);
-        String[] args = cl.getArgs();
-        if (cl.hasOption("version")) {
-            System.out.println(version());
-            System.exit(0);
+        CommandLine cl = MainUtil
+            .commandLine("jsonformat", "[<INPUT FILE>|-] [<OUTPUT FILE>|-]", (options) -> {}, argv);
+        String[] args  = cl.getArgs();
+        try (InputStream in = Util.getInput(args, 0);
+             OutputStream out = Util.getOutput(args, 1);) {
+
+            Formatter formatter = new Formatter(out);
+            formatter.read(Util.getJsonParser(in));
         }
-        if (cl.hasOption("help")) {
-            System.out.println("jsonformat - " + version() + " - See https://github.com/mihxil/json");
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp(
-                    "jsonformat [OPTIONS]  [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
-                    options);
-
-            System.exit(0);
-        }
-
-
-        InputStream in = Util.getInput(args, 0);
-
-        OutputStream out = Util.getOutput(args, 1);
-        Formatter formatter = new Formatter(out);
-
-        formatter.read(Util.getJsonParser(in));
-        in.close();
-        out.close();
     }
 
 }

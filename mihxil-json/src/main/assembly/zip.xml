@@ -26,6 +26,7 @@
       <includes>
         <include>jsonformat</include>
         <include>jsongrep</include>
+        <include>jsonsed</include>
       </includes>
       <fileMode>0755</fileMode>
     </fileSet>

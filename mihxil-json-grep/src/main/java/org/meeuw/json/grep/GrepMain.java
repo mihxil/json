@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.*;
 
 import org.apache.commons.cli.*;
+import org.meeuw.json.MainUtil;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.PathMatcher;
 import org.meeuw.json.grep.parsing.Parser;
@@ -21,7 +22,7 @@ import com.fasterxml.jackson.core.JsonParser;
  * @author Michiel Meeuwissen
  * @since 0.4
  */
-public class GrepMain {
+public class GrepMain  {
 
 
     public enum Output {
@@ -186,35 +187,26 @@ public class GrepMain {
     }
 
     public static void main(String[] argv) throws IOException, ParseException {
-        CommandLineParser parser = new DefaultParser();
-        Options options = new Options().addOption(new Option("help", "print this message"));
-        options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
-        options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
-        options.addOption(new Option("record", true, "Record pattern (default to no matching at all). On match, a record separator will be outputted."));
-        options.addOption(new Option("recordsep", true, "Record separator"));
-        options.addOption(new Option("sortfields", true, "Sort the fields of a found 'record', according to the order of the matchers."));
-        options.addOption(new Option("max", false, "Max number of records"));
-        options.addOption(new Option("version", false, "Print version"));
-        options.addOption(new Option("ignoreArrays", false, "Ignore arrays (no need to match those)"));
 
-        options.addOption(new Option("debug", false, "Debug"));
-        CommandLine cl = parser.parse(options, argv, true);
+        CommandLine cl = MainUtil.commandLine(
+            "jsongrep",
+            "<pathMatcher expression> [<INPUT FILE>|-]",
+            (options) -> {
+                options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
+                options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
+                options.addOption(new Option("record", true, "Record pattern (default to no matching at all). On match, a record separator will be outputted."));
+                options.addOption(new Option("recordsep", true, "Record separator"));
+                options.addOption(new Option("sortfields", true, "Sort the fields of a found 'record', according to the order of the matchers."));
+                options.addOption(new Option("max", false, "Max number of records"));
+                options.addOption(new Option("ignoreArrays", false, "Ignore arrays (no need to match those)"));
+                options.addOption(new Option("debug", false, "Debug"));
+
+            },argv
+        );
+
         String[] args = cl.getArgs();
-        if (cl.hasOption("version")) {
-            System.out.println(version());
-            System.exit(0);
-        }
+
         final List<String> argList = cl.getArgList();
-        if (cl.hasOption("help") || argList.isEmpty()) {
-            System.out.println("jsongrep - " + version() + " - See https://github.com/mihxil/json");
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp(
-                    "jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]",
-                    options);
-
-            System.exit(0);
-        }
-
         boolean ignoreArrays = cl.hasOption("ignoreArrays");
 
         Output output = Output.PATHANDVALUE;

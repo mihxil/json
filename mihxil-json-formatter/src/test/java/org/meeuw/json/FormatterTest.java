@@ -62,7 +62,7 @@ public class FormatterTest {
             assertExitCode(() -> {
                 Formatter.main(new String[]{"-version"});
             }).isNormal();
-            assertThat(outContent.toString()).startsWith(String.valueOf(Formatter.version()));
+            assertThat(outContent.toString()).startsWith(String.valueOf(MainUtil.version()));
         }
     }
 

@@ -229,10 +229,21 @@ Normally between matches a newline is outputted, but when you use -record you'd 
 
 Normally, when using this 'record' functionality, the output record will be implicitely sorted like the matches. So in this case first the 'mid', then 'publishDate' then 'lastModified', independent from the order they appeared in the json document. With the '-sortfields' parameter you can disable this behaviour, and simply output in the original order.
 
-=== TODO
+== jsonsed
 
-Currently, only precise and * matches on the keys are implemented, but it would be simple to think up
-some other matches. E.g. regular expression matching in keys too.
+A variant of 'jsongrep' is 'jsonsed'. This will just output the incoming json, but it will apply the replacements (which are possible in jsongrep too).
+
+[source,bash]
+-----
+ $ echo '{ "items" : [ { "a" : "abc def"},  { "a" : "xyz qwv"}]} ' | jsonsed -ignoreArrays -format 'items.a~abc\s*(.*)~def'
+{
+  "items" : [ {
+    "a" : "def"
+  }, {
+    "a" : "xyz qwv"
+  } ]
+}
+-----
 
 == Elasticsearch
 
