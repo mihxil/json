@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+DIR=$(dirname $0)
+java -cp $DIR/mihxil-json-grep-${project.version}-executable.jar org.meeuw.json.grep.SedMain "$@"

@@ -1,6 +1,5 @@
 package org.meeuw.json;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
@@ -16,7 +15,7 @@ public class Structure extends AbstractJsonReader {
     }
 
     @Override
-    protected void handleToken(ParseEvent event) throws IOException {
+    protected void handleToken(ParseEvent event) {
         switch(event.getToken()) {
             case VALUE_EMBEDDED_OBJECT:
             case VALUE_STRING:

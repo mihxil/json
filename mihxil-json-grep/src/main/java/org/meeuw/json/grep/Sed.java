@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringJoiner;
 
-import org.meeuw.json.JsonIterator;
-import org.meeuw.json.ParseEvent;
+import org.meeuw.json.*;
 import org.meeuw.json.grep.matching.NeverPathMatcher;
 import org.meeuw.json.grep.matching.PathMatcher;
 
@@ -15,7 +14,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 
 /**
- * jsonsed. To search in json streams.
+ * jsonsed. To search/replace in json streams.
+ * @since 0.10
  */
 public class Sed  implements Iterator<ParseEvent> {
 
