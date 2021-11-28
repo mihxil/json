@@ -35,7 +35,7 @@ public class Parser {
         for (String s : split) {
             list.add(parsePathMatcher(s, ignoreArrays, needsObject));
         }
-        return new PathMatcherOrChain(list.toArray(new PathMatcher[list.size()]));
+        return new PathMatcherOrChain(list.toArray(new PathMatcher[0]));
 
     }
 
@@ -96,7 +96,7 @@ public class Parser {
                 parseKeyPattern(list, s);
             }
         }
-        return new SinglePathMatcher(ignoreArrays, list.toArray(new KeysPattern[list.size()]));
+        return new SinglePathMatcher(ignoreArrays, list.toArray(new KeysPattern[0]));
     }
 
 

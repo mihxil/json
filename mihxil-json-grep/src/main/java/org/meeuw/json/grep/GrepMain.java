@@ -248,7 +248,6 @@ public class GrepMain {
             main.setMax(Long.valueOf(cl.getOptionValue("max")));
         }
 
-
         if (cl.hasOption("debug")) {
             System.out.println(main.matcher);
             System.exit(0);

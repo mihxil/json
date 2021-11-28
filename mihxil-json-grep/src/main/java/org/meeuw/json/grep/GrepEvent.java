@@ -62,12 +62,9 @@ public class GrepEvent {
         }
     }
 
-
-
     @Override
     public String toString() {
         return getPath() + "=" + getValue();
     }
-
 
 }

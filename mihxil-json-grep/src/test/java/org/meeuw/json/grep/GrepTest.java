@@ -2,6 +2,7 @@ package org.meeuw.json.grep;
 
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,7 @@ import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -22,6 +24,7 @@ public class GrepTest {
         Grep grep = new Grep(matcher, Util.getJsonParser("{a:1, b: {b1: 5}, c: [ {d: 4, e:5 }]}"));
         assertEquals("b.b1=5", grep.next().toString());
         assertFalse(grep.hasNext());
+        assertThatThrownBy(grep::next).isInstanceOf(NoSuchElementException.class);
     }
 
 

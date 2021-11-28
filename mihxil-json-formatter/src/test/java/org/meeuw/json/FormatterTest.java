@@ -54,6 +54,15 @@ public class FormatterTest {
             assertExitCode(() -> {
                 Formatter.main(new String[]{"-help"});
             }).isNormal();
+            assertThat(outContent.toString()).startsWith("jsonformat");
+
+        }
+        @Test
+        public void version() throws IOException {
+            assertExitCode(() -> {
+                Formatter.main(new String[]{"-version"});
+            }).isNormal();
+            assertThat(outContent.toString()).startsWith(String.valueOf(Formatter.version()));
         }
     }
 

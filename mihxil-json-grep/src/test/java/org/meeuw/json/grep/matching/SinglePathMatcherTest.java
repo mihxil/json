@@ -1,12 +1,13 @@
 package org.meeuw.json.grep.matching;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
+
 import org.meeuw.json.*;
 
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -19,27 +20,27 @@ import static org.mockito.Mockito.mock;
 public class SinglePathMatcherTest {
 
     @Test
-    public void grepSinglePathPatcherTest() throws IOException {
+    public void grepSinglePathPatcherTest() {
         SinglePathMatcher matcher = new SinglePathMatcher(true,
                 new PreciseMatch("titles"),
                 new PreciseMatch("value"));
-        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2))));
-        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("foo"), new ArrayEntry(2))));
-        assertTrue(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("titles"), new KeyEntry("value"))));
-        assertFalse(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("foo"), new KeyEntry("value"))));
-        assertTrue(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("value"))));
-        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("foo"))));
-        assertFalse(matcher.matches(Collections.<PathEntry>emptyList()));
+        assertFalse(matcher.matches(asList(new KeyEntry("titles"), new ArrayEntry(2))));
+        assertFalse(matcher.matches(asList(new KeyEntry("foo"), new ArrayEntry(2))));
+        assertTrue(matcher.matches(asList(new KeyEntry("titles"), new KeyEntry("value"))));
+        assertFalse(matcher.matches(asList(new KeyEntry("foo"), new KeyEntry("value"))));
+        assertTrue(matcher.matches(asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("value"))));
+        assertFalse(matcher.matches(asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("foo"))));
+        assertFalse(matcher.matches(Collections.emptyList()));
 
-
+        assertThat(matcher.toString()).isEqualTo("titles.value");
     }
 
     @Test
-    public void emptyPath() throws IOException {
+    public void emptyPath() {
         SinglePathMatcher matcher = new SinglePathMatcher(true,
                 new PreciseMatch("titles"),
                 new PreciseMatch("value"));
-        assertFalse(matcher.matches(Collections.<PathEntry>emptyList()));
+        assertFalse(matcher.matches(Collections.emptyList()));
     }
 
     @Test
@@ -85,20 +86,17 @@ public class SinglePathMatcherTest {
     }
 
     @Test
-    public void testAnyDepthMatcher() throws IOException {
+    public void testAnyDepthMatcher() {
         SinglePathMatcher matcher = new SinglePathMatcher(false,
                 new AnyDepthMatcher(),
                 new PreciseMatch("value"));
-        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2))));
-        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("foo"), new ArrayEntry(2))));
-        assertTrue(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("titles"), new KeyEntry("value"))));
-        assertTrue(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("foo"), new KeyEntry("value"))));
-        assertTrue(matcher.matches(Arrays.<PathEntry>asList(new KeyEntry("a"), new KeyEntry("b"), new KeyEntry("value"))));
-        assertTrue(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("value"))));
-        assertFalse(matcher.matches(Arrays.asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("foo"))));
-        assertFalse(matcher.matches(Collections.<PathEntry>emptyList()));
-
-
-
+        assertFalse(matcher.matches(asList(new KeyEntry("titles"), new ArrayEntry(2))));
+        assertFalse(matcher.matches(asList(new KeyEntry("foo"), new ArrayEntry(2))));
+        assertTrue(matcher.matches(asList(new KeyEntry("titles"), new KeyEntry("value"))));
+        assertTrue(matcher.matches(asList(new KeyEntry("foo"), new KeyEntry("value"))));
+        assertTrue(matcher.matches(asList(new KeyEntry("a"), new KeyEntry("b"), new KeyEntry("value"))));
+        assertTrue(matcher.matches(asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("value"))));
+        assertFalse(matcher.matches(asList(new KeyEntry("titles"), new ArrayEntry(2), new KeyEntry("foo"))));
+        assertFalse(matcher.matches(Collections.emptyList()));
     }
 }
