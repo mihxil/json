@@ -34,14 +34,18 @@ public class FormatterTest {
 
         @Test
         public void main() {
-            System.setIn(new ByteArrayInputStream("{'a': 'B'}".getBytes(StandardCharsets.UTF_8)));
+            System.setIn(new ByteArrayInputStream("{'a': 'B', 'array': [1, 2.0, true, false], 'object': { 'x': null }}".getBytes(StandardCharsets.UTF_8)));
 
             assertExitCode(() -> {
                 Formatter.main(new String[]{});
             }).isNormal();
 
             assertThat(outContent.toString()).isEqualTo("{\n" +
-                "  \"a\" : \"B\"\n" +
+                "  \"a\" : \"B\",\n" +
+                "  \"array\" : [ 1, 2.0, true, false ],\n" +
+                "  \"object\" : {\n" +
+                "    \"x\" : null\n" +
+                "  }\n" +
                 "}");
         }
 

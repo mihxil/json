@@ -204,7 +204,8 @@ public class GrepMain {
             System.out.println(version());
             System.exit(0);
         }
-        if (cl.hasOption("help") || cl.getArgList().isEmpty()) {
+        final List<String> argList = cl.getArgList();
+        if (cl.hasOption("help") || argList.isEmpty()) {
             System.out.println("jsongrep - " + version() + " - See https://github.com/mihxil/json");
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp(
@@ -254,7 +255,6 @@ public class GrepMain {
             return;
         }
 
-        List<String> argList = cl.getArgList();
         try (InputStream in = Util.getInput(argList.toArray(new String[0]), 1)) {
             main.read(in, System.out);
         }
