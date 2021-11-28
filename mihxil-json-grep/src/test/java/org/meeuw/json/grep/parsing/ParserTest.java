@@ -86,7 +86,7 @@ public class ParserTest {
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
         assertTrue(result.getPatterns()[1] instanceof ValueRegexpMatcher);
-        assertEquals(".*", result.getPatterns()[1].toString());
+        assertEquals("value~.*", result.getPatterns()[1].toString());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ParserTest {
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
         assertTrue(result.getPatterns()[1] instanceof ValueRegexpMatcher);
-        assertEquals("(a|b)", result.getPatterns()[1].toString());
+        assertEquals("value~(a|b)", result.getPatterns()[1].toString());
     }
 
 	@Test
