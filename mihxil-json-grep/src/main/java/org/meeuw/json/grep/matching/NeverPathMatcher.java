@@ -4,7 +4,6 @@ import java.util.function.Predicate;
 
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
-import org.meeuw.util.Predicates;
 
 /**
  * The matcher that matches never.
@@ -18,11 +17,11 @@ public class NeverPathMatcher implements PathMatcher {
 
     @Override
     public Predicate<Path> needsKeyCollection() {
-        return Predicates.alwaysFalse();
+        return (path) -> false;
     }
 
     @Override
     public Predicate<Path> needsObjectCollection() {
-        return Predicates.alwaysFalse();
+        return (path) -> false;
     }
 }

@@ -4,7 +4,6 @@ import java.util.function.Predicate;
 
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
-import org.meeuw.util.Predicates;
 
 /**
  * @author Michiel Meeuwissen
@@ -30,7 +29,7 @@ public class NeedsObjectObjectMatcher extends ObjectMatcher {
 
     @Override
     public Predicate<Path> needsObjectCollection() {
-        return Predicates.alwaysTrue();
+        return (path) -> true;
     }
 
     public static ObjectMatcher get(ObjectMatcher objectMatcher, boolean needsObject) {

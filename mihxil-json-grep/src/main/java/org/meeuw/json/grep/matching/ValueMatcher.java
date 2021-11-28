@@ -4,7 +4,6 @@ import java.util.function.Predicate;
 
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
-import org.meeuw.util.Predicates;
 
 /**
  * a keys matcher only considers the value of a json path for matching.
@@ -19,12 +18,11 @@ abstract class ValueMatcher implements PathMatcher {
 
     @Override
     public Predicate<Path> needsKeyCollection() {
-        return Predicates.alwaysFalse();
+        return (path) -> false;
     }
 
     @Override
     public Predicate<Path> needsObjectCollection() {
-        return Predicates.alwaysFalse();
-    }
+        return (path) -> false;    }
 
 }

@@ -1,14 +1,14 @@
 package org.meeuw.json.grep.matching;
 
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
-import org.meeuw.util.Predicates;
 import org.mozilla.javascript.*;
 
 /**
@@ -68,12 +68,12 @@ public class JavascriptMatcher extends ObjectMatcher {
 
     @Override
     public Predicate<Path> needsKeyCollection() {
-        return Predicates.alwaysFalse();
+        return (path) -> false;
     }
 
     @Override
     public Predicate<Path> needsObjectCollection() {
-        return Predicates.alwaysTrue();
+        return (path) -> true;
     }
 
     @Override

@@ -2,15 +2,12 @@ package org.meeuw.json;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
-import org.meeuw.util.Predicates;
 
 import com.fasterxml.jackson.core.JsonToken;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.meeuw.util.Predicates.alwaysFalse;
 
 /**
  * @author Michiel Meeuwissen
@@ -98,7 +95,7 @@ public class JsonIteratorTest {
     @Test
     public void collectKeys() throws IOException {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: 2}}"),
-                path -> path.size() == 1 && path.peekLast().toString().equals("b"), Predicates.<Path>alwaysFalse());
+                path -> path.size() == 1 && path.peekLast().toString().equals("b"), (path) -> false);
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
 		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
@@ -121,7 +118,7 @@ public class JsonIteratorTest {
 	@Test
     public void collectObjects() throws IOException {
 		JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: {}}}"),
-            alwaysFalse(),
+            (path) -> false,
             path -> path != null && path.size() == 1 && path.peekLast().toString().equals("b")
         );
 		assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
@@ -149,13 +146,11 @@ public class JsonIteratorTest {
     @Test
     public void collectArray() throws IOException {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: [1, 2.0, 3]}"),
-                Predicates.alwaysFalse(),
-                new Predicate<Path>() {
-                    @Override
-                    public boolean test(Path path) {
-                        return path != null && path.size() == 1 && path.peekLast().toString().equals("b");
-                    }
-                });
+            (path)-> false,
+            (path) ->
+
+                path != null && path.size() == 1 && path.peekLast().toString().equals("b")
+        );
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
         assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
@@ -177,16 +172,11 @@ public class JsonIteratorTest {
     @Test
     public void collectObjectsMultiple() throws IOException {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: ['x', 'y']}}"),
-                Predicates.<Path>alwaysFalse(),
-                new Predicate<Path>() {
-                    @Override
-                    public boolean test(Path path) {
-                        return path != null &&
-                                ( (path.size() == 1 && path.peekLast().toString().equals("b")) ||
-                                  (path.size() == 2 && path.peekLast().toString().equals("d"))
-                                );
-                    }
-                });
+            (path) -> false,
+            path -> path != null &&
+                ( (path.size() == 1 && path.peekLast().toString().equals("b")) ||
+                    (path.size() == 2 && path.peekLast().toString().equals("d"))
+                ));
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
         assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
@@ -243,7 +233,7 @@ public class JsonIteratorTest {
     @Test
     public void npe() throws IOException {
         JsonIterator iterator = new JsonIterator(
-                Util.getJsonParser("{\"items\" : [{ \"result\" : {\"a\" : {}, \"b\" : 1 }} ]}"), Predicates.<Path>alwaysFalse(), Predicates.<Path>alwaysFalse());
+                Util.getJsonParser("{\"items\" : [{ \"result\" : {\"a\" : {}, \"b\" : 1 }} ]}"), (path) -> false, (path) -> false);
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
         assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "items");
         assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);

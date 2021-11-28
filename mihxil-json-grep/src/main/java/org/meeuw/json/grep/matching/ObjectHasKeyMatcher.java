@@ -4,7 +4,6 @@ import java.util.function.Predicate;
 
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
-import org.meeuw.util.Predicates;
 
 /**
  * @author Michiel Meeuwissen
@@ -25,12 +24,12 @@ public class ObjectHasKeyMatcher extends ObjectMatcher {
 
     @Override
     public Predicate<Path> needsKeyCollection() {
-        return Predicates.alwaysTrue();
+        return (path) -> true;
     }
 
     @Override
     public Predicate<Path> needsObjectCollection() {
-        return Predicates.alwaysFalse();
+        return (path) -> false;
     }
 
 	@Override
