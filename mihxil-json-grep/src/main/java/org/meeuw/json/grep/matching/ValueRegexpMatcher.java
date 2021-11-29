@@ -1,8 +1,5 @@
 package org.meeuw.json.grep.matching;
 
-import lombok.Getter;
-import lombok.With;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,11 +9,8 @@ import org.meeuw.json.ParseEvent;
  * Matches the value with a regular expression.
  */
 public class ValueRegexpMatcher extends ValueMatcher {
-    @Getter
-    private final Pattern pattern;
 
-    @Getter
-    @With
+    private final Pattern pattern;
     private final String replacement;
 
     public ValueRegexpMatcher(Pattern pattern, String replacement) {

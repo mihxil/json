@@ -31,7 +31,7 @@ public class GrepMain  {
             void toBuilder(StringBuilder builder, GrepEvent match) {
                 builder.append(match.getPath().toString());
                 builder.append('=');
-                builder.append(match.getValue());
+                builder.append(match.valueOrNodeAsConciseString());
             }
         },
 
@@ -40,7 +40,7 @@ public class GrepMain  {
             void toBuilder(StringBuilder builder, GrepEvent match) {
                 builder.append(match.getPath().toString());
                 builder.append('=');
-                builder.append(match.getNode());
+                builder.append(match.getEvent().valueOrNodeAsString());
             }
         },
         KEYANDVALUE(false) {
@@ -48,7 +48,7 @@ public class GrepMain  {
             void toBuilder(StringBuilder builder, GrepEvent match) {
                 builder.append(match.getPath().peekLast());
                 builder.append('=');
-                builder.append(match.getValue());
+                builder.append(match.valueOrNodeAsConciseString());
             }
         },
         KEYANDFULLVALUE(true) {
@@ -56,7 +56,7 @@ public class GrepMain  {
             void toBuilder(StringBuilder builder, GrepEvent match) {
                 builder.append(match.getPath().peekLast());
                 builder.append('=');
-                builder.append(match.getNode());
+                builder.append(match.getEvent().valueOrNodeAsString());
             }
         },
         PATH(false) {
@@ -74,13 +74,13 @@ public class GrepMain  {
         VALUE(false) {
             @Override
             void toBuilder(StringBuilder builder, GrepEvent match) {
-                builder.append(match.getValue());
+                builder.append(match.valueOrNodeAsConciseString());
             }
         },
         FULLVALUE(true) {
             @Override
             void toBuilder(StringBuilder builder, GrepEvent match) {
-                builder.append(match.getNode());
+                builder.append(match.valueOrNodeAsString());
             }
         };
         private final boolean needsObject;
@@ -192,14 +192,14 @@ public class GrepMain  {
             "jsongrep",
             "<pathMatcher expression> [<INPUT FILE>|-]",
             (options) -> {
-                options.addOption(new Option("output", true, "Output format, one of " + Arrays.asList(Output.values())));
-                options.addOption(new Option("sep", true, "Separator (defaults to newline)"));
-                options.addOption(new Option("record", true, "Record pattern (default to no matching at all). On match, a record separator will be outputted."));
-                options.addOption(new Option("recordsep", true, "Record separator"));
-                options.addOption(new Option("sortfields", true, "Sort the fields of a found 'record', according to the order of the matchers."));
-                options.addOption(new Option("max", false, "Max number of records"));
-                options.addOption(new Option("ignoreArrays", false, "Ignore arrays (no need to match those)"));
-                options.addOption(new Option("debug", false, "Debug"));
+                options.addOption(new Option("o", "output", true, "Output format, one of " + Arrays.asList(Output.values())));
+                options.addOption(new Option("s", "sep", true, "Separator (defaults to newline)"));
+                options.addOption(new Option("r", "record", true, "Record pattern (default to no matching at all). On match, a record separator will be outputted."));
+                options.addOption(new Option("rs", "recordsep", true, "Record separator"));
+                options.addOption(new Option("sf", "sortfields", true, "Sort the fields of a found 'record', according to the order of the matchers."));
+                options.addOption(new Option("m", "max", false, "Max number of records"));
+                MainUtil.ignoreArrays(options);
+                options.addOption(new Option("d", "debug", false, "Debug"));
 
             },argv
         );

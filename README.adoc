@@ -31,9 +31,11 @@ This zip also contain executable scripts to call them with `java -jar`, which wi
 curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.9/mihxil-json-0.9-all.zip ; unzip -o json.zip ; rm json.zip
 ----
 
-== Formatter
+== Formatter ('jsonformat')
 
 Implemented in link:mihxil-json-formatter[mihxil-json-formatter]
+
+This is actually just a thin layer around Jackson's `JsonParser` and `JsonGenerator`.
 
 Usage
 
@@ -62,10 +64,17 @@ michiel@belono:/tmp$ ls -lah alldocs.*
 
 == Grep
 
-Implemented in link:mihxil-json-formatter[mihxil-json-grep]
-
+Implemented in link:mihxil-json-grep[mihxil-json-grep]
 
 This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used to produce one line abstracts of the records which can easily be processed further by a normal grep or awk or so.
+
+
+=== Architecture
+
+The 'grep' (and 'sed') implementation are basically configured using  `PathMatcher` and extensions.  Seperately of that there is a `Parser` that can convert a string to (a set of) `PathMatcher`(s).  The provided command line tools depend on that. But all functionality is also available by constructing java objects in code.
+
+
+=== Command line 'jsongrep'
 
 Example
 
@@ -74,6 +83,8 @@ Example
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[1].e
 y.arr[1].e=z
 ----
+
+This just demonstrate a simple path patch. It returns the matched math together with the associated value.
 
 === comma matching
 It is possible to specify more than one match
@@ -96,14 +107,29 @@ y.arr[1].e=z
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.*[*].d
 y.arr[0].d=y
 ----
+This is useful for array indices. But you can also choose it completely ignore array indices in matching, which may simplify things:
+
+[source,sh]
+----
+$ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep -ignoreArrays y.arr.e
+y.arr[1].e=z
+----
 
 === regex matching
 
-Regex matching on key is also possible, which can be used to output different keys a the same level.
+Regex matching on key is also possible, which can e.g. be used to output different keys at the same level.
 
 [source]
 ----
-echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z', 'f': 'g'}]}}"  | jsongrep -output PATHANDFULLVALUE -ignoreArrays '...arr./d|e/'
+echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z', 'f': 'g'}]}}"  | jsongrep -output PATHANDFULLVALUE -ignoreArrays '*.arr./d|e/'
+y.arr[0].d=y
+y.arr[1].e=z
+----
+
+which is equivalent to:
+[source]
+----
+echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z', 'f': 'g'}]}}"  | jsongrep -output PATHANDFULLVALUE -ignoreArrays '*.arr.d,*.arr.e'
 y.arr[0].d=y
 y.arr[1].e=z
 ----
@@ -229,7 +255,7 @@ Normally between matches a newline is outputted, but when you use -record you'd 
 
 Normally, when using this 'record' functionality, the output record will be implicitely sorted like the matches. So in this case first the 'mid', then 'publishDate' then 'lastModified', independent from the order they appeared in the json document. With the '-sortfields' parameter you can disable this behaviour, and simply output in the original order.
 
-== jsonsed
+== Stream editing ('jsonsed')
 
 A variant of 'jsongrep' is 'jsonsed'. This will just output the incoming json, but it will apply the replacements (which are possible in jsongrep too).
 

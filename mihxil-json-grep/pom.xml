@@ -72,7 +72,7 @@
                   <ProjectVersion>${project.version}</ProjectVersion>
                 </manifestEntries>
                 <manifest>
-                  <mainClass>org.meeuw.json.grep.Main</mainClass>
+                  <mainClass>org.meeuw.json.grep.GrepMain</mainClass>
                 </manifest>
               </archive>
             </configuration>

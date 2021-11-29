@@ -16,6 +16,10 @@ public class MainUtil {
         return Manifests.read("ProjectVersion");
     }
 
+    public static void ignoreArrays(Options options){
+        options.addOption(new Option("i", "ignoreArrays", false, "Ignore arrays (no need to match those)"));
+    }
+
 
     public static CommandLine commandLine(
         String name,
@@ -24,25 +28,31 @@ public class MainUtil {
         String[] argv) throws IOException, ParseException {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
-        options.addOption(new Option("help", "print this message"));
-        options.addOption(new Option("version", false, "Print version"));
+        options.addOption(new Option("?", "help", false, "print this message"));
+        options.addOption(new Option("v", "version", false, "Print version"));
         addOptions.accept(options);
         CommandLine cl = parser.parse(options, argv, true);
 
-         if (cl.hasOption("version")) {
-             System.out.println(version());
-             System.exit(0);
-         }
-         if (cl.hasOption("help") || cl.getArgList().isEmpty()) {
-             System.out.println(name + " - " + version() + " - See https://github.com/mihxil/json");
-             HelpFormatter formatter = new HelpFormatter();
-             formatter.setWidth(100);
-             formatter.printHelp(
-                 name + " [OPTIONS] " + argsDescription,
-                 options);
+        boolean exit = false;
+        if (cl.hasOption("version")) {
+            System.out.println(version());
+            exit = true;
+        }
+        if (cl.hasOption("help") || cl.getArgList().isEmpty()) {
+            System.out.println(name + " - " + version() + " - See https://github.com/mihxil/json");
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.setWidth(100);
+            formatter.printHelp(
+                name + " [OPTIONS] " + argsDescription,
+                options);
 
-             System.exit(0);
-         }
-         return cl;
+            exit = true;
+        }
+
+        if (exit) {
+            System.exit(0);
+        }
+
+        return cl;
      }
 }

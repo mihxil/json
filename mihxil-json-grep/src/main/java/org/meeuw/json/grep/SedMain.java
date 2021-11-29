@@ -35,9 +35,8 @@ public class SedMain {
     public static void main(String[] argv) throws IOException, ParseException {
         CommandLine cl = MainUtil.commandLine("jsonsed", "<pathMatcher expression> [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
             (options) -> {
-                options.addOption(new Option("ignoreArrays", false, "Ignore arrays (no need to match those)"));
-                options.addOption(new Option("format", false, "Pretty print output"));
-
+                MainUtil.ignoreArrays(options);
+                options.addOption(new Option("f", "format", false, "Pretty print output"));
             },
             argv);
 

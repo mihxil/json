@@ -8,13 +8,16 @@ import org.meeuw.json.ParseEvent;
 public class ValueEqualsMatcher extends ValueMatcher {
     private final String test;
 
-    public ValueEqualsMatcher(String test) {
+    private final String replacement;
+
+    public ValueEqualsMatcher(String test, String replacement) {
         this.test = test;
+        this.replacement = replacement;
     }
 
     @Override
     public MatchResult matches(ParseEvent event) {
-        return new MatchResult(event, test.equals(event.getValue()));
+        return new MatchResult(replacement == null ? event : event.withValue(replacement), test.equals(event.getValue()));
     }
     @Override
     public String toString() {

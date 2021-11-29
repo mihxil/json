@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.With;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonToken;
 
 /**
+ * Describes the completion of an entire 'leaf' in json. It basically wraps a {@link Path} with (optionally) its value
+ *
  * @author Michiel Meeuwissen
  * @since 0.4
  */
@@ -97,4 +100,34 @@ public class ParseEvent {
         }
     }
 
+    /**
+     * Returns the value associated with this event as a string.
+     * @return The value as a string if it is a simple value. Or, if this leaf represents an object or an array, a complete json representation of it as a string.
+     */
+    public String valueOrNodeAsString() {
+        switch (getToken()) {
+            case END_OBJECT:
+            case END_ARRAY: {
+                StringWriter writer = new StringWriter();
+                Util.write(getNode(), writer);
+                return writer.toString();
+            }
+            default:
+                return getValue();
+        }
+    }
+
+    /**
+     * @return The value as a string if it is a simple value. Or, if this leaf represents an object or an array, either '{...}' or '[...]'
+     */
+    public String valueOrNodeAsConciseString() {
+        switch(getToken()) {
+            case END_OBJECT:
+                return "{...}";
+            case END_ARRAY:
+                return "[...]";
+            default:
+                return getValue();
+        }
+    }
 }

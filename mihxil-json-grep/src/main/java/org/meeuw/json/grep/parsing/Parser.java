@@ -66,11 +66,12 @@ public class Parser {
                     parseKeysMatcher(split[0], ignoreArrays),
                     new JavascriptMatcher("function(" + split[1]));
         }
-        split = arg.split("=", 2);
-        if (split.length == 2) {
+        split = arg.split("=", 3);
+        if (split.length >= 2) {
+            String replacement = split.length == 2 ? null : split[2];
             return new PathMatcherAndChain(
                     parseKeysMatcher(split[0], ignoreArrays),
-                    new ValueEqualsMatcher(split[1]));
+                    new ValueEqualsMatcher(split[1], replacement));
         }
 
         // >, <, operators...

@@ -2,25 +2,35 @@ package org.meeuw.json.grep;
 
 import lombok.Getter;
 
-import java.io.StringWriter;
-
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
-import org.meeuw.json.Util;
 
 /**
+ * A grep event is a light wrapper around a {@link ParseEvent}, but it adds two fields:
+ * 'the type' of the event, i.e how wel it matched ({@link #getWeight()} and why it matched {@link #getType()}
  * @author Michiel Meeuwissen
  * @since 0.4
  */
 @Getter
 public class GrepEvent {
     private final ParseEvent event;
+
     public enum Type {
+        /**
+         * The event occurred because it matched for value
+         */
         VALUE,
+        /**
+         * The event occurred because it matched for a record separation
+         */
         RECORD
     }
 
     private final Type type;
+
+    /**
+     * How well this matched. 0 is no match.
+     */
     private final int weight;
 
     public GrepEvent(ParseEvent result, int weight) {
@@ -38,33 +48,23 @@ public class GrepEvent {
         return event.getPath();
     }
 
-    public String getValue() {
-        switch(event.getToken()) {
-            case END_OBJECT:
-                return "{...}";
-            case END_ARRAY:
-                return "[...]";
-            default:
-                return event.getValue();
-        }
+    /**
+     * Returns {@link ParseEvent#valueOrNodeAsConciseString()} of the associated {@link #getEvent()}
+     */
+    public String valueOrNodeAsConciseString() {
+        return event.valueOrNodeAsConciseString();
     }
 
-    public String getNode() {
-        switch (event.getToken()) {
-            case END_OBJECT:
-            case END_ARRAY: {
-                StringWriter writer = new StringWriter();
-                Util.write(event.getNode(), writer);
-                return writer.toString();
-            }
-            default:
-                return event.getValue();
-        }
+    /**
+     * Returns the {@link ParseEvent#valueOrNodeAsString()} associated with this event as a string.
+     */
+    public String valueOrNodeAsString() {
+        return event.valueOrNodeAsString();
     }
 
     @Override
     public String toString() {
-        return getPath() + "=" + getValue();
+        return getPath() + "=" + valueOrNodeAsConciseString();
     }
 
 }

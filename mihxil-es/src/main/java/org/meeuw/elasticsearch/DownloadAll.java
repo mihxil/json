@@ -116,7 +116,7 @@ public class DownloadAll {
         long subCount = 0;
         for (GrepEvent event : grep) {
             if (event.getPath().toString().equals("_scroll_id")) {
-                status.scroll_id = event.getValue();
+                status.scroll_id = event.valueOrNodeAsConciseString();
             } else {
                 separate.accept(status);
                 status.count++;

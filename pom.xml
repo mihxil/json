@@ -47,7 +47,7 @@
   <properties>
     <jmh.version>1.33</jmh.version>
     <jackson.version>2.13.0</jackson.version>
-    <junit.version>5.8.1</junit.version>
+    <junit.version>5.8.2</junit.version>
     <mockito.version>4.1.0</mockito.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <lombok.version>1.18.22</lombok.version>
@@ -99,7 +99,7 @@
       <dependency>
         <groupId>com.ginsberg</groupId>
         <artifactId>junit5-system-exit</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.2</version>
         <scope>test</scope>
     </dependency>
     </dependencies>
