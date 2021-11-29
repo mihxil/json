@@ -4,7 +4,7 @@
 
   <groupId>org.meeuw</groupId>
   <artifactId>mihxil-json-parent</artifactId>
-  <version>0.10-SNAPSHOT</version>
+  <version>0.11-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>mihxil-json</name>
   <description>Json-related utilities</description>
@@ -205,7 +205,7 @@
               <include>**/*Test$**</include>
             </includes>
             <excludes>
-              <exclude/>
+              <exclude />
             </excludes>
             <systemPropertyVariables>
               <projectArtifactId>${project.artifactId}</projectArtifactId>
