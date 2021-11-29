@@ -1,7 +1,7 @@
 package org.meeuw.json.grep;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
@@ -77,6 +77,31 @@ class SedTest {
         assertThat(out.toString()).isEqualTo("{\"items\":[{\"a\":\"foobar\"},{\"a\":\"foobar\"}]}");
 
         assertThat(sed.toString()).isEqualTo("Sed[matcher=items.a AND replace:foobar]");
+    }
+
+    @Test
+    public void swagger() throws IOException {
+        String input = "{apiVersion: \"3.0\",\n" +
+            "swaggerVersion: \"1.2\",\n" +
+            "basePath: \"/${api.basePath}\"}";
+        PathMatcher matcher = new PathMatcherOrChain(
+            new PathMatcherAndChain(
+                new SinglePathMatcher(new PreciseMatch("basePath")),
+                new ScalarRegexpMatcher(Pattern.compile("[/]?\\$\\{api\\.basePath}"), "/v3/api")
+            ),
+            new PathMatcherAndChain(
+                new SinglePathMatcher(new PreciseMatch("host")),
+                new ScalarEqualsMatcher("${api.host}", "foobar:80")
+            )
+        );
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try (OutputStream output =  Sed.transform(out, matcher)) {
+            output.write(input.getBytes(StandardCharsets.UTF_8));
+        }
+
+        assertThat(out.toString()).isEqualTo("{\"apiVersion\":\"3.0\",\"swaggerVersion\":\"1.2\",\"basePath\":\"/v3/api\"}");
+
     }
 
 }

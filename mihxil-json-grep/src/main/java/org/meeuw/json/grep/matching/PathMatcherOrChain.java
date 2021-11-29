@@ -22,8 +22,9 @@ public class PathMatcherOrChain implements PathMatcher {
         int count = 0;
         for (PathMatcher matcher : matchers) {
             count++;
-            if (matcher.matches(event).getAsBoolean()) {
-                return new MatchResult(event, count);
+            MatchResult matches = matcher.matches(event);
+            if (matches.getAsBoolean()) {
+                return new MatchResult(matches.getEvent(), count);
             }
         }
         return new MatchResult(event, false);
