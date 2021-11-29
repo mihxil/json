@@ -1,12 +1,11 @@
 package org.meeuw.json.grep;
 
-import lombok.Getter;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringJoiner;
 
-import org.meeuw.json.*;
+import org.meeuw.json.JsonIterator;
+import org.meeuw.json.ParseEvent;
 import org.meeuw.json.grep.matching.NeverPathMatcher;
 import org.meeuw.json.grep.matching.PathMatcher;
 
@@ -19,13 +18,10 @@ import com.fasterxml.jackson.core.JsonParser;
  */
 public class Sed  implements Iterator<ParseEvent> {
 
-    // settings
-    @Getter
     private final PathMatcher matcher;
 
     final JsonIterator wrapped;
 
-    @lombok.Builder
     public Sed(PathMatcher matcher, JsonParser jp) {
         this.matcher = matcher == null ? new NeverPathMatcher() : matcher;
         this.wrapped = new JsonIterator(jp,

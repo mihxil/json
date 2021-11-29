@@ -32,6 +32,8 @@ class SedTest {
         }
 
         assertThat(out.toString()).isEqualTo("{\"items\":[{\"a\":\"def\"},{\"a\":\"xyz qwv\"}]}");
+
+        assertThat(sed.toString()).isEqualTo("Sed[matcher=items.a AND value~abc\\s*(.*)]");
     }
 
 }
