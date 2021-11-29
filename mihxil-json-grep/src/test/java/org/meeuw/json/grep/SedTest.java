@@ -83,11 +83,16 @@ class SedTest {
     public void swagger() throws IOException {
         String input = "{apiVersion: \"3.0\",\n" +
             "swaggerVersion: \"1.2\",\n" +
+            "basePath2: \"/${CONTEXT}/api\",\n" +
             "basePath: \"/${api.basePath}\"}";
         PathMatcher matcher = new PathMatcherOrChain(
             new PathMatcherAndChain(
                 new SinglePathMatcher(new PreciseMatch("basePath")),
                 new ScalarRegexpMatcher(Pattern.compile("[/]?\\$\\{api\\.basePath}"), "/v3/api")
+            ),
+            new PathMatcherAndChain(
+                new SinglePathMatcher(new PreciseMatch("basePath2")),
+                new ScalarRegexpMatcher(Pattern.compile("[/]?(.*)\\$\\{CONTEXT}(.*)"), "$1/v3$2")
             ),
             new PathMatcherAndChain(
                 new SinglePathMatcher(new PreciseMatch("host")),
@@ -100,7 +105,7 @@ class SedTest {
             output.write(input.getBytes(StandardCharsets.UTF_8));
         }
 
-        assertThat(out.toString()).isEqualTo("{\"apiVersion\":\"3.0\",\"swaggerVersion\":\"1.2\",\"basePath\":\"/v3/api\"}");
+        assertThat(out.toString()).isEqualTo("{\"apiVersion\":\"3.0\",\"swaggerVersion\":\"1.2\",\"basePath2\":\"/v3/api\",\"basePath\":\"/v3/api\"}");
 
     }
 
