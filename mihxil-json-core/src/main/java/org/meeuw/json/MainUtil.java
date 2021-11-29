@@ -29,6 +29,7 @@ public class MainUtil {
         String name,
         String argsDescription,
         Consumer<Options> addOptions,
+        int expectedNumberOfArguments,
         String[] argv) throws IOException, ParseException {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
@@ -42,7 +43,7 @@ public class MainUtil {
             System.out.println(version());
             exit = true;
         }
-        if (cl.hasOption("help") || cl.getArgList().isEmpty()) {
+        if (cl.hasOption("help") || cl.getArgList().size() < expectedNumberOfArguments) {
             System.out.println(name + " - " + version() + " - See https://github.com/mihxil/json");
             HelpFormatter formatter = new HelpFormatter();
             formatter.setWidth(100);

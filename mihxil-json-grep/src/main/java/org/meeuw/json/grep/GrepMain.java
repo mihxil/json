@@ -200,7 +200,7 @@ public class GrepMain  {
                 options.addOption(new Option("m", "max", false, "Max number of records"));
                 MainUtil.ignoreArrays(options);
                 MainUtil.debug(options);
-            },argv
+            }, 1, argv
         );
 
         String[] args = cl.getArgs();

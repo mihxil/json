@@ -278,8 +278,7 @@ public class GrepMainTest {
             String version = GrepMain.version();
             assertThat(outContent.toString())
                 .startsWith("jsongrep - " + version + " - See https://github.com/mihxil/json\n" +
-                    "usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]\n" +
-                    " -debug              Debug");
+                    "usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]");
         }
 
         @Test

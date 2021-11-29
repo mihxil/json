@@ -38,7 +38,7 @@ public class Formatter extends AbstractJsonReader {
 
     public static void main(String[] argv) throws IOException, ParseException {
         CommandLine cl = MainUtil
-            .commandLine("jsonformat", "[<INPUT FILE>|-] [<OUTPUT FILE>|-]", (options) -> {}, argv);
+            .commandLine("jsonformat", "[<INPUT FILE>|-] [<OUTPUT FILE>|-]",  (options) -> {}, 0, argv);
         String[] args  = cl.getArgs();
         try (InputStream in = Util.getInput(args, 0);
              OutputStream out = Util.getOutput(args, 1);) {

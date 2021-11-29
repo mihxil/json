@@ -36,6 +36,7 @@ public class SedMain {
                 MainUtil.ignoreArrays(options);
                 MainUtil.debug(options);
             },
+            1,
             argv);
 
         String[] args = cl.getArgs();
