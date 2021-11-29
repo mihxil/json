@@ -8,18 +8,18 @@ import org.meeuw.json.ParseEvent;
 /**
  * Matches the value with a regular expression.
  */
-public class ValueRegexpMatcher extends ValueMatcher {
+public class ScalarRegexpMatcher extends ScalarMatcher {
 
     private final Pattern pattern;
     private final String replacement;
 
-    public ValueRegexpMatcher(Pattern pattern, String replacement) {
+    public ScalarRegexpMatcher(Pattern pattern, String replacement) {
         this.pattern = pattern;
         this.replacement = replacement;
     }
 
     @Override
-    public MatchResult matches(ParseEvent event) {
+    protected MatchResult matchesScalar(ParseEvent event) {
         Matcher matcher = pattern.matcher(event.getValue());
         if (matcher.matches()) {
             if (replacement != null) {

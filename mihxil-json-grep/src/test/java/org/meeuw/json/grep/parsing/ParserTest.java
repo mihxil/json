@@ -76,7 +76,7 @@ public class ParserTest {
         PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b=c", false, false);
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
-        assertTrue(result.getPatterns()[1] instanceof ValueEqualsMatcher);
+        assertTrue(result.getPatterns()[1] instanceof ScalarEqualsMatcher);
         assertEquals("c", result.getPatterns()[1].toString());
     }
 
@@ -85,7 +85,7 @@ public class ParserTest {
         PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b~.*", false, false);
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
-        assertTrue(result.getPatterns()[1] instanceof ValueRegexpMatcher);
+        assertTrue(result.getPatterns()[1] instanceof ScalarRegexpMatcher);
         assertEquals("value~.*", result.getPatterns()[1].toString());
     }
 
@@ -94,7 +94,7 @@ public class ParserTest {
         PathMatcherAndChain result = (PathMatcherAndChain) Parser.parsePathMatcher("a[*].b~(a|b)", false, false);
         assertTrue(result.getPatterns()[0] instanceof SinglePathMatcher);
         assertEquals("a[*].b", result.getPatterns()[0].toString());
-        assertTrue(result.getPatterns()[1] instanceof ValueRegexpMatcher);
+        assertTrue(result.getPatterns()[1] instanceof ScalarRegexpMatcher);
         assertEquals("value~(a|b)", result.getPatterns()[1].toString());
     }
 

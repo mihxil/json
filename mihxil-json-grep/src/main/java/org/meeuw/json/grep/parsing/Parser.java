@@ -45,7 +45,7 @@ public class Parser {
             String replacement = split.length == 3 ? split[2] : null;
             return new PathMatcherAndChain(
                     parseKeysMatcher(split[0], ignoreArrays),
-                    new ValueRegexpMatcher(Pattern.compile(split[1]), replacement));
+                    new ScalarRegexpMatcher(Pattern.compile(split[1]), replacement));
         }
 
 		split = arg.split("\\s+!\\s*contains\\s+", 2);
@@ -71,7 +71,7 @@ public class Parser {
             String replacement = split.length == 2 ? null : split[2];
             return new PathMatcherAndChain(
                     parseKeysMatcher(split[0], ignoreArrays),
-                    new ValueEqualsMatcher(split[1], replacement));
+                    new ScalarEqualsMatcher(split[1], replacement));
         }
 
         // >, <, operators...

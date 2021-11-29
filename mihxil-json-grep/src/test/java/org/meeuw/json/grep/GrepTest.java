@@ -232,7 +232,7 @@ public class GrepTest {
                     new PreciseMatch("items"),
                     new PreciseMatch("a")
                 ),
-                new ValueRegexpMatcher(Pattern.compile("abc\\s*(.*)"), "$1")),
+                new ScalarRegexpMatcher(Pattern.compile("abc\\s*(.*)"), "$1")),
             Util.getJsonParser("{ \"items\" : [ { \"a\" : 'abc def'},  { \"a\" : 'xyz qwv'}]}"));
 
         assertEquals("items[0].a=def", grep.next().toString());
