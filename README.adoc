@@ -84,7 +84,37 @@ $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[1].e
 y.arr[1].e=z
 ----
 
-This just demonstrate a simple path patch. It returns the matched math together with the associated value.
+This just demonstrate a simple path patch. It returns the matched path together with the associated value.
+
+It can also accept a second optional parameter which is a file or an URL:
+
+[source,sh]
+----
+$ jsongrep  y.arr[*].*~[xz] test.json
+y.arr[1].e=z
+----
+
+Generally the available options are documented in the tools itself too
+[source,sh]
+----
+$ jsongrep --help
+jsongrep - 0.10-SNAPSHOT - See https://github.com/mihxil/json
+usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]
+ -?,--help                print this message
+ -d,--debug               Debug
+ -i,--ignoreArrays        Ignore arrays (no need to match those)
+ -m,--max                 Max number of records
+ -o,--output <arg>        Output format, one of [PATHANDVALUE, PATHANDFULLVALUE, KEYANDVALUE,
+                          KEYANDFULLVALUE, PATH, KEY, VALUE, FULLVALUE]
+ -r,--record <arg>        Record pattern (default to no matching at all). On match, a record
+                          separator will be outputted.
+ -rs,--recordsep <arg>    Record separator
+ -s,--sep <arg>           Separator (defaults to newline)
+ -sf,--sortfields <arg>   Sort the fields of a found 'record', according to the order of the
+                          matchers.
+ -v,--version             Print version
+----
+
 
 === comma matching
 It is possible to specify more than one match
@@ -117,7 +147,7 @@ y.arr[1].e=z
 
 === regex matching
 
-Regex matching on key is also possible, which can e.g. be used to output different keys at the same level.
+Regex matching on key is also possible, which can e.g. be used to output different keys at the same level more easily.
 
 [source]
 ----
@@ -136,7 +166,7 @@ y.arr[1].e=z
 
 === reporting
 
-If it does not match a value but an object or an array, it will be reported like this:
+If a matcher does not match a simple value but an object or an array, it will be reported like this:
 
 [source,sh]
 ----
@@ -178,7 +208,7 @@ $ jsongrep rows.*.doc.workflow=FOR_REPUBLICATION,rows.*.doc.mid  http://couchdbh
 
 
 === matching on value
-It is also possible to match certain values:
+It is also possible to match on value rather than path alone:
 
 [source,sh]
 ----
@@ -204,6 +234,8 @@ You can match directly inside the tree ('…' means 'an arbitrary path)
 $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  '...e'
 y.arr[1].e=z
 ----
+
+==== contains
 
 It's possible to match on object containing a certain key:
 
@@ -231,13 +263,6 @@ $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep -output KEYANDF
 [0]={"d":"y"}
 ----
 
-It can also accept a second optional parameter which is a file or an URL:
-
-[source,sh]
-----
-$ jsongrep  y.arr[*].*~[xz] test.json
-y.arr[1].e=z
-----
 
 
 === separators
@@ -270,6 +295,10 @@ A variant of 'jsongrep' is 'jsonsed'. This will just output the incoming json, b
   } ]
 }
 -----
+
+NOTE: The syntax for replacement currenlty is `<path>\~<value>~<replacement>`. This will make it hard to have
+a literal ~ in the value. The parser may be changed to be more like `sed` itself. `<path>~<ANY><value><ANY><replacement>` or so (where `<ANY>` will be a character you can choose like `/` or `|` )
+
 
 == Elasticsearch
 
