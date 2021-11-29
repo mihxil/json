@@ -19,6 +19,10 @@ jobs:
       with:
         java-version: 11
         distribution: 'temurin'
+    - name: Create settings.xml
+      uses: s4u/maven-settings-action@v2
+      with:
+        servers: '[{"id": "ossrh", "username": "mihxil", "password": "${{secrets.OSSRH_PASSWORD}}"}]'
     - name: Build with Maven
       run: mvn -B -fae
     - uses: codecov/codecov-action@v2
@@ -27,7 +31,11 @@ jobs:
       if: ${{ github.event_name == 'push' }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: crazy-max/ghaction-import-gpg@v3
+      with:
+        gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
+        passphrase: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
     - name: Deploy with Maven
-      run: OSSRH_PASSWORD=${{ secrets.OSSRH_PASSWORD }} mvn -B -Ddeploy  -DskipTests=true -s $GITHUB_WORKSPACE/.github/settings.xml -Dgpg.skip=true
+      run: mvn -B -Pdeploy  -DskipTests=true  deploy
       if: ${{ github.event_name == 'push' }}
 

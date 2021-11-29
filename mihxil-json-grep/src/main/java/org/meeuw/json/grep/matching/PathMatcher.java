@@ -14,7 +14,7 @@ import org.meeuw.json.Path;
 public interface PathMatcher {
 
     /**
-     *
+     * @param event The event to match
      */
     MatchResult matches(ParseEvent event);
 

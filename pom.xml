@@ -276,13 +276,16 @@
                 </goals>
               </execution>
             </executions>
+            <configuration>
+              <failOnError>false</failOnError>
+            </configuration>
           </plugin>
         </plugins>
       </build>
     </profile>
   </profiles>
 
-  <distributionManagement>
+ <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
