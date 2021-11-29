@@ -4,7 +4,7 @@
 image:https://github.com/mihxil/json/workflows/build/badge.svg?[Build Status,link=https://github.com/mihxil/json/actions?query=workflow%3Abuild]
 image:https://img.shields.io/maven-central/v/org.meeuw/mihxil-json.svg?label=Maven%20Central[Maven Central,link=https://search.maven.org/search?q=g:%22org.meeuw%22%20AND%20a:%22mihxil-json%22]
 image:https://img.shields.io/nexus/s/https/oss.sonatype.org/org.meeuw/mihxil-json.svg[snapshots,link=https://oss.sonatype.org/content/repositories/snapshots/org/meeuw/mihxil-json/]
-image:http://www.javadoc.io/badge/org.meeuw/mihxil-json.svg?color=blue[javadoc,link=http://www.javadoc.io/doc/org.meeuw/mihxil-json]
+image:http://www.javadoc.io/badge/org.meeuw/mihxil-json-core.svg?color=blue[javadoc,link=http://www.javadoc.io/doc/org.meeuw/mihxil-json-core]
 image:https://codecov.io/gh/mihxil/json/branch/main/graph/badge.svg[codecov,link=https://codecov.io/gh/mihxil/json]
 
 
@@ -66,6 +66,9 @@ michiel@belono:/tmp$ ls -lah alldocs.*
 == Grep
 
 Implemented in link:mihxil-json-grep[mihxil-json-grep]
+
+image:http://www.javadoc.io/badge/org.meeuw/mihxil-json-grep.svg?color=blue[javadoc,link=http://www.javadoc.io/doc/org.meeuw/mihxil-json-grep]
+
 
 This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used to produce one line abstracts of the records which can easily be processed further by a normal grep or awk or so.
 
@@ -303,7 +306,10 @@ a literal ~ in the value. The parser may be changed to be more like `sed` itself
 
 == Elasticsearch
 
-Implemented in link:mihxil-es[mihxil-json-es], and contains a tool to download an entire elasticsearch database.
+image:http://www.javadoc.io/badge/org.meeuw/mihxil-es.svg?color=blue[javadoc,link=http://www.javadoc.io/doc/org.meeuw/mihxil-es]
+
+
+Implemented in link:mihxil-es[mihxil-es], and contains a tool to download an entire elasticsearch database.
 
 
 == Json-include
