@@ -199,8 +199,7 @@ public class GrepMain  {
                 options.addOption(new Option("sf", "sortfields", true, "Sort the fields of a found 'record', according to the order of the matchers."));
                 options.addOption(new Option("m", "max", false, "Max number of records"));
                 MainUtil.ignoreArrays(options);
-                options.addOption(new Option("d", "debug", false, "Debug"));
-
+                MainUtil.debug(options);
             },argv
         );
 

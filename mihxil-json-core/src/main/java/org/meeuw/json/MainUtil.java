@@ -20,6 +20,10 @@ public class MainUtil {
         options.addOption(new Option("i", "ignoreArrays", false, "Ignore arrays (no need to match those)"));
     }
 
+    public static void debug(Options options) {
+        options.addOption(new Option("d", "debug", false, "Debug"));
+    }
+
 
     public static CommandLine commandLine(
         String name,

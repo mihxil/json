@@ -1,7 +1,5 @@
 package org.meeuw.json.grep;
 
-import lombok.Getter;
-
 import java.io.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -23,7 +21,6 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 public class SedMain {
 
 
-    @Getter
     private final PathMatcher matcher;
 
 
@@ -35,8 +32,9 @@ public class SedMain {
     public static void main(String[] argv) throws IOException, ParseException {
         CommandLine cl = MainUtil.commandLine("jsonsed", "<pathMatcher expression> [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
             (options) -> {
-                MainUtil.ignoreArrays(options);
                 options.addOption(new Option("f", "format", false, "Pretty print output"));
+                MainUtil.ignoreArrays(options);
+                MainUtil.debug(options);
             },
             argv);
 

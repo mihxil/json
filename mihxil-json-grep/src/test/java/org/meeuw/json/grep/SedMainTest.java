@@ -17,9 +17,24 @@ class SedMainTest {
         @Test
         public void test() {
             System.setIn(new ByteArrayInputStream("{ \"items\" : [ { \"a\" : 'abc def'},  { \"a\" : 'xyz qwv'}]}".getBytes(StandardCharsets.UTF_8)));
-            Assertions.assertExitCode(() -> SedMain.main(new String[] {"-ignoreArrays", "items.a~abc\\s*(.*)~def", "-", "-"})).isNormal();
+            Assertions.assertExitCode(() -> SedMain.main(new String[] {"--ignoreArrays", "--format", "items.a~abc\\s*(.*)~def", "-", "-"})).isNormal();
 
-            assertThat(outContent.toString()).isEqualTo("{\"items\":[{\"a\":\"def\"},{\"a\":\"xyz qwv\"}]}");
+            assertThat(outContent.toString()).isEqualTo("{\n" +
+                "  \"items\" : [ {\n" +
+                "    \"a\" : \"def\"\n" +
+                "  }, {\n" +
+                "    \"a\" : \"xyz qwv\"\n" +
+                "  } ]\n" +
+                "}");
+        }
+
+        @Test
+        public void debug() {
+            Assertions.assertExitCode(() -> SedMain.main(new String[] {"--debug", "items.a~abc\\s*(.*)~def"})).isNormal();
+
+            assertThat(outContent.toString()).isEqualTo(
+                "items.a AND value~abc\\s*(.*)\n");
+
 
         }
 
