@@ -78,6 +78,7 @@
               </archive>
             </configuration>
           </execution>
+          <!--
           <execution>
             <id>create-grep-lean-jar</id>
             <phase>package</phase>
@@ -98,6 +99,7 @@
               </archive>
             </configuration>
           </execution>
+          -->
         </executions>
       </plugin>
     </plugins>
