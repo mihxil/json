@@ -20,14 +20,14 @@ public class AbstractMainTest {
 
 
     @BeforeEach
-    public void setUpStreams() {
+    public void setUpStreamsAndSecurityManager() {
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
         System.setSecurityManager(new DisallowExitSecurityManager(original));
     }
 
     @AfterEach
-    public void restoreStreams() {
+    public void restoreStreamsAndSecurityManager() {
         System.setOut(originalOut);
         System.out.println(outContent);
         System.setErr(originalErr);
