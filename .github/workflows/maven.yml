@@ -22,8 +22,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
         server-id: ossrh
-        server-username: OSSRH_USERNAME
-        server-password: OSSRH_PASSWORD
+        server-username: SONATYPE_USERNAME
+        server-password: SONATYPE_PASSWORD
         gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
         gpg-passphrase: GPG_SECRET_KEY_PASSPHRASE
     - name: Build with Maven
