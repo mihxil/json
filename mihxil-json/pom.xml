@@ -21,7 +21,7 @@
       <groupId>org.meeuw</groupId>
       <artifactId>mihxil-json-grep</artifactId>
       <version>${project.version}</version>
-      <classifier>executable-lean</classifier>
+      <classifier>executable_lean</classifier>
     </dependency>
     <dependency>
       <groupId>org.meeuw</groupId>
@@ -36,7 +36,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
         <executions>
           <execution>
             <id>copy-resources</id>
@@ -59,7 +59,7 @@
 
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.4.2</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>create-zip</id>
