@@ -9,19 +9,17 @@ jobs:
     env:
       MAVEN_OPTS: -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: 11
-      - name: Create settings.xml
-        uses: s4u/maven-settings-action@v2
-        with:
-          servers: '[{"id": "ossrh", "username": "mihxil", "password": "${{secrets.OSSRH_PASSWORD}}"}]'
-      - uses: crazy-max/ghaction-import-gpg@v3
-        with:
+          cache: maven
+          server-id: ossrh
+          server-username: OSSRH_USERNAME
+          server-password: OSSRH_PASSWORD
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
-          passphrase: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
+          gpg-passphrase: GPG_SECRET_KEY_PASSPHRASE
       - name: Release
         run: |
           git config --global user.name 'github actions'
@@ -29,3 +27,7 @@ jobs:
           mvn --batch-mode  -Darguments=-DskipTests  -DpushChanges=false release:prepare
           git push --atomic -v --follow-tags
           mvn -Pdeploy --batch-mode -Darguments=-DskipTests release:perform
+        env:
+          SONATYPE_USERNAME: mihxil
+          SONATYPE_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          GPG_SECRET_KEY_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
