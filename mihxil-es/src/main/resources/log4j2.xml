@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+  <Properties>
+
+    <Property name="postfix">.log.%d{yyy-MM-dd}</Property>
+  </Properties>
+  <Appenders>
+ <Console name="console">
+          <PatternLayout pattern="%d{ISO8601} %4.4p - %X{remoteHost} %X{userNameAndKey} %X{request} %m  [ %c - %t ] %n"
+                         charset="UTF-8"/>
+        </Console>
+
+  </Appenders>
+  <Loggers>
+
+    <Root level="INFO">
+
+      <AppenderRef ref="console" level="INFO"/>
+    </Root>
+
+
+  </Loggers>
+</Configuration>

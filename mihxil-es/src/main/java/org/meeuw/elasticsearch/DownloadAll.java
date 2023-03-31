@@ -2,14 +2,12 @@ package org.meeuw.elasticsearch;
 
 
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.net.URI;
+import java.net.http.*;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -17,10 +15,7 @@ import org.apache.commons.cli.*;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.Grep;
 import org.meeuw.json.grep.GrepEvent;
-import org.meeuw.json.grep.matching.ArrayEntryMatch;
-import org.meeuw.json.grep.matching.PathMatcherOrChain;
-import org.meeuw.json.grep.matching.PreciseMatch;
-import org.meeuw.json.grep.matching.SinglePathMatcher;
+import org.meeuw.json.grep.matching.*;
 
 import com.fasterxml.jackson.core.JsonParser;
 
@@ -30,7 +25,7 @@ import com.fasterxml.jackson.core.JsonParser;
  * @since 3.0
  */
 @Data
-@Slf4j
+@Log4j2
 public class DownloadAll {
 
     public static final String ID = "_id";
@@ -112,7 +107,6 @@ public class DownloadAll {
         Grep grep = new Grep(new PathMatcherOrChain(
             new SinglePathMatcher(new PreciseMatch("_scroll_id")),
             new SinglePathMatcher(new PreciseMatch("hits"), new PreciseMatch("hits"), new ArrayEntryMatch())), parser);
-        status.scroll_id = null;
         long subCount = 0;
         for (GrepEvent event : grep) {
             if (event.getPath().toString().equals("_scroll_id")) {
@@ -145,27 +139,44 @@ public class DownloadAll {
         status.calls++;
     }
 
-    protected InputStream openStream(Status status) throws IOException {
+
+    HttpClient client = HttpClient.newBuilder().build();
+
+    protected InputStream openStream(Status status) throws IOException, InterruptedException {
         if (status.scroll_id != null) {
-            URL url = new URL(elasticSearchServer + "_search/scroll?scroll=1m");
-            URLConnection con = url.openConnection();
-            con.setDoOutput(true);
-            con.getOutputStream().write(status.scroll_id.getBytes());
+            URI url = URI.create(elasticSearchServer + "_search/scroll");
+            String json = "{\"scroll_id\": \"%s\", \"scroll\" : \"1m\"\n}";
+            HttpRequest request = HttpRequest.newBuilder(url)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(String.format(json, status.scroll_id)))
+                .build();
+            HttpResponse<InputStream> send = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             status.calls++;
-            return con.getInputStream();
+            if (send.statusCode() != 200) {
+                log.warn("\n\n" + new String(send.body().readAllBytes()));
+                log.warn(send.toString());
+            }
+            return send.body();
         } else {
-            String u = elasticSearchServer + elasticSearchDatabase + "/" + getTypesString() + "_search?search_type=scan&scroll=10&size=50";
+            String u = elasticSearchServer + elasticSearchDatabase + "/" + getTypesString() + "_search?scroll=1m&size=100";
             if (sort != null) {
                 u += "&sort=" + sort;
             }
             log.info("Using " + u);
-            URL url = new URL(u);
-            return url.openStream();
+            URI url = URI.create(u);
+            HttpRequest request = HttpRequest.newBuilder(url).GET().build();
+            HttpResponse<InputStream> send = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+            if (send.statusCode() != 200) {
+                log.error(new String(send.body().readAllBytes()));
+                log.error(send.toString());
+            }
+            return send.body();
+
         }
     }
 
 
-    public Status download(OutputStream out) throws IOException {
+    public Status download(OutputStream out) throws IOException, InterruptedException {
         out.write("[".getBytes());
         Status status = new Status();
         status.byteCount++;
@@ -178,11 +189,11 @@ public class DownloadAll {
         return status;
     }
 
-    public Status iterate(Consumer<ESObject> consumer) throws IOException {
+    public Status iterate(Consumer<ESObject> consumer) throws IOException, InterruptedException {
         return iterate(consumer, (status) -> {});
     }
 
-    public  Status iterate(Consumer<ESObject> consumer, Consumer<Status> separate) throws IOException {
+    public  Status iterate(Consumer<ESObject> consumer, Consumer<Status> separate) throws IOException, InterruptedException {
         Status status = new Status();
         iterate(status, openStream(status), consumer, separate);
         while (!status.ready) {
@@ -208,7 +219,7 @@ public class DownloadAll {
         formatter.printHelp("downloadall <elastic search server> <elastic database> [<output file>]", options);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Options options =
             new Options()
                 .addOption(Option.builder("types").hasArg().build())
