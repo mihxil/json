@@ -7,7 +7,6 @@ import java.util.Map;
 
 /**
  * @author Michiel Meeuwissen
- * @since ...
  */
 @Data
 @AllArgsConstructor

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
-import java.net.URI;
+import java.net.*;
 import java.net.http.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +33,9 @@ public class DownloadAll {
     public static final String SOURCE = "_source";
     public static final String SCORE = "_score";
 
+    private final HttpClient client;
+
+
     private final String elasticSearchServer;
     private final String elasticSearchDatabase;
 
@@ -42,25 +45,38 @@ public class DownloadAll {
     private List<String> types = null;
 
 
-    public DownloadAll(String elasticSearchServer, String elasticSearchDatabase) {
+    public DownloadAll(String elasticSearchServer, String elasticSearchDatabase, String username, String password) {
         this.elasticSearchServer = elasticSearchServer;
         this.elasticSearchDatabase = elasticSearchDatabase;
+        HttpClient.Builder builder = HttpClient.newBuilder();
+        if (username != null) {
+            builder.authenticator(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password.toCharArray());
+                }
+            });
+        }
+        this.client = builder.build();
     }
 
     @lombok.Builder(builderClassName = "Builder")
     private  DownloadAll(
         String elasticSearchServer,
         String elasticSearchDatabase,
+        String username,
+        String password,
         String sort,
         Long max,
         Long offset,
         List<String> types
     ) {
-        this(elasticSearchServer, elasticSearchDatabase);
+        this(elasticSearchServer, elasticSearchDatabase, username, password);
         this.sort = sort;
         this.max = max;
         this. offset = offset;
         this.types = types;
+
     }
 
     private String getTypesString() {
@@ -73,10 +89,10 @@ public class DownloadAll {
 
 
 
-    private void download(Status status, InputStream is, final OutputStream out) {
+    private void download(Status status, InputStream is, final OutputStream out, boolean sourceOnly) {
         iterate(status, is, (node) -> {
             ByteArrayOutputStream writer = new ByteArrayOutputStream();
-            Util.write(node.getSource(), writer);
+            Util.write(sourceOnly ? node.getSource(): node, writer);
             byte[] bytes = writer.toByteArray();
             status.byteCount += bytes.length;
             try {
@@ -140,7 +156,6 @@ public class DownloadAll {
     }
 
 
-    HttpClient client = HttpClient.newBuilder().build();
 
     protected InputStream openStream(Status status) throws IOException, InterruptedException {
         if (status.scroll_id != null) {
@@ -162,9 +177,10 @@ public class DownloadAll {
             if (sort != null) {
                 u += "&sort=" + sort;
             }
-            log.info("Using " + u);
+            log.debug("Using " + u);
             URI url = URI.create(u);
-            HttpRequest request = HttpRequest.newBuilder(url).GET().build();
+            HttpRequest request = HttpRequest.newBuilder(url)
+                .GET().build();
             HttpResponse<InputStream> send = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             if (send.statusCode() != 200) {
                 log.error(new String(send.body().readAllBytes()));
@@ -176,13 +192,13 @@ public class DownloadAll {
     }
 
 
-    public Status download(OutputStream out) throws IOException, InterruptedException {
+    public Status download(OutputStream out, boolean sourceOnly) throws IOException, InterruptedException {
         out.write("[".getBytes());
         Status status = new Status();
         status.byteCount++;
-        download(status, openStream(status), out);
+        download(status, openStream(status), out, sourceOnly);
         while (! status.ready) {
-            download(status, openStream(status), out);
+            download(status, openStream(status), out, sourceOnly);
         }
         status.byteCount++;
         out.write("]".getBytes());
@@ -193,7 +209,7 @@ public class DownloadAll {
         return iterate(consumer, (status) -> {});
     }
 
-    public  Status iterate(Consumer<ESObject> consumer, Consumer<Status> separate) throws IOException, InterruptedException {
+    public Status iterate(Consumer<ESObject> consumer, Consumer<Status> separate) throws IOException, InterruptedException {
         Status status = new Status();
         iterate(status, openStream(status), consumer, separate);
         while (!status.ready) {
@@ -222,11 +238,11 @@ public class DownloadAll {
     public static void main(String[] args) throws IOException, InterruptedException {
         Options options =
             new Options()
-                .addOption(Option.builder("types").hasArg().build())
                 .addOption("sort", true, "sort")
-                .addOption("max", true, "max")
-                .addOption("offset", true, "offset");
-
+                .addOption("sourceOnly", false, "source only")
+                .addOption("username", true, "user name")
+                .addOption("password", true, "password")
+            ;
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
@@ -246,7 +262,13 @@ public class DownloadAll {
         }
 
         OutputStream output = cmd.getArgs().length == 2 || cmd.getArgs()[2].equals("-") ? System.out : new FileOutputStream(cmd.getArgs()[2]);
-        DownloadAll all = new DownloadAll(cmd.getArgs()[0], cmd.getArgs()[1]);
+        String username = null;
+        String password = null;
+        if (cmd.hasOption("username")) {
+            username = cmd.getOptionValue("username");
+            password = cmd.getOptionValue("password");
+        }
+        DownloadAll all = new DownloadAll(cmd.getArgs()[0], cmd.getArgs()[1], username, password);
 
         if (cmd.hasOption("sort")) {
             all.setSort(cmd.getOptionValue("sort"));
@@ -260,7 +282,7 @@ public class DownloadAll {
         if (cmd.hasOption("types")) {
             all.setTypes(Arrays.asList(cmd.getOptionValue("types").split(",")));
         }
-        Status status = all.download(output);
+        Status status = all.download(output, cmd.hasOption("sourceOnly"));
         output.close();
         System.err.println("\nready "+ status.byteCount + " in "  + TimeUnit.SECONDS.convert(System.currentTimeMillis() - status.startTime, TimeUnit.MILLISECONDS) + " s");
         System.exit(0);

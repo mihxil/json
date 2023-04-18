@@ -87,6 +87,8 @@ public class Util {
             write((Map) o, gen);
         } else if (o instanceof List) {
             write((List) o, gen);
+        } else {
+            gen.writeObject(o);
         }
     }
 
