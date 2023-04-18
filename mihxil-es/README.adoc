@@ -1,0 +1,11 @@
+= ES Tools
+:toc:
+
+== Downloadall
+Tool to download an entire elasticsearch database.
+
+[source, bash]
+----
+java -jar target/mihxil-es-0.11-SNAPSHOT-executable.jar  https://vpc-poms-plus-elasticsearch-prod-syxdj6ehquy6ruls6f6zdccxyq.eu-central-1.es.amazonaws.com:9220/ apimedia -username elasticsearch -password password -sourceOnly > prod.json
+
+----

@@ -89,7 +89,7 @@ public class DownloadAll {
 
 
 
-    private void download(Status status, InputStream is, final OutputStream out, boolean sourceOnly) {
+    private void download(Status status, InputStream is, final OutputStream out, boolean sourceOnly) throws IOException {
         iterate(status, is, (node) -> {
             ByteArrayOutputStream writer = new ByteArrayOutputStream();
             Util.write(sourceOnly ? node.getSource(): node, writer);
@@ -118,41 +118,43 @@ public class DownloadAll {
             }});
     }
 
-    private void iterate(Status status, InputStream is, Consumer<ESObject> consumer, Consumer<Status> separate) {
-        JsonParser parser = Util.getJsonParser(is);
-        Grep grep = new Grep(new PathMatcherOrChain(
-            new SinglePathMatcher(new PreciseMatch("_scroll_id")),
-            new SinglePathMatcher(new PreciseMatch("hits"), new PreciseMatch("hits"), new ArrayEntryMatch())), parser);
-        long subCount = 0;
-        for (GrepEvent event : grep) {
-            if (event.getPath().toString().equals("_scroll_id")) {
-                status.scroll_id = event.valueOrNodeAsConciseString();
-            } else {
-                separate.accept(status);
-                status.count++;
-                if (offset != null && status.count < offset) {
-                    continue;
+    private void iterate(Status status, InputStream is, Consumer<ESObject> consumer, Consumer<Status> separate) throws IOException {
+        try (is) {
+            JsonParser parser = Util.getJsonParser(is);
+            Grep grep = new Grep(new PathMatcherOrChain(
+                new SinglePathMatcher(new PreciseMatch("_scroll_id")),
+                new SinglePathMatcher(new PreciseMatch("hits"), new PreciseMatch("hits"), new ArrayEntryMatch())), parser);
+            long subCount = 0;
+            for (GrepEvent event : grep) {
+                if (event.getPath().toString().equals("_scroll_id")) {
+                    status.scroll_id = event.valueOrNodeAsConciseString();
+                } else {
+                    separate.accept(status);
+                    status.count++;
+                    if (offset != null && status.count < offset) {
+                        continue;
+                    }
+
+                    subCount++;
+                    Map<String, Object> node = (Map<String, Object>) event.getEvent().getNode();
+                    ESObject esObject = ESObject.builder()
+                        .id((String) node.get(ID))
+                        .type((String) node.get(TYPE))
+                        .score((Double) node.get(SCORE))
+                        .source((Map<String, Object>) node.get(SOURCE))
+                        .build();
+
+                    consumer.accept(esObject);
                 }
-
-                subCount++;
-                Map<String, Object> node = (Map<String, Object>) event.getEvent().getNode();
-                ESObject esObject = ESObject.builder()
-                    .id((String) node.get(ID))
-                    .type((String) node.get(TYPE))
-                    .score((Double) node.get(SCORE))
-                    .source((Map<String, Object>) node.get(SOURCE))
-                    .build();
-
-                consumer.accept(esObject);
             }
+            if (max != null && status.count > max) {
+                status.ready = true;
+            }
+            if (subCount == 0 && status.calls > 0) {
+                status.ready = true;
+            }
+            status.calls++;
         }
-        if (max != null && status.count > max) {
-            status.ready = true;
-        }
-        if (subCount == 0 && status.calls > 0) {
-            status.ready = true;
-        }
-        status.calls++;
     }
 
 
@@ -168,8 +170,10 @@ public class DownloadAll {
             HttpResponse<InputStream> send = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             status.calls++;
             if (send.statusCode() != 200) {
-                log.warn("\n\n" + new String(send.body().readAllBytes()));
-                log.warn(send.toString());
+                try (InputStream inputStream = send.body()) {
+                    log.warn("\n\n" + new String(inputStream.readAllBytes()));
+                    log.warn(send.toString());
+                }
             }
             return send.body();
         } else {
@@ -183,8 +187,11 @@ public class DownloadAll {
                 .GET().build();
             HttpResponse<InputStream> send = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             if (send.statusCode() != 200) {
-                log.error(new String(send.body().readAllBytes()));
-                log.error(send.toString());
+                try (InputStream inputStream = send.body()) {
+
+                    log.error(new String(inputStream.readAllBytes()));
+                    log.error(send.toString());
+                }
             }
             return send.body();
 
