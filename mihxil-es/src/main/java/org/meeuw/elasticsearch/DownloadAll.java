@@ -162,7 +162,7 @@ public class DownloadAll {
     protected InputStream openStream(Status status) throws IOException, InterruptedException {
         if (status.scroll_id != null) {
             URI url = URI.create(elasticSearchServer + "_search/scroll");
-            String json = "{\"scroll_id\": \"%s\", \"scroll\" : \"1m\"\n}";
+            String json = "{\"scroll_id\": \"%s\", \"scroll\" : \"5m\"\n}";
             HttpRequest request = HttpRequest.newBuilder(url)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(String.format(json, status.scroll_id)))
@@ -177,7 +177,7 @@ public class DownloadAll {
             }
             return send.body();
         } else {
-            String u = elasticSearchServer + elasticSearchDatabase + "/" + getTypesString() + "_search?scroll=1m&size=100";
+            String u = elasticSearchServer + elasticSearchDatabase + "/" + getTypesString() + "_search?scroll=5m&size=1000";
             if (sort != null) {
                 u += "&sort=" + sort;
             }
