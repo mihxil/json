@@ -1,5 +1,7 @@
 package org.meeuw.json.grep.matching;
 
+import java.util.function.UnaryOperator;
+
 import org.meeuw.json.ParseEvent;
 
 /**
@@ -7,19 +9,23 @@ import org.meeuw.json.ParseEvent;
 */
 public class ReplaceScalarMatcher extends ScalarMatcher {
 
-    private final String replacement;
+    private final UnaryOperator<String> replacement;
+
+    public ReplaceScalarMatcher(UnaryOperator<String> replacement) {
+        this.replacement = replacement;
+    }
 
     public ReplaceScalarMatcher(String replacement) {
-        this.replacement = replacement;
+        this.replacement = t -> replacement;
     }
 
     @Override
     protected MatchResult matchesScalar(ParseEvent event) {
-        return new MatchResult(event.withValue(replacement), true);
+        return new MatchResult(event.withValue(replacement.apply(event.getValue())), true);
     }
 
     @Override
     public String toString() {
-        return "replace:" + replacement;
+        return "replace:" + replacement.apply("<value>");
     }
 }
