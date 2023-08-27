@@ -48,7 +48,7 @@
     <jmh.version>1.37</jmh.version>
     <jackson.version>2.15.2</jackson.version>
     <junit.version>5.10.0</junit.version>
-    <mockito.version>5.4.0</mockito.version>
+    <mockito.version>5.5.0</mockito.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <lombok.version>1.18.28</lombok.version>
     <slf4j.version>2.0.7</slf4j.version>
