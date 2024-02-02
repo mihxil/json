@@ -80,6 +80,27 @@ class SedTest {
     }
 
     @Test
+    public void testReplace2() throws IOException {
+        Sed sed = new Sed(
+             new PathMatcherAndChain(
+                new SinglePathMatcher(true,
+                    new PreciseMatch("items"),
+                    new PreciseMatch("a")
+                ),
+                new ReplaceScalarMatcher("foobar")),
+            Util.getJsonParser("{ \"items\" : [ { \"a\" : 'abc def'},  { \"a\" : 'xyz qwv'}]}"));
+
+        StringWriter out = new StringWriter();
+        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(out)) {
+            sed.toGenerator(generator);
+        }
+
+        assertThat(out.toString()).isEqualTo("{\"items\":[{\"a\":\"foobar\"},{\"a\":\"foobar\"}]}");
+
+        assertThat(sed.toString()).isEqualTo("Sed[matcher=items.a AND replace:foobar]");
+    }
+
+    @Test
     public void swagger() throws IOException {
         String input = "{apiVersion: \"3.0\",\n" +
             "swaggerVersion: \"1.2\",\n" +
@@ -108,5 +129,7 @@ class SedTest {
         assertThat(out.toString()).isEqualTo("{\"apiVersion\":\"3.0\",\"swaggerVersion\":\"1.2\",\"basePath2\":\"/v3/api\",\"basePath\":\"/v3/api\"}");
 
     }
+
+
 
 }
