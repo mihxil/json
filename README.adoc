@@ -1,7 +1,7 @@
 = Json Tools
 :toc:
 
-image:https://github.com/mihxil/json/actions/workflows/maven.yml/badge.svg?[Build Status,link=https://github.com/mihxil/json/actions?query=workflow%3Amaven]
+image:https://github.com/mihxil/json/actions/workflows/maven.yml/badge.svg?[Build Status,link=https://github.com/mihxil/json/actions/workflows/maven.yml]
 image:https://img.shields.io/maven-central/v/org.meeuw/mihxil-json.svg?label=Maven%20Central[Maven Central,link=https://search.maven.org/search?q=g:%22org.meeuw%22%20AND%20a:%22mihxil-json%22]
 image:https://img.shields.io/nexus/s/https/oss.sonatype.org/org.meeuw/mihxil-json.svg[snapshots,link=https://oss.sonatype.org/content/repositories/snapshots/org/meeuw/mihxil-json/]
 image:http://www.javadoc.io/badge/org.meeuw/mihxil-json-core.svg?color=blue[javadoc,link=http://www.javadoc.io/doc/org.meeuw/mihxil-json-core]
