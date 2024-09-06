@@ -7,9 +7,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Michiel Meeuwissen
@@ -127,6 +126,6 @@ public class Util {
     }
 
     public static JsonFactory getJsonFactory() {
-        return new JsonFactory();
+        return new JsonFactory(new ObjectMapper());
     }
 }
