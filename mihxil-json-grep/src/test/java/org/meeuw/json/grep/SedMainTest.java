@@ -10,7 +10,7 @@ import org.meeuw.main.Assertions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SedMainTest {
+public class SedMainTest {
 
     public static class Main extends AbstractMainTest {
 

@@ -6,8 +6,6 @@ import java.io.PrintStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-import com.ginsberg.junit.exit.DisallowExitSecurityManager;
-
 public class AbstractMainTest {
 
     protected final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -16,23 +14,20 @@ public class AbstractMainTest {
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
 
-    private final SecurityManager original = System.getSecurityManager();
 
 
     @BeforeEach
-    public void setUpStreamsAndSecurityManager() {
+    public void setUpStreams() {
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
-        System.setSecurityManager(new DisallowExitSecurityManager(original));
     }
 
     @AfterEach
-    public void restoreStreamsAndSecurityManager() {
+    public void restoreStreams() {
         System.setOut(originalOut);
         System.out.println(outContent);
         System.setErr(originalErr);
         System.err.println(errContent);
-        System.setSecurityManager(original);
     }
 
 }

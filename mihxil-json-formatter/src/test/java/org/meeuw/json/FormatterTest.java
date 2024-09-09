@@ -30,7 +30,7 @@ public class FormatterTest {
                 "}", out.toString());
     }
 
-    public static class Main extends AbstractMainTest {
+    public  class Main extends AbstractMainTest {
 
         @Test
         public void main() {
