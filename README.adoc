@@ -75,7 +75,7 @@ This is a streaming 'jsongrep', and works a bit like grep. It e.g. can be used t
 
 === Architecture
 
-The 'grep' (and 'sed') implementation are basically configured using  `PathMatcher` and extensions.  Seperately of that there is a `Parser` that can convert a string to (a set of) `PathMatcher`(s).  The provided command line tools depend on that. But all functionality is also available by constructing java objects in code.
+The 'grep' (and 'sed') implementation is basically configured using  `PathMatcher` and extensions.  Seperate of that there is a `Parser` that can convert a string to (a set of) `PathMatcher`(s).  The provided command line tools depend on that. But all functionality is also available by constructing java objects in code.
 
 
 === Command line 'jsongrep'
@@ -88,7 +88,7 @@ $ echo "{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"  | jsongrep  y.arr[1].e
 y.arr[1].e=z
 ----
 
-This just demonstrate a simple path patch. It returns the matched path together with the associated value.
+This just demonstrate a simple path match. It returns the matched path together with the associated value.
 
 It can also accept a second optional parameter which is a file or an URL:
 
@@ -202,7 +202,7 @@ $ jsongrep  -output KEYANDVALUE  y.arr[*].*~[xz] test.json
 e=z
 ----
 
-Another example on a couchdb database (find documents where certain field has certain value)
+Another example on a couchdb database (find documents where a certain field has certain value)
 
 [source,sh]
 ----
