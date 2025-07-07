@@ -32,7 +32,7 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: (success() || failure())
       with:
-        junit_files: "**/target/surefire-reports/*.xml"
+        files: "**/target/surefire-reports/*.xml"
     - name: Deploy with Maven
       run: mvn -B -Pdeploy  -DskipTests=true  deploy
       if: ${{ github.event_name == 'push' }}
