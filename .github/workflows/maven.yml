@@ -47,4 +47,13 @@ jobs:
     - name: Run benchmarks
       run: |
         cd mihxil-json-benchmarks/target/
-        jar -jar benchmarks.jar
+        jar -jar benchmarks.jar   -wi 1 -i 3 -f 1 -rf json | tee output.txt
+    - name: Store benchmark result
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+          tool: 'jmh'
+          output-file-path: jmh-result.json
+          alert-threshold: '200%'
+          comment-on-alert: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-on-alert: false
