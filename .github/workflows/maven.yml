@@ -46,5 +46,5 @@ jobs:
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
     - name: Run benchmarks
       run: |
-        cd mihxil-json-benchmark/target
+        cd mihxil-json-benchmarks/target/
         jar -jar bencharks.jar
