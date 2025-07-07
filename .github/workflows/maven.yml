@@ -46,8 +46,7 @@ jobs:
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
     - name: Run benchmarks
       run: |
-        cd mihxil-json-benchmarks/target/
-        java -jar benchmarks.jar   -wi 1 -i 3 -f 1 -rf json | tee output.txt
+        java -jar  mihxil-json-benchmarks/target/benchmarks.jar   -wi 1 -i 3 -f 1 -rf json | tee output.txt
     - name: Store benchmark result
       uses: benchmark-action/github-action-benchmark@v1
       with:
