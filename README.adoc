@@ -1,4 +1,5 @@
 = Json Tools
+:version: 0.11
 :toc:
 
 image:https://github.com/mihxil/json/actions/workflows/maven.yml/badge.svg?[Build Status,link=https://github.com/mihxil/json/actions/workflows/maven.yml]
@@ -9,8 +10,8 @@ image:https://codecov.io/gh/mihxil/json/branch/main/graph/badge.svg[codecov,link
 
 
 
-This is provides several JSON-related tools implemented with
-Jackson. Its goal is to be useable with extremely large json
+This provides several JSON-related tools implemented with
+Jackson. Its goal is to be usable with extremely large json
 streams, and everything needs to happen streaming.
 
 I tried several tools implemented in python (python -m json.tool,
@@ -27,9 +28,9 @@ https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.10/mihxil-json-0.10-all.z
 
 This zip also contain executable scripts to call them with `java -jar`, which will work in a unix or osx environment, and can be unzipped somewhere in your path. Typing this install in the current directory:
 
-[source,shell]
+[source,shell,subs="attributes"]
 ----
-curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/0.10/mihxil-json-0.10-all.zip ; unzip -o json.zip ; rm json.zip
+curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/{version}/mihxil-json-{version}-all.zip ; unzip -o json.zip ; rm json.zip
 ----
 
 == Formatter ('jsonformat')
@@ -99,10 +100,10 @@ y.arr[1].e=z
 ----
 
 Generally the available options are documented in the tools itself too
-[source,sh]
+[source,sh,subs="attributes"]
 ----
 $ jsongrep --help
-jsongrep - 0.10-SNAPSHOT - See https://github.com/mihxil/json
+jsongrep - {version} - See https://github.com/mihxil/json
 usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]
  -?,--help                print this message
  -d,--debug               Debug
