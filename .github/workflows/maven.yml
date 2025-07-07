@@ -40,8 +40,11 @@ jobs:
         files: "**/target/surefire-reports/*.xml"
     - name: Deploy with Maven
       run: mvn -B -Pdeploy  -DskipTests=true  deploy
-      if: ${{ github.event_name == 'push' }}
       env:
         CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
         CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
+    - name: Run benchmarks
+      run:
+        cd mihxil-json-benchmark/target
+        jar -jar bencharks.jar

@@ -40,7 +40,6 @@
     <module>mihxil-json</module>
     <module>mihxil-es</module>
     <module>mihxil-json-xml</module>
-    <module>mihxil-json-benchmarks</module>
     <module>mihxil-json-include</module>
   </modules>
 
@@ -285,6 +284,15 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>mihxil-json-benchmarks</module>
+      </modules>
     </profile>
   </profiles>
 
