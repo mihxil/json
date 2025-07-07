@@ -21,16 +21,15 @@ jobs:
         java-version: 11
         distribution: 'temurin'
         cache: maven
-        server-id: ossrh
-        server-username: SONATYPE_USERNAME
-        server-password: SONATYPE_PASSWORD
+        server-id: central
+        server-username: CENTRAL_USERNAME
+        server-password: CENTRAL_PASSWORD
         gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
-        gpg-passphrase: GPG_SECRET_KEY_PASSPHRASE
     - name: Build with Maven
       run: mvn -B -fae
-    - uses: codecov/codecov-action@v4.0.1
+    - uses: codecov/codecov-action@v4
     - name: Publish Unit Test Results
-      uses: EnricoMi/publish-unit-test-result-action@v2.12.0
+      uses: EnricoMi/publish-unit-test-result-action@v2
       if: (success() || failure())
       with:
         junit_files: "**/target/surefire-reports/*.xml"
@@ -38,6 +37,6 @@ jobs:
       run: mvn -B -Pdeploy  -DskipTests=true  deploy
       if: ${{ github.event_name == 'push' }}
       env:
-        SONATYPE_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-        SONATYPE_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-        GPG_SECRET_KEY_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
+        CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+        CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+        MAVEN_SECRET_KEY_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
