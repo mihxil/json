@@ -10,10 +10,6 @@
   <artifactId>mihxil-json-benchmarks</artifactId>
   <packaging>jar</packaging>
 
-  <prerequisites>
-    <maven>3.0</maven>
-  </prerequisites>
-
   <dependencies>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
