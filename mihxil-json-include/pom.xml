@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.meeuw</groupId>
     <artifactId>mihxil-json-parent</artifactId>
-    <version>0.12-SNAPSHOT</version>
+    <version>0.12</version>
   </parent>
   <artifactId>mihxil-json-include</artifactId>
 
