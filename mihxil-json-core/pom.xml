@@ -7,6 +7,8 @@
     <version>0.12-SNAPSHOT</version>
   </parent>
   <artifactId>mihxil-json-core</artifactId>
+  <name>mihxil-json-core</name>
+
 
   <packaging>jar</packaging>
 
