@@ -24,10 +24,10 @@ jobs:
             target: 'deploy'
           - os: ubuntu-latest
             java: 21
-            target: 'package'
+            target: 'install'
           - os: ubuntu-latest
             java: 25
-            target: 'package'
+            target: 'install'
     runs-on: ${{ matrix.os }}
     env:
       MAVEN_ARGS: '--no-transfer-progress'
