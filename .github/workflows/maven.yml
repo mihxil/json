@@ -70,9 +70,9 @@ jobs:
       with:
           tool: 'jmh'
           output-file-path: jmh-result.json
-          #external-data-json-path: ./cache/benchmark-data.json
           alert-threshold: '200%'
           comment-on-alert: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           fail-on-alert: false
+          benchmark-data-dir-path: "dev/bench/${{ matrix.java }}"
           auto-push: true

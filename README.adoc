@@ -320,4 +320,6 @@ This is unfinished. The idea is to have to tool to have something similar to x-i
 
 == Benchmarks
 
-https://mihxil.github.io/json/dev/bench/
+https://mihxil.github.io/json/dev/bench/17
+https://mihxil.github.io/json/dev/bench/21
+https://mihxil.github.io/json/dev/bench/25
