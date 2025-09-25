@@ -20,7 +20,7 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            java: 11
+            java: 17
             target: 'deploy'
           - os: ubuntu-latest
             java: 21
