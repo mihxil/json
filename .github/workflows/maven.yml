@@ -50,7 +50,7 @@ jobs:
         CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
     - uses: codecov/codecov-action@v5
-    - name: Publish Unit Test Results
+    - name: Publish Unit Test Results ${{ matrix.java }}
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: (success() || failure())
       with:
