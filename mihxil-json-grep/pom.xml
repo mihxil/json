@@ -30,10 +30,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>com.ginsberg</groupId>
-      <artifactId>junit5-system-exit</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.meeuw</groupId>
       <artifactId>mihxil-json-core</artifactId>
       <version>${project.version}</version>

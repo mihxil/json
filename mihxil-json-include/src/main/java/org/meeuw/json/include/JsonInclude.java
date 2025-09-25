@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonParser;
 public class JsonInclude  {
 
 
-
     @lombok.Builder
     private JsonInclude(
         PathMatcher matcher,

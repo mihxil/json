@@ -1,9 +1,9 @@
 package org.meeuw.json.include;
 
-import java.io.IOException;
 import java.io.StringReader;
 
 import org.junit.jupiter.api.Test;
+
 import org.meeuw.json.JsonIterator;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.PathMatcher;
@@ -16,7 +16,7 @@ import org.meeuw.json.grep.parsing.Parser;
 public class JsonIncludeTest {
 
     @Test
-    public void test() throws IOException {
+    public void test() {
         PathMatcher pathMatcher = Parser.parsePathMatcherChain("bla");
         JsonIterator iterator =   new JsonIterator(Util.getJsonParser(new StringReader("{ 'bla': 'xxx' }")));
 

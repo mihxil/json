@@ -5,7 +5,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -60,16 +60,14 @@ public class GrepMainTest {
         assertEquals("", result);
     }
 
-	@Test
-	public void grepTitle() throws IOException {
-		GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.*.value"));
-		grep.setOutputFormat(GrepMain.Output.VALUE);
+    @Test
+    public void grepTitle() throws IOException {
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.*.value"));
+        grep.setOutputFormat(GrepMain.Output.VALUE);
 
-		String result = grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
-		assertEquals("title1\ntitle2\n", result);
-
-
-	}
+        String result = grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
+        assertEquals("title1\ntitle2\n", result);
+    }
 
 
     @Test
@@ -104,15 +102,15 @@ public class GrepMainTest {
 
 
     @Test
-	public void grepNotContainsKey() throws IOException {
-		GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.* ! contains a"));
-		grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
+    public void grepNotContainsKey() throws IOException {
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.* ! contains a"));
+        grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
 
-		String result = grep.read(new StringReader("{titles: [{a: 'A'}, {b: 'B'}]}"));
-		assertEquals("titles[1]={...}\n", result);
+        String result = grep.read(new StringReader("{titles: [{a: 'A'}, {b: 'B'}]}"));
+        assertEquals("titles[1]={...}\n", result);
 
 
-	}
+    }
 
 
     @Test

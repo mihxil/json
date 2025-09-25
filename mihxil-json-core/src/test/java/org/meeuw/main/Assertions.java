@@ -5,7 +5,9 @@ import lombok.SneakyThrows;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.ThrowableAssert;
 
+import com.ginsberg.junit.exit.ExitPreventerStrategy;
 import com.ginsberg.junit.exit.SystemExitPreventedException;
+import com.ginsberg.junit.exit.agent.AgentSystemExitHandlerStrategy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,10 +27,15 @@ public class Assertions {
 
         protected void runIfNeeded() throws Throwable {
             if (! ran) {
+                final ExitPreventerStrategy exitPreventerStrategy = new AgentSystemExitHandlerStrategy();
                 try {
+                    exitPreventerStrategy.resetBetweenTests();
+                    exitPreventerStrategy.beforeTest();
                     actual.call();
                 } catch (SystemExitPreventedException spe) {
                     this.systemExitPreventedException = spe;
+                } finally {
+                    exitPreventerStrategy.afterTest();
                 }
             }
         }
@@ -43,6 +50,7 @@ public class Assertions {
         public SystemAssert isNormal() {
             return isEqualTo(0);
         }
+
     }
 }
 
