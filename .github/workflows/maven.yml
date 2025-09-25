@@ -50,21 +50,29 @@ jobs:
         CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
     - uses: codecov/codecov-action@v5
-    - name: Publish Unit Test Results ${{ matrix.java }}
+    - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: (success() || failure())
       with:
+        check_name: 'Test Results ${{matrix.java}}'
         files: "**/target/surefire-reports/*.xml"
     - name: Run benchmarks
       run: |
         (cd mihxil-json-benchmarks ; mvn package )
         java -jar  mihxil-json-benchmarks/target/benchmarks.jar   -wi 1 -i 3 -f 1 -rf json | tee output.txt
+    - name: Download previous benchmark data
+      uses: actions/cache@v4
+      with:
+        path: ./cache
+        key: ${{ runner.os }}-benchmark
     - name: Store benchmark result
       uses: benchmark-action/github-action-benchmark@v1
       with:
           tool: 'jmh'
           output-file-path: jmh-result.json
+          external-data-json-path: ./cache/benchmark-data.json
           alert-threshold: '200%'
           comment-on-alert: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
           fail-on-alert: false
+          auto-push: true
