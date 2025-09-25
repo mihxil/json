@@ -317,3 +317,7 @@ Implemented in link:mihxil-es[mihxil-es], and contains a tool to download an ent
 
 This is unfinished. The idea is to have to tool to have something similar to x-include, but for json.
 
+
+== Benchmarks
+
+https://mihxil.github.io/json/dev/bench/
