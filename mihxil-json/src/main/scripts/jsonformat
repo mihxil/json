@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-DIR=$(dirname $0)
-java -jar $DIR/mihxil-json-formatter-${project.version}-executable.jar "$@"
