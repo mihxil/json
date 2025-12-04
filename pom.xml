@@ -45,10 +45,10 @@
 
   <properties>
     <jmh.version>1.37</jmh.version>
-    <jackson.version>2.20.0</jackson.version>
-    <junit.version>5.13.4</junit.version>
+    <jackson.version>2.20.1</jackson.version>
+    <junit.version>6.0.1</junit.version>
     <mockito.version>5.20.0</mockito.version>
-    <commons-cli.version>1.10.0</commons-cli.version>
+    <commons-cli.version>1.11.0</commons-cli.version>
     <lombok.version>1.18.42</lombok.version>
     <slf4j.version>2.0.7</slf4j.version>
 
