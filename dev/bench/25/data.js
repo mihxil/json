@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1758838149917,
+  "lastUpdate": 1764863623395,
   "repoUrl": "https://github.com/mihxil/json",
   "entries": {
     "Benchmark": [
@@ -82,6 +82,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "org.meeuw.MyBenchmark.grepMain",
             "value": 180179.34825899804,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "michiel.meeuwissen@gmail.com",
+            "name": "Michiel Meeuwissen",
+            "username": "mihxil"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1affcfbfb6ef7b0829f19546d6c4503ea3bbdc16",
+          "message": "Merge pull request #1 from mihxil/dependabot/maven/mihxil-json-grep/org.mozilla-rhino-1.8.1\n\nBump org.mozilla:rhino from 1.8.0 to 1.8.1 in /mihxil-json-grep",
+          "timestamp": "2025-12-04T16:50:23+01:00",
+          "tree_id": "2fc50e7d2da3fafe7fc8ba59b22908687e8d88b9",
+          "url": "https://github.com/mihxil/json/commit/1affcfbfb6ef7b0829f19546d6c4503ea3bbdc16"
+        },
+        "date": 1764863622369,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "org.meeuw.MyBenchmark.baseline",
+            "value": 2115588890.867422,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grep",
+            "value": 263139.45043974306,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grepMain",
+            "value": 130273.8163587906,
             "unit": "ops/s",
             "extra": "iterations: 3\nforks: 1\nthreads: 1"
           }
