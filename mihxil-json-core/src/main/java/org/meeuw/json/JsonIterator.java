@@ -5,8 +5,8 @@ import java.util.*;
 import java.util.function.Predicate;
 
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
 
 /**
  * Represents a json object as an iterator of {@link ParseEvent}s.
@@ -71,7 +71,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                     List<String> eventKeys = null;
                     Object eventObjects = null;
 
-                    String text = jp.getText();
+                    String text = jp.getString();
                     switch (token) {
                         case START_OBJECT:
                             if (needsKeyCollection.test(path)) {

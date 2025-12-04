@@ -9,8 +9,8 @@ import java.io.*;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.util.DefaultPrettyPrinter;
 
 /**
  * Pretty prints the json-stream. Depends entirely on jackson.

@@ -10,7 +10,7 @@ import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.PathMatcher;
 import org.meeuw.json.grep.parsing.Parser;
 
-import com.fasterxml.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
 /**

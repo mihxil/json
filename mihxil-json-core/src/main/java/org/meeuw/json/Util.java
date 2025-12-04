@@ -7,8 +7,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.*;
+import tools.jackson.core.json.JsonFactory;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * @author Michiel Meeuwissen

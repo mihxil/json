@@ -8,8 +8,8 @@ import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonToken;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonToken;
 
 /**
  * Describes the completion of an entire 'leaf' in json. It basically wraps a {@link Path} with (optionally) its value
@@ -71,12 +71,12 @@ public class ParseEvent {
             case END_ARRAY:
                 generator.writeEndArray();
                 break;
-            case FIELD_NAME:
-                generator.writeFieldName(getValue());
+              case PROPERTY_NAME:
+                generator.writeName(getValue());
                 break;
             case VALUE_EMBEDDED_OBJECT:
                 // don't know
-                generator.writeObject(getValue());
+                generator.writePOJO(getValue());
                 break;
             case VALUE_STRING:
                 generator.writeString(getValue());
