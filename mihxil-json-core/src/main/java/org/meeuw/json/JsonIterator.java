@@ -90,7 +90,7 @@ public class JsonIterator implements Iterator<ParseEvent> {
                         }
                         break;
                     case PROPERTY_NAME:
-                        String fieldName = jp.getText();
+                        String fieldName = jp.getString();
                         if (needsKeyCollection.test(path)) {
                             keys.peekLast().add(fieldName);
                         }
