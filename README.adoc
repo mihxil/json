@@ -1,5 +1,5 @@
 = Json Tools
-:version: 0.14
+:version: 1.0
 :toc:
 
 image:https://github.com/mihxil/json/actions/workflows/maven.yml/badge.svg?[Build Status,link=https://github.com/mihxil/json/actions/workflows/maven.yml]
