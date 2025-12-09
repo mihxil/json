@@ -55,7 +55,7 @@ public class Util {
     public static void write(Map<String, Object> map, JsonGenerator gen) {
         gen.writeStartObject();
         for (Map.Entry<String, Object> e : map.entrySet()) {
-            gen.writeString(e.getKey());
+            gen.writeName(e.getKey());
             write(e.getValue(), gen);
         }
         gen.writeEndObject();
