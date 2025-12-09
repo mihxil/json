@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765313692297,
+  "lastUpdate": 1765314032488,
   "repoUrl": "https://github.com/mihxil/json",
   "entries": {
     "Benchmark": [
@@ -396,6 +396,44 @@ window.BENCHMARK_DATA = {
           {
             "name": "org.meeuw.MyBenchmark.grepMain",
             "value": 217545.62823733632,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "mihxil",
+            "username": "mihxil"
+          },
+          "committer": {
+            "name": "mihxil",
+            "username": "mihxil"
+          },
+          "id": "f5f61278774b20478e3008cea3f5b77b25c67694",
+          "message": "jackson3",
+          "timestamp": "2025-12-09T12:07:12Z",
+          "url": "https://github.com/mihxil/json/pull/2/commits/f5f61278774b20478e3008cea3f5b77b25c67694"
+        },
+        "date": 1765314032110,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "org.meeuw.MyBenchmark.baseline",
+            "value": 2652049181.9262576,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grep",
+            "value": 535946.7935251555,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grepMain",
+            "value": 227896.0992470413,
             "unit": "ops/s",
             "extra": "iterations: 3\nforks: 1\nthreads: 1"
           }
