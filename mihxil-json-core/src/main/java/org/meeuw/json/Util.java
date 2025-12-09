@@ -51,8 +51,8 @@ public class Util {
         try (JsonGenerator gen = JSONFACTORY.createGenerator(ObjectWriteContext.empty(), writer)) {
             write(map, gen);
         }
-
     }
+
     public static void write(Map<String, Object> map, JsonGenerator gen) {
         gen.writeStartObject();
         for (Map.Entry<String, Object> e : map.entrySet()) {
