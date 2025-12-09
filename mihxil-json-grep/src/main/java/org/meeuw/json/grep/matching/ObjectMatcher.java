@@ -2,13 +2,13 @@ package org.meeuw.json.grep.matching;
 
 import org.meeuw.json.ParseEvent;
 
-import com.fasterxml.jackson.core.JsonToken;
+import tools.jackson.core.JsonToken;
 
 /**
  * @author Michiel Meeuwissen
  * @since ...
  */
-abstract class  ObjectMatcher implements PathMatcher {
+public abstract class  ObjectMatcher implements PathMatcher {
 
     @Override
     public final MatchResult matches(ParseEvent event) {

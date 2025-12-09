@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
 
-import com.fasterxml.jackson.core.JsonToken;
+import tools.jackson.core.JsonToken;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;

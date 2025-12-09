@@ -1,10 +1,8 @@
 package org.meeuw.json.grep;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
+import tools.jackson.core.JsonParser;
 
-import com.fasterxml.jackson.core.JsonParser;
+import java.util.*;
 
 /**
  * @author Michiel Meeuwissen
@@ -62,7 +60,7 @@ class GrepMainIteratorImpl implements GrepMainIterator {
                         grepMain.outputFormat.toBuilder(builder, match);
                         break;
                     case RECORD:
-                        if (next.fields.size() > 0) {
+                        if (!next.fields.isEmpty()) {
                             sort(next.fields);
                             hasNext = true;
                             return;
@@ -76,7 +74,7 @@ class GrepMainIteratorImpl implements GrepMainIterator {
                     break;
                 }
             }
-            if (next.fields.size() > 0) {
+            if (!next.fields.isEmpty()) {
                 sort(next.fields);
                 maxRecordSize = Math.max(maxRecordSize, next.fields.size());
                 hasNext = true;

@@ -4,7 +4,7 @@ import lombok.SneakyThrows;
 
 import java.io.*;
 
-import com.fasterxml.jackson.core.JsonParser;
+import tools.jackson.core.JsonParser;
 
 
 public abstract class AbstractJsonReader implements Closeable {

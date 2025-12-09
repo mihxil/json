@@ -1,5 +1,7 @@
 package org.meeuw.json.grep;
 
+import tools.jackson.core.JsonGenerator;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
@@ -8,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.*;
-
-import com.fasterxml.jackson.core.JsonGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

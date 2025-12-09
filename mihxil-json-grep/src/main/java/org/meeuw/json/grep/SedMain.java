@@ -1,17 +1,15 @@
 package org.meeuw.json.grep;
 
+import tools.jackson.core.*;
+
 import java.io.*;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.apache.commons.cli.*;
 import org.meeuw.json.MainUtil;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.PathMatcher;
 import org.meeuw.json.grep.parsing.Parser;
-
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
 /**
  * SedMain is a wrapper around {@link Sed},
@@ -22,10 +20,11 @@ public class SedMain {
 
 
     private final PathMatcher matcher;
+    private final boolean pretty;
 
-
-    public SedMain(PathMatcher pathMatcher) {
+    public SedMain(PathMatcher pathMatcher, boolean pretty) {
         this.matcher = pathMatcher;
+        this.pretty = pretty;
     }
 
 
@@ -43,7 +42,7 @@ public class SedMain {
         final List<String> argList = cl.getArgList();
         boolean ignoreArrays = cl.hasOption("ignoreArrays");
 
-        SedMain main = new SedMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, false, null));
+        SedMain main = new SedMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, false, null), cl.hasOption("format"));
 
         if (cl.hasOption("debug")) {
             System.out.println(main.matcher);
@@ -54,19 +53,18 @@ public class SedMain {
         try (InputStream in = Util.getInput(argList.toArray(new String[0]), 1);
              OutputStream out = Util.getOutput(argList.toArray(new String[0]), 2);
         ) {
-            main.read(in, out, (generator) -> {
-                if (cl.hasOption("format")) {
-                    generator.setPrettyPrinter(new DefaultPrettyPrinter());
-                }
-            });
+            main.read(in, out);
         }
         System.exit(0);
     }
 
-    private void read(InputStream in, OutputStream out, Consumer<JsonGenerator> jsonGeneratorConsumer) throws IOException {
-        Sed sed = new Sed(matcher, Util.getJsonParser(in));
-        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(out)) {
-            jsonGeneratorConsumer.accept(generator);
+    private void read(InputStream in, OutputStream out) throws IOException {
+        JsonParser parser = Util.getJsonParser(in);
+        Sed sed = new Sed(matcher, parser);
+        ObjectWriteContext writeContext = pretty ? Util.prettyWriteContext() : ObjectWriteContext.empty();
+
+        try (JsonGenerator generator = Util.getJsonFactory()
+            .createGenerator(writeContext, out)) {
             sed.toGenerator(generator);
         }
     }

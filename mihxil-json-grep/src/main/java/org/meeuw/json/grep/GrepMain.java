@@ -14,7 +14,7 @@ import org.meeuw.json.grep.parsing.Parser;
 import org.meeuw.util.Manifests;
 import org.meeuw.util.MaxOffsetIterator;
 
-import com.fasterxml.jackson.core.JsonParser;
+import tools.jackson.core.JsonParser;
 
 /**
  * GrepMain is a wrapper around {@link Grep}, it arranges output,and record collection and sorting.
