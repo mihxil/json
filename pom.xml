@@ -4,7 +4,7 @@
 
   <groupId>org.meeuw</groupId>
   <artifactId>mihxil-json-parent</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>pom</packaging>
   <name>mihxil-json</name>
   <description>Json-related utilities</description>
@@ -62,7 +62,7 @@
     <connection>scm:git:${project.scm.url}</connection>
     <developerConnection>scm:git:${project.scm.url}</developerConnection>
     <url>https://github.com/mihxil/json</url>
-    <tag>HEAD</tag>
+    <tag>1.0</tag>
   </scm>
 
 
