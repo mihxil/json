@@ -6,7 +6,6 @@ package org.meeuw.json;
 
 import tools.jackson.core.JsonGenerator;
 import tools.jackson.core.ObjectWriteContext;
-import tools.jackson.core.util.DefaultPrettyPrinter;
 
 import java.io.*;
 
@@ -22,16 +21,7 @@ public class Formatter extends AbstractJsonReader {
 
     final JsonGenerator generator;
     public Formatter(OutputStream out) {
-
-        DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
-        ObjectWriteContext writeContext = ObjectWriteContext
-            .empty();
-        /* TODO?
-            (SerializationContext.builder()
-                .serializerFactory(BeanSerializerFactory.instance
-                    .withConfig(new SerializerFactoryConfig()))
-                .build());
-*/
+        ObjectWriteContext writeContext = Util.prettyWriteContext();
         generator = Util.getJsonFactory().createGenerator(
             writeContext, out
         );

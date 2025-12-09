@@ -1,7 +1,8 @@
 package org.meeuw.json.grep;
 
 import tools.jackson.core.JsonGenerator;
-import tools.jackson.core.ObjectWriteContext;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.json.UTF8JsonGenerator;
 
 import java.io.*;
 import java.util.List;
@@ -56,6 +57,10 @@ public class SedMain {
         ) {
             main.read(in, out, (generator) -> {
                 if (cl.hasOption("format")) {
+                    if (generator instanceof UTF8JsonGenerator utf8JsonGenerator) {
+                        //utf8JsonGenerator.en(new DefaultPrettyPrinter());
+                    }
+                    generator.getPrettyPrinter();
 
                     //generator.setPrettyPrinter(new DefaultPrettyPrinter());
                 }
@@ -65,8 +70,10 @@ public class SedMain {
     }
 
     private void read(InputStream in, OutputStream out, Consumer<JsonGenerator> jsonGeneratorConsumer) throws IOException {
-        Sed sed = new Sed(matcher, Util.getJsonParser(in));
-        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(ObjectWriteContext.empty(), out)) {
+        JsonParser parser = Util.getJsonParser(in);
+        Sed sed = new Sed(matcher, parser);
+        try (JsonGenerator generator = Util.getJsonFactory()
+            .createGenerator(Util.prettyWriteContext(), out)) {
             jsonGeneratorConsumer.accept(generator);
             sed.toGenerator(generator);
         }

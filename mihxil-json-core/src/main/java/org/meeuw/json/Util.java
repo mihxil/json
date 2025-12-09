@@ -4,6 +4,7 @@ import lombok.extern.java.Log;
 import tools.jackson.core.*;
 import tools.jackson.core.json.JsonFactory;
 import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.core.util.DefaultPrettyPrinter;
 
 import java.io.*;
 import java.net.URL;
@@ -121,5 +122,14 @@ public class Util {
 
     public static JsonFactory getJsonFactory() {
         return JSONFACTORY;
+    }
+
+    public static ObjectWriteContext prettyWriteContext() {
+        return new ObjectWriteContext.Base() {
+            @Override
+            public PrettyPrinter getPrettyPrinter() {
+                return new DefaultPrettyPrinter();
+            }
+        };
     }
 }
