@@ -4,9 +4,6 @@ package org.meeuw.json.grep.matching;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.Path;
 import org.mozilla.javascript.*;
@@ -19,17 +16,14 @@ public class JavascriptMatcher extends ObjectMatcher {
 
     final String script;
 
-    final ScriptEngine engine;
 
     public JavascriptMatcher(String script) {
         this.script = script;
-        ScriptEngineManager mgr = new ScriptEngineManager();
-        engine = mgr.getEngineByName("JavaScript");
+
     }
 
     @Override
     protected MatchResult matchesObject(ParseEvent event) {
-        //ScriptContext context = engine.getContext();
         Context context = Context.enter();
         ScriptableObject scope = context.initStandardObjects();
         Scriptable that = context.newObject(scope);
@@ -38,7 +32,8 @@ public class JavascriptMatcher extends ObjectMatcher {
         IdScriptableObject nobj = getNativeObject(event);
 
         Object result = fct.call(
-                context, scope, that, new Object[]{nobj});
+            context, scope, that, new Object[]{nobj}
+        );
         if (! (result instanceof Boolean)) {
             throw new IllegalArgumentException(
                     "" + NativeJSON.stringify(context, scope, result, null, null) +
