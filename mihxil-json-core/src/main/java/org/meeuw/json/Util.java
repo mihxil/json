@@ -8,6 +8,8 @@ import tools.jackson.core.util.DefaultPrettyPrinter;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.*;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -27,14 +29,12 @@ public class Util {
     private Util() {}
 
     public static JsonParser getJsonParser(InputStream in)  {
-        JsonParser jp = JSONFACTORY
+        return JSONFACTORY
             .createParser(ObjectReadContext.empty(), in);
-        return jp;
     }
 
     public static JsonParser getJsonParser(Reader in) {
-        JsonParser jp = JSONFACTORY.createParser(ObjectReadContext.empty(), in);
-        return jp;
+        return JSONFACTORY.createParser(ObjectReadContext.empty(), in);
     }
 
     public static JsonParser getJsonParser(String string) throws IOException {
@@ -69,52 +69,53 @@ public class Util {
         }
         gen.writeEndArray();
     }
+    @SuppressWarnings("rawtypes")
     private static void write(Object o, JsonGenerator gen)  {
         if (o == null) {
             gen.writeNull();
-        } else if (o instanceof Long) {
-            gen.writeNumber((Long) o);
-        } else if (o instanceof Double) {
-            gen.writeNumber((Double) o);
-        } else if (o instanceof Boolean) {
-            gen.writeBoolean((Boolean) o);
-        } else if (o instanceof String) {
-            gen.writeString((String) o);
-        } else if (o instanceof Float) {
-            gen.writeNumber((Float) o);
-        } else if (o instanceof Integer) {
-            gen.writeNumber((Integer) o);
-        } else if (o instanceof Map) {
-            write((Map) o, gen);
-        } else if (o instanceof List) {
-            write((List) o, gen);
+        } else if (o instanceof Long l) {
+            gen.writeNumber(l);
+        } else if (o instanceof Double d) {
+            gen.writeNumber(d);
+        } else if (o instanceof Boolean b) {
+            gen.writeBoolean(b);
+        } else if (o instanceof String s) {
+            gen.writeString(s);
+        } else if (o instanceof Float f) {
+            gen.writeNumber(f);
+        } else if (o instanceof Integer i) {
+            gen.writeNumber(i);
+        } else if (o instanceof Map map) {
+            write(map, gen);
+        } else if (o instanceof List list) {
+            write(list, gen);
         } else {
             gen.writePOJO(o);
         }
     }
 
 
-    private static File getFile(String string) {
-        if ("-".equals(string) || string == null) return null;
-        return new File(string);
-    }
 
     public static InputStream getInput(String[] argv, int pos) throws IOException {
         String arg = argv.length > pos ? argv[pos] : null;
-        File file = getFile(arg);
-        if (file == null) {
+        if (arg == null || "-".equals(arg)) {
             return System.in;
-        } else if (!file.exists()) {
+        }
+        Path file = FileSystems.getDefault().getPath(arg);
+        if (! Files.exists(file)) {
             return new URL(arg).openStream();
         } else {
-            return new FileInputStream(file);
+            return Files.newInputStream(file);
         }
     }
 
     public static OutputStream getOutput(String[] argv, int pos) throws IOException {
         if (argv.length > pos) {
-            File file = getFile(argv[pos]);
-            return file == null ? System.out : new FileOutputStream(file);
+            if ("-".equals(argv[pos])) {
+                return System.out;
+            }
+            Path file = FileSystems.getDefault().getPath(argv[pos]);
+            return Files.newOutputStream(file);
         } else {
             return System.out;
         }
