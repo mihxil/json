@@ -16,10 +16,8 @@ public class JavascriptMatcher extends ObjectMatcher {
 
     final String script;
 
-
     public JavascriptMatcher(String script) {
         this.script = script;
-
     }
 
     @Override
@@ -36,8 +34,8 @@ public class JavascriptMatcher extends ObjectMatcher {
         );
         if (! (result instanceof Boolean)) {
             throw new IllegalArgumentException(
-                    "" + NativeJSON.stringify(context, scope, result, null, null) +
-                            " is not a boolean. Called on " + NativeJSON.stringify(context, scope, nobj, null, null));
+                NativeJSON.stringify(context, scope, result, null, null) +
+                    " is not a boolean. Called on " + NativeJSON.stringify(context, scope, nobj, null, null));
         } else {
             return new MatchResult(event, (Boolean) result);
         }
