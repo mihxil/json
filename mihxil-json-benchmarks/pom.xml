@@ -4,7 +4,7 @@
     <parent>
       <artifactId>mihxil-json-parent</artifactId>
       <groupId>org.meeuw</groupId>
-      <version>1.0</version>
+      <version>1.1-SNAPSHOT</version>
     </parent>
 
   <artifactId>mihxil-json-benchmarks</artifactId>
