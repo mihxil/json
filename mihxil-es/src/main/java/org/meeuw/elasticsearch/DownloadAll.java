@@ -3,6 +3,7 @@ package org.meeuw.elasticsearch;
 
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import tools.jackson.core.JsonParser;
 
 import java.io.*;
 import java.net.*;
@@ -16,8 +17,6 @@ import org.meeuw.json.Util;
 import org.meeuw.json.grep.Grep;
 import org.meeuw.json.grep.GrepEvent;
 import org.meeuw.json.grep.matching.*;
-
-import com.fasterxml.jackson.core.JsonParser;
 
 /**
  * This can download an entire elastic search database.

@@ -17,7 +17,7 @@ import org.meeuw.json.grep.Grep;
 import org.meeuw.json.grep.GrepEvent;
 import org.meeuw.json.grep.matching.*;
 
-import com.fasterxml.jackson.core.JsonParser;
+import tools.jackson.core.JsonParser;
 
 /**
  * This can download an entire elastic search database.

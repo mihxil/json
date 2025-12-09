@@ -1,34 +1,38 @@
 package org.meeuw.json;
 
-import lombok.SneakyThrows;
+import lombok.extern.java.Log;
+import tools.jackson.core.*;
+import tools.jackson.core.json.JsonFactory;
+import tools.jackson.core.json.JsonReadFeature;
 
 import java.io.*;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import tools.jackson.core.*;
-import tools.jackson.core.json.JsonFactory;
-import tools.jackson.databind.ObjectMapper;
-
 /**
  * @author Michiel Meeuwissen
  */
+@Log
 public class Util {
+
+    static final JsonFactory JSONFACTORY = JsonFactory.builder()
+        .configure(JsonReadFeature.ALLOW_UNQUOTED_PROPERTY_NAMES, true)
+        .configure(JsonReadFeature.ALLOW_SINGLE_QUOTES, true)
+        .configure(JsonReadFeature.ALLOW_JAVA_COMMENTS, true)
+        .configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS, true)
+        .build();
 
     private Util() {}
 
-    @SneakyThrows({IOException.class})
     public static JsonParser getJsonParser(InputStream in)  {
-        JsonParser jp = getJsonFactory().createParser(in);
-        setJsonParserOptions(jp);
+        JsonParser jp = JSONFACTORY
+            .createParser(ObjectReadContext.empty(), in);
         return jp;
     }
 
-    @SneakyThrows({IOException.class})
     public static JsonParser getJsonParser(Reader in) {
-        JsonParser jp = getJsonFactory().createParser(in);
-        setJsonParserOptions(jp);
+        JsonParser jp = JSONFACTORY.createParser(ObjectReadContext.empty(), in);
         return jp;
     }
 
@@ -36,39 +40,35 @@ public class Util {
         return getJsonParser(new StringReader(string));
     }
 
-    @SneakyThrows({IOException.class})
     public static void write(Object map, Writer writer) {
-        JsonGenerator gen = getJsonFactory().createGenerator(writer);
-        write(map, gen);
-        gen.close();
+        try (JsonGenerator gen = JSONFACTORY.createGenerator(ObjectWriteContext.empty(), writer)) {
+            write(map, gen);
+        }
     }
 
     public static void write(Object map, OutputStream writer) {
-        try {
-            JsonGenerator gen = getJsonFactory().createGenerator(writer);
+        try (JsonGenerator gen = JSONFACTORY.createGenerator(ObjectWriteContext.empty(), writer)) {
             write(map, gen);
-            gen.close();
-        } catch (IOException ioe) {
-            System.err.println(ioe.getMessage());
         }
+
     }
-    public static void write(Map<String, Object> map, JsonGenerator gen) throws IOException {
+    public static void write(Map<String, Object> map, JsonGenerator gen) {
         gen.writeStartObject();
         for (Map.Entry<String, Object> e : map.entrySet()) {
-            gen.writeFieldName(e.getKey());
+            gen.writeString(e.getKey());
             write(e.getValue(), gen);
         }
         gen.writeEndObject();
     }
 
-    private static  void write(List<Object> os, JsonGenerator gen) throws IOException {
+    private static  void write(List<Object> os, JsonGenerator gen)  {
         gen.writeStartArray();
         for (Object o : os) {
             write(o, gen);
         }
         gen.writeEndArray();
     }
-    private static void write(Object o, JsonGenerator gen) throws IOException {
+    private static void write(Object o, JsonGenerator gen)  {
         if (o == null) {
             gen.writeNull();
         } else if (o instanceof Long) {
@@ -88,7 +88,7 @@ public class Util {
         } else if (o instanceof List) {
             write((List) o, gen);
         } else {
-            gen.writeObject(o);
+            gen.writePOJO(o);
         }
     }
 
@@ -119,14 +119,7 @@ public class Util {
         }
     }
 
-    protected static void setJsonParserOptions(JsonParser jp) {
-        jp.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        jp.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        jp.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-        jp.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-    }
-
     public static JsonFactory getJsonFactory() {
-        return new JsonFactory(new ObjectMapper());
+        return JSONFACTORY;
     }
 }

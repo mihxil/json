@@ -1,19 +1,15 @@
 package org.meeuw.json.xml;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import tools.jackson.core.JsonGenerator;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import java.io.*;
+
+import javax.xml.parsers.*;
 
 import org.meeuw.json.Util;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
  * @author Michiel Meeuwissen

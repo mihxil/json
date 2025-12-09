@@ -2,6 +2,7 @@ package org.meeuw.json.grep;
 
 import lombok.Getter;
 import lombok.Setter;
+import tools.jackson.core.JsonParser;
 
 import java.util.*;
 
@@ -9,8 +10,6 @@ import org.meeuw.json.JsonIterator;
 import org.meeuw.json.ParseEvent;
 import org.meeuw.json.grep.matching.NeverPathMatcher;
 import org.meeuw.json.grep.matching.PathMatcher;
-
-import com.fasterxml.jackson.core.JsonParser;
 
 /**
  * jsongrep. To search in json streams. You can match on the keys

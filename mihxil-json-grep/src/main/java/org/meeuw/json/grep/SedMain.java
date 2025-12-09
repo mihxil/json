@@ -1,5 +1,8 @@
 package org.meeuw.json.grep;
 
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.ObjectWriteContext;
+
 import java.io.*;
 import java.util.List;
 import java.util.function.Consumer;
@@ -9,9 +12,6 @@ import org.meeuw.json.MainUtil;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.PathMatcher;
 import org.meeuw.json.grep.parsing.Parser;
-
-import tools.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
 /**
  * SedMain is a wrapper around {@link Sed},
@@ -56,7 +56,8 @@ public class SedMain {
         ) {
             main.read(in, out, (generator) -> {
                 if (cl.hasOption("format")) {
-                    generator.setPrettyPrinter(new DefaultPrettyPrinter());
+
+                    //generator.setPrettyPrinter(new DefaultPrettyPrinter());
                 }
             });
         }
@@ -65,7 +66,7 @@ public class SedMain {
 
     private void read(InputStream in, OutputStream out, Consumer<JsonGenerator> jsonGeneratorConsumer) throws IOException {
         Sed sed = new Sed(matcher, Util.getJsonParser(in));
-        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(out)) {
+        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(ObjectWriteContext.empty(), out)) {
             jsonGeneratorConsumer.accept(generator);
             sed.toGenerator(generator);
         }

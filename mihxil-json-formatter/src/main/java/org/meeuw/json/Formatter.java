@@ -4,13 +4,14 @@
  */
 package org.meeuw.json;
 
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.ObjectWriteContext;
+import tools.jackson.core.util.DefaultPrettyPrinter;
+
 import java.io.*;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
-
-import tools.jackson.core.JsonGenerator;
-import tools.jackson.core.util.DefaultPrettyPrinter;
 
 /**
  * Pretty prints the json-stream. Depends entirely on jackson.
@@ -20,9 +21,22 @@ import tools.jackson.core.util.DefaultPrettyPrinter;
 public class Formatter extends AbstractJsonReader {
 
     final JsonGenerator generator;
-    public Formatter(OutputStream out) throws IOException {
-        generator = Util.getJsonFactory().createGenerator(out);
-        generator.setPrettyPrinter(new DefaultPrettyPrinter());
+    public Formatter(OutputStream out) {
+
+        DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
+        ObjectWriteContext writeContext = ObjectWriteContext
+            .empty();
+        /* TODO?
+            (SerializationContext.builder()
+                .serializerFactory(BeanSerializerFactory.instance
+                    .withConfig(new SerializerFactoryConfig()))
+                .build());
+*/
+        generator = Util.getJsonFactory().createGenerator(
+            writeContext, out
+        );
+
+
     }
 
     @Override

@@ -1,15 +1,13 @@
 package org.meeuw;
 
+import tools.jackson.core.JsonParser;
+
 import java.io.IOException;
 
 import org.meeuw.json.Util;
-import org.meeuw.json.grep.Grep;
-import org.meeuw.json.grep.GrepEvent;
-import org.meeuw.json.grep.GrepMain;
+import org.meeuw.json.grep.*;
 import org.meeuw.json.grep.parsing.Parser;
 import org.openjdk.jmh.annotations.Benchmark;
-
-import com.fasterxml.jackson.core.JsonParser;
 
 public class MyBenchmark {
 

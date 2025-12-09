@@ -1,11 +1,11 @@
 package org.meeuw.json;
 
+import tools.jackson.core.JsonToken;
+
 import java.io.IOException;
 import java.util.*;
 
 import org.junit.jupiter.api.Test;
-
-import com.fasterxml.jackson.core.JsonToken;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +28,7 @@ public class JsonIteratorTest {
     public void test2() throws IOException {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{'b':[]}"));
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "b");
         assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
         assertEvent(iterator.next(), JsonToken.END_ARRAY, 1);
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 0);
@@ -50,10 +50,10 @@ public class JsonIteratorTest {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: {}, c:5}"));
 
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "a");
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 1);
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 1);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "c");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "c");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "5");
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 0);
         assertFalse(iterator.hasNext());
@@ -64,27 +64,27 @@ public class JsonIteratorTest {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{b: {b1: 5}, c:5, d: [3, 2, {x: 'blabla'}, {y: 'bloebloe'}], e: 'EEE'}"));
 
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "b");
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 1);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "b1");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 2, "b1");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "5");
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 1);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "c");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "c");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "5");
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "d");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "d");
         assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "3");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "2");
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "x");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 3, "x");
         assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "blabla");
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "y");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 3, "y");
         assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "bloebloe");
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
         assertEvent(iterator.next(), JsonToken.END_ARRAY, 1);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "e");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "e");
         assertEvent(iterator.next(), JsonToken.VALUE_STRING, 1, "EEE");
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 0);
         assertFalse(iterator.hasNext());
@@ -95,13 +95,13 @@ public class JsonIteratorTest {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{a: 1, b: {c: 1, d: 2}}"),
                 path -> path.size() == 1 && path.peekLast().toString().equals("b"), (path) -> false);
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
+		assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "a");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "b");
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 1);
-		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "c");
+		assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 2, "c");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "1");
-		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "d");
+		assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 2, "d");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "2");
 		ParseEvent last = iterator.next();
 		assertEvent(last, JsonToken.END_OBJECT, 1);
@@ -120,13 +120,13 @@ public class JsonIteratorTest {
             path -> path != null && path.size() == 1 && path.peekLast().toString().equals("b")
         );
 		assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
+		assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "a");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
-		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
+		assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "b");
 		assertEvent(iterator.next(), JsonToken.START_OBJECT, 1);
-		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "c");
+		assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 2, "c");
 		assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "1");
-		assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "d");
+		assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 2, "d");
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
 		ParseEvent last = iterator.next();
@@ -150,9 +150,9 @@ public class JsonIteratorTest {
                 path != null && path.size() == 1 && path.peekLast().toString().equals("b")
         );
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "a");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "b");
         assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "1");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_FLOAT, 2, "2.0");
@@ -176,13 +176,13 @@ public class JsonIteratorTest {
                     (path.size() == 2 && path.peekLast().toString().equals("d"))
                 ));
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "a");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "a");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 1, "1");
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "b");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "b");
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 1);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "c");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 2, "c");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 2, "1");
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 2, "d");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 2, "d");
         assertEvent(iterator.next(), JsonToken.START_ARRAY, 2);
         assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "x");
         assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "y");
@@ -200,10 +200,10 @@ public class JsonIteratorTest {
     public void array() throws IOException {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{ \"items\":[{\"a\":'x'}]}"));
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "items");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "items");
         assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "a");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 3, "a");
         assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "x");
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
         assertEvent(iterator.next(), JsonToken.END_ARRAY, 1);
@@ -214,13 +214,13 @@ public class JsonIteratorTest {
     public void arrayInArray() throws IOException {
         JsonIterator iterator = new JsonIterator(Util.getJsonParser("{ \"items\":[{\"a\":[], \"b\": 'B'}]}"));
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "items");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "items");
         assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "a");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 3, "a");
         assertEvent(iterator.next(), JsonToken.START_ARRAY, 3);
         assertEvent(iterator.next(), JsonToken.END_ARRAY, 3);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "b");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 3, "b");
         assertEvent(iterator.next(), JsonToken.VALUE_STRING, 3, "B");
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
         assertEvent(iterator.next(), JsonToken.END_ARRAY, 1);
@@ -233,15 +233,15 @@ public class JsonIteratorTest {
         JsonIterator iterator = new JsonIterator(
                 Util.getJsonParser("{\"items\" : [{ \"result\" : {\"a\" : {}, \"b\" : 1 }} ]}"), (path) -> false, (path) -> false);
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 0);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 1, "items");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 1, "items");
         assertEvent(iterator.next(), JsonToken.START_ARRAY, 1);
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 2);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 3, "result");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 3, "result");
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 3);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 4, "a");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 4, "a");
         assertEvent(iterator.next(), JsonToken.START_OBJECT, 4);
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 4);
-        assertEvent(iterator.next(), JsonToken.FIELD_NAME, 4, "b");
+        assertEvent(iterator.next(), JsonToken.PROPERTY_NAME, 4, "b");
         assertEvent(iterator.next(), JsonToken.VALUE_NUMBER_INT, 4);
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 3);
         assertEvent(iterator.next(), JsonToken.END_OBJECT, 2);
