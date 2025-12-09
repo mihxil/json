@@ -9,17 +9,11 @@
   <artifactId>mihxil-json-core</artifactId>
   <name>mihxil-json-core</name>
 
-
   <packaging>jar</packaging>
-
   <dependencies>
     <dependency>
       <groupId>tools.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>tools.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-cli</groupId>
