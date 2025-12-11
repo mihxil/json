@@ -21,7 +21,7 @@ jackson2 in java. They are streaming and don't need much memory, and can deal wi
 
 All tools support a -help argument for an overview of all supported options.
 
-== Download
+== Download & Install
 
 The executable jars are packaged in a zip, which can be downloaded
 https://repo1.maven.org/maven2/org/meeuw/mihxil-json/{version}/mihxil-json-{version}-all.zip[here].
@@ -32,6 +32,8 @@ This zip also contain executable scripts to call them with `java -jar`, which wi
 ----
 curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/{version}/mihxil-json-{version}-all.zip ; unzip -o json.zip ; rm json.zip
 ----
+
+As a library, please refer to link:https://central.sonatype.com/search?q=g%3Aorg.meeuw+json[maven central].
 
 == Formatter ('jsonformat')
 
