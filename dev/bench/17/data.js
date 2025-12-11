@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765316782531,
+  "lastUpdate": 1765442344822,
   "repoUrl": "https://github.com/mihxil/json",
   "entries": {
     "Benchmark": [
@@ -648,6 +648,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "org.meeuw.MyBenchmark.grepMain",
             "value": 202671.89697393923,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "michiel.meeuwissen@gmail.com",
+            "name": "Michiel Meeuwissen",
+            "username": "mihxil"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d7bf58d8c9a6c6bded6fcc243bf5227e0bae91cb",
+          "message": "Enhance README with download and install info\n\nUpdated download section and added installation instructions.",
+          "timestamp": "2025-12-11T09:35:14+01:00",
+          "tree_id": "b1c3662acd395c378c618ea13f3b5fd372d84dab",
+          "url": "https://github.com/mihxil/json/commit/d7bf58d8c9a6c6bded6fcc243bf5227e0bae91cb"
+        },
+        "date": 1765442344292,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "org.meeuw.MyBenchmark.baseline",
+            "value": 1964120210.4023774,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grep",
+            "value": 468863.54830638604,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grepMain",
+            "value": 197038.93595140218,
             "unit": "ops/s",
             "extra": "iterations: 3\nforks: 1\nthreads: 1"
           }
