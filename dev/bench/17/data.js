@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1765442344822,
+  "lastUpdate": 1766232916597,
   "repoUrl": "https://github.com/mihxil/json",
   "entries": {
     "Benchmark": [
@@ -690,6 +690,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "org.meeuw.MyBenchmark.grepMain",
             "value": 197038.93595140218,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4165fd06a5b6a9ecb4671b8b4f00727e90c059ba",
+          "message": "Bump org.apache.logging.log4j:log4j-core in /mihxil-es (#3)\n\nBumps org.apache.logging.log4j:log4j-core from 2.25.2 to 2.25.3.\n\n---\nupdated-dependencies:\n- dependency-name: org.apache.logging.log4j:log4j-core\n  dependency-version: 2.25.3\n  dependency-type: direct:production\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-12-20T13:11:06+01:00",
+          "tree_id": "855a06badd17e22cabf5d7368b0fd10985407431",
+          "url": "https://github.com/mihxil/json/commit/4165fd06a5b6a9ecb4671b8b4f00727e90c059ba"
+        },
+        "date": 1766232916092,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "org.meeuw.MyBenchmark.baseline",
+            "value": 1965553761.154649,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grep",
+            "value": 483543.1959313291,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grepMain",
+            "value": 206969.2340284847,
             "unit": "ops/s",
             "extra": "iterations: 3\nforks: 1\nthreads: 1"
           }
