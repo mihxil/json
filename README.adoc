@@ -33,6 +33,26 @@ This zip also contain executable scripts to call them with `java -jar`, which wi
 curl -o json.zip  https://repo1.maven.org/maven2/org/meeuw/mihxil-json/{version}/mihxil-json-{version}-all.zip ; unzip -o json.zip ; rm json.zip
 ----
 
+=== Maven dependency and versions
+
+|===
+|Version | Jackson | Date | Notes
+
+| 1.0
+| 3
+|
+|
+
+| 0.x
+| 2
+|
+|
+|===
+
+
+If you want to include the libraries in your own maven project, you can add the following dependency to your `pom.xml`:
+
+
 == Formatter ('jsonformat')
 
 Implemented in link:mihxil-json-formatter[mihxil-json-formatter]
