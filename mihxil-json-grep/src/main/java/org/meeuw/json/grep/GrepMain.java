@@ -22,6 +22,7 @@ import tools.jackson.core.JsonParser;
  * @author Michiel Meeuwissen
  * @since 0.4
  */
+@SuppressWarnings("UnusedReturnValue")
 public class GrepMain  {
 
 
@@ -120,6 +121,7 @@ public class GrepMain  {
     @Getter
     private Long max = null;
 
+    @Getter
     private Long previousMaxRecordSize = null;
 
 
@@ -157,9 +159,6 @@ public class GrepMain  {
         output.close();
         previousMaxRecordSize =  iterator.getMaxRecordSize();
         return out;
-    }
-    public Long  getPreviousMaxRecordSize() {
-        return previousMaxRecordSize;
     }
 
 

@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import org.apache.commons.cli.*;
+import org.apache.commons.cli.help.HelpFormatter;
+
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.Grep;
 import org.meeuw.json.grep.GrepEvent;
@@ -117,6 +119,7 @@ public class DownloadAll {
             }});
     }
 
+    @SuppressWarnings("unchecked")
     private void iterate(Status status, InputStream is, Consumer<ESObject> consumer, Consumer<Status> separate) throws IOException {
         try (is) {
             JsonParser parser = Util.getJsonParser(is);
@@ -226,7 +229,7 @@ public class DownloadAll {
 
 
 
-    private static class Status {
+    public static class Status {
         long startTime = System.currentTimeMillis();
         String scroll_id = null;
         long count = 0;
@@ -235,10 +238,11 @@ public class DownloadAll {
         long byteCount = 0;
     }
 
-    private static void printHelp(Options options) {
-        HelpFormatter formatter = new HelpFormatter();
+    private static void printHelp(Options options) throws IOException {
+        HelpFormatter formatter = HelpFormatter.builder()
+            .get();
 
-        formatter.printHelp("downloadall <elastic search server> <elastic database> [<output file>]", options);
+        formatter.printHelp("downloadall <elastic search server> <elastic database> [<output file>]", "downloadall",  options, "footer", true);
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

@@ -30,7 +30,7 @@ jobs:
             target: 'install'
     runs-on: ${{ matrix.os }}
     env:
-      MAVEN_ARGS: '--no-transfer-progress'
+      MAVEN_ARGS: '--no-transfer-progress --color=auto'
     steps:
     - uses: actions/checkout@v6
     - name: Set up JDK

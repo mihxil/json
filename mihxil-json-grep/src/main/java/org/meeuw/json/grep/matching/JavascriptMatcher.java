@@ -27,7 +27,7 @@ public class JavascriptMatcher extends ObjectMatcher {
         Scriptable that = context.newObject(scope);
         Function fct = context.compileFunction(scope, script, "script", 1, null);
 
-        IdScriptableObject nobj = getNativeObject(event);
+        ScriptableObject nobj = getNativeObject(event);
 
         Object result = fct.call(
             context, scope, that, new Object[]{nobj}
@@ -41,7 +41,7 @@ public class JavascriptMatcher extends ObjectMatcher {
         }
     }
 
-    private IdScriptableObject getNativeObject(ParseEvent event) {
+    private ScriptableObject getNativeObject(ParseEvent event) {
 
         if (event.getNode() != null) {
             if (event.getNode() instanceof Map) {
