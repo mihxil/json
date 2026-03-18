@@ -2,14 +2,12 @@ package org.meeuw.json;
 
 import lombok.Getter;
 import lombok.With;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonToken;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
-
-import tools.jackson.core.JsonGenerator;
-import tools.jackson.core.JsonToken;
 
 /**
  * Describes the completion of an entire 'leaf' in json. It basically wraps a {@link Path} with (optionally) its value
@@ -57,7 +55,7 @@ public class ParseEvent {
         return token + " " + path + "=" + value;
     }
 
-    public void toGenerator(JsonGenerator generator) throws IOException {
+    public void toGenerator(JsonGenerator generator) {
           switch(getToken()) {
             case START_OBJECT:
                 generator.writeStartObject();

@@ -18,7 +18,7 @@ import static org.meeuw.main.Assertions.assertExitCode;
 public class FormatterTest {
 
     @Test
-    public void format() throws IOException {
+    public void format() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Formatter formatter = new Formatter(out);
 
@@ -55,7 +55,7 @@ public class FormatterTest {
             assertExitCode(() -> {
                 Formatter.main(new String[]{"-help"});
             }).isNormal();
-            assertThat(outContent.toString()).startsWith("jsonformat");
+            assertThat(outContent.toString()).startsWith(" usage:  jsonformat [OPTIONS] [<INPUT FILE>|-] [<OUTPUT FILE>|-]");
 
         }
         @Test

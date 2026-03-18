@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import org.apache.commons.cli.*;
+import org.apache.commons.cli.help.HelpFormatter;
 import org.meeuw.util.Manifests;
 
 public class MainUtil {
@@ -12,8 +13,12 @@ public class MainUtil {
 
     }
 
-    public static String version() throws IOException {
-        return Manifests.read("ProjectVersion");
+    public static String version() {
+        try {
+            return Manifests.read("ProjectVersion");
+        } catch (IOException e) {
+            return "<unknown>";
+        }
     }
 
     public static void ignoreArrays(Options options){
@@ -27,10 +32,11 @@ public class MainUtil {
 
     public static CommandLine commandLine(
         String name,
+        String header,
         String argsDescription,
         Consumer<Options> addOptions,
         int expectedNumberOfArguments,
-        String[] argv) throws IOException, ParseException {
+        String[] argv) throws ParseException, IOException {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
         options.addOption(new Option("?", "help", false, "print this message"));
@@ -44,12 +50,17 @@ public class MainUtil {
             exit = true;
         }
         if (cl.hasOption("help") || cl.getArgList().size() < expectedNumberOfArguments) {
-            System.out.println(name + " - " + version() + " - See https://github.com/mihxil/json");
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.setWidth(100);
+            HelpFormatter formatter = HelpFormatter.builder()
+                .setShowSince(false)
+                .get();
+
+
             formatter.printHelp(
                 name + " [OPTIONS] " + argsDescription,
-                options);
+                header,
+                options,
+                "See https://github.com/mihxil/json",
+                false);
 
             exit = true;
         }

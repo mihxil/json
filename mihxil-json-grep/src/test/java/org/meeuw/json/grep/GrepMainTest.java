@@ -14,15 +14,14 @@ import org.meeuw.json.grep.parsing.Parser;
 import org.meeuw.main.AbstractMainTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.meeuw.main.Assertions.assertExitCode;
 
 public class GrepMainTest {
 
 
     @Test
-    public void grepEmpty() throws IOException {
+    public void grepEmpty() {
         GrepMain grep = new GrepMain(new SinglePathMatcher(
                 new PreciseMatch("c"),
                 new Wildcard(),
@@ -36,7 +35,7 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepPathIgnoreArray() throws IOException {
+    public void grepPathIgnoreArray() {
         GrepMain grep = new GrepMain(new SinglePathMatcher(true,
                 new PreciseMatch("titles"),
                 new PreciseMatch("value")));
@@ -50,7 +49,7 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepPathIgnoreArray2() throws IOException {
+    public void grepPathIgnoreArray2() {
         GrepMain grep = new GrepMain(new SinglePathMatcher(true,
                 new PreciseMatch("titles"),
                 new PreciseMatch("value")));
@@ -61,7 +60,7 @@ public class GrepMainTest {
     }
 
     @Test
-    public void grepTitle() throws IOException {
+    public void grepTitle() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.*.value"));
         grep.setOutputFormat(GrepMain.Output.VALUE);
 
@@ -71,7 +70,7 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepOutputFullValue() throws IOException {
+    public void grepOutputFullValue() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles[0]"));
         grep.setOutputFormat(GrepMain.Output.FULLVALUE);
 
@@ -81,7 +80,7 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepOutputFullArray() throws IOException {
+    public void grepOutputFullArray() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles"));
         grep.setOutputFormat(GrepMain.Output.FULLVALUE);
 
@@ -90,7 +89,7 @@ public class GrepMainTest {
     }
 
     @Test
-    public void grepOutputFullValueMultiple() throws IOException {
+    public void grepOutputFullValueMultiple() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles[0],titles"));
         grep.setOutputFormat(GrepMain.Output.FULLVALUE);
 
@@ -102,7 +101,7 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepNotContainsKey() throws IOException {
+    public void grepNotContainsKey() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.* ! contains a"));
         grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
 
@@ -114,7 +113,7 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepArrays() throws IOException {
+    public void grepArrays() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("titles.[*]"));
         grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
 
@@ -124,7 +123,7 @@ public class GrepMainTest {
     }
 
     @Test
-    public void grepArrays2() throws IOException {
+    public void grepArrays2() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items.[*]"));
         grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
 
@@ -136,7 +135,7 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepArrays3() throws IOException {
+    public void grepArrays3() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*]"));
 
         String result = grep.read(getClass().getResourceAsStream("/big.json"));
@@ -154,12 +153,12 @@ public class GrepMainTest {
 
 
     @Test
-    public void grepJavascript1() throws IOException {
+    public void grepJavascript1() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("c function(doc) { return doc.b1 == 1}"));
         PathMatcherAndChain matcher = (PathMatcherAndChain) grep.getMatcher();
-        assertTrue(matcher.getPatterns()[0] instanceof SinglePathMatcher);
+        assertInstanceOf(SinglePathMatcher.class, matcher.getPatterns()[0]);
         assertEquals("c", matcher.getPatterns()[0].toString());
-        assertTrue(matcher.getPatterns()[1] instanceof JavascriptMatcher);
+        assertInstanceOf(JavascriptMatcher.class, matcher.getPatterns()[1]);
         assertEquals("function(doc) { return doc.b1 == 1}", matcher.getPatterns()[1].toString());
 
         String result = grep.read(new StringReader("{c: {b1: 1, b3: 2}}"));
@@ -168,7 +167,7 @@ public class GrepMainTest {
     }
 
     @Test
-    public void grepJavascript() throws IOException {
+    public void grepJavascript() {
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("items[*] function(doc) { return doc.score < 1.9;}"));
 
         String result = grep.read(getClass().getResourceAsStream("/big.json"));
@@ -181,7 +180,7 @@ public class GrepMainTest {
     }
 
     @Test // Tests NeedsObjectObjectMatcher...
-    public void grepContains() throws IOException {
+    public void grepContains() {
         GrepMain.Output output = GrepMain.Output.FULLVALUE;
         GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("...arr[*] contains d", false, output.needsObject(), null));
         grep.setOutputFormat(output);
@@ -275,8 +274,8 @@ public class GrepMainTest {
 
             String version = GrepMain.version();
             assertThat(outContent.toString())
-                .startsWith("jsongrep - " + version + " - See https://github.com/mihxil/json\n" +
-                    "usage: jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]");
+                .startsWith(" usage:  jsongrep [OPTIONS] <pathMatcher expression> [<INPUT FILE>|-]");
+
         }
 
         @Test

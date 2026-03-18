@@ -2,6 +2,7 @@ package org.meeuw.json.grep;
 
 import lombok.Getter;
 import lombok.Setter;
+import tools.jackson.core.JsonParser;
 
 import java.io.*;
 import java.util.*;
@@ -13,8 +14,6 @@ import org.meeuw.json.grep.matching.PathMatcher;
 import org.meeuw.json.grep.parsing.Parser;
 import org.meeuw.util.Manifests;
 import org.meeuw.util.MaxOffsetIterator;
-
-import tools.jackson.core.JsonParser;
 
 /**
  * GrepMain is a wrapper around {@link Grep}, it arranges output,and record collection and sorting.
@@ -149,7 +148,7 @@ public class GrepMain  {
             }
         };
     }
-    public <T extends OutputStream> T read(JsonParser in, T out) throws IOException {
+    public <T extends OutputStream> T read(JsonParser in, T out) {
         PrintStream output = new PrintStream(out);
         GrepMainIterator iterator = iterate(in);
         iterator.forEachRemaining((record) -> {
@@ -162,18 +161,18 @@ public class GrepMain  {
     }
 
 
-    public <T extends OutputStream> T read(Reader in, T out) throws IOException {
+    public <T extends OutputStream> T read(Reader in, T out) {
         return read(Util.getJsonParser(in), out);
     }
-    public <T extends OutputStream> T read(InputStream in, T out) throws IOException {
+    public <T extends OutputStream> T read(InputStream in, T out) {
         return read(Util.getJsonParser(in), out);
     }
 
-    public String read(Reader in) throws IOException {
+    public String read(Reader in) {
         return read(Util.getJsonParser(in), new ByteArrayOutputStream()).toString();
     }
 
-    public String read(InputStream in) throws IOException {
+    public String read(InputStream in) {
         return read(Util.getJsonParser(in), new ByteArrayOutputStream()).toString();
     }
 
@@ -189,6 +188,7 @@ public class GrepMain  {
 
         CommandLine cl = MainUtil.commandLine(
             "jsongrep",
+            "Search in json files",
             "<pathMatcher expression> [<INPUT FILE>|-]",
             (options) -> {
                 options.addOption(new Option("o", "output", true, "Output format, one of " + Arrays.asList(Output.values())));

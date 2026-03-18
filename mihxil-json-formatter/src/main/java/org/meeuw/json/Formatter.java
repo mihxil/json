@@ -28,19 +28,21 @@ public class Formatter extends AbstractJsonReader {
     }
 
     @Override
-    protected void handleToken(ParseEvent event) throws IOException {
+    protected void handleToken(ParseEvent event) {
         event.toGenerator(generator);
     }
 
     @Override
-    protected void ready() throws IOException {
+    protected void ready() {
         generator.close();
     }
 
 
     public static void main(String[] argv) throws IOException, ParseException {
         CommandLine cl = MainUtil
-            .commandLine("jsonformat", "[<INPUT FILE>|-] [<OUTPUT FILE>|-]",  (options) -> {}, 0, argv);
+            .commandLine("jsonformat",
+                "Format json files",
+                "[<INPUT FILE>|-] [<OUTPUT FILE>|-]",  (options) -> {}, 0, argv);
         String[] args  = cl.getArgs();
         try (InputStream in = Util.getInput(args, 0);
              OutputStream out = Util.getOutput(args, 1);) {

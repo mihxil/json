@@ -1,6 +1,8 @@
 package org.meeuw.json.grep;
 
 import lombok.extern.java.Log;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
 
 import java.io.*;
 import java.util.Iterator;
@@ -10,9 +12,6 @@ import java.util.concurrent.*;
 import org.meeuw.json.*;
 import org.meeuw.json.grep.matching.NeverPathMatcher;
 import org.meeuw.json.grep.matching.PathMatcher;
-
-import tools.jackson.core.JsonGenerator;
-import tools.jackson.core.JsonParser;
 
 /**
  * jsonsed. To search/replace in json streams.
@@ -48,7 +47,7 @@ public class Sed  implements Iterator<ParseEvent> {
         return wrapped.hasNext();
     }
 
-    public int toGenerator(JsonGenerator generator) throws IOException {
+    public int toGenerator(JsonGenerator generator) {
         int i = 0;
         while (hasNext()) {
             ParseEvent next = next();

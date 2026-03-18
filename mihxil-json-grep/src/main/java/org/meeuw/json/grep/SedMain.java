@@ -28,8 +28,11 @@ public class SedMain {
     }
 
 
-    public static void main(String[] argv) throws IOException, ParseException {
-        CommandLine cl = MainUtil.commandLine("jsonsed", "<pathMatcher expression> [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
+    public static void main(String[] argv) throws ParseException, IOException {
+        CommandLine cl = MainUtil.commandLine(
+            "jsonsed",
+            "Replace in json files",
+            "<pathMatcher expression> [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
             (options) -> {
                 options.addOption(new Option("f", "format", false, "Pretty print output"));
                 MainUtil.ignoreArrays(options);
@@ -58,7 +61,7 @@ public class SedMain {
         System.exit(0);
     }
 
-    private void read(InputStream in, OutputStream out) throws IOException {
+    private void read(InputStream in, OutputStream out)  {
         JsonParser parser = Util.getJsonParser(in);
         Sed sed = new Sed(matcher, parser);
         ObjectWriteContext writeContext = pretty ? Util.prettyWriteContext() : ObjectWriteContext.empty();
