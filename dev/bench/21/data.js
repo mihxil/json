@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1776030462207,
+  "lastUpdate": 1776191273948,
   "repoUrl": "https://github.com/mihxil/json",
   "entries": {
     "Benchmark": [
@@ -894,6 +894,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "org.meeuw.MyBenchmark.grepMain",
             "value": 233138.18458673975,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "michiel.meeuwissen@gmail.com",
+            "name": "Michiel Meeuwissen",
+            "username": "mihxil"
+          },
+          "committer": {
+            "email": "michiel.meeuwissen@gmail.com",
+            "name": "Michiel Meeuwissen",
+            "username": "mihxil"
+          },
+          "distinct": true,
+          "id": "0002be038ca67cf77b63a8b643ee5c4b77619d2e",
+          "message": "leave to parent",
+          "timestamp": "2026-04-14T20:24:29+02:00",
+          "tree_id": "8a3cac5fe4d484935663e606141169f9158c2c6a",
+          "url": "https://github.com/mihxil/json/commit/0002be038ca67cf77b63a8b643ee5c4b77619d2e"
+        },
+        "date": 1776191273013,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "org.meeuw.MyBenchmark.baseline",
+            "value": 2683161314.641928,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grep",
+            "value": 534068.3541995907,
+            "unit": "ops/s",
+            "extra": "iterations: 3\nforks: 1\nthreads: 1"
+          },
+          {
+            "name": "org.meeuw.MyBenchmark.grepMain",
+            "value": 228336.27818946866,
             "unit": "ops/s",
             "extra": "iterations: 3\nforks: 1\nthreads: 1"
           }
