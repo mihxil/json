@@ -32,7 +32,7 @@ jobs:
     env:
       MAVEN_ARGS: '--no-transfer-progress --color=auto'
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Set up JDK
       uses: actions/setup-java@v5
       with:
@@ -49,7 +49,7 @@ jobs:
         CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
         CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_SECRET_KEY_PASSPHRASE }}
-    - uses: codecov/codecov-action@v5
+    - uses: codecov/codecov-action@v7
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: (success() || failure())
@@ -61,7 +61,7 @@ jobs:
         (cd mihxil-json-benchmarks ; mvn package )
         java -jar  mihxil-json-benchmarks/target/benchmarks.jar   -wi 1 -i 3 -f 1 -rf json | tee output.txt
     - name: Download previous benchmark data
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ./cache
         key: ${{ runner.os }}-benchmark
