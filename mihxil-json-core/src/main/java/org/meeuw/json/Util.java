@@ -7,7 +7,12 @@ import tools.jackson.core.json.JsonReadFeature;
 import tools.jackson.core.util.DefaultPrettyPrinter;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.*;
 import java.nio.file.Path;
 import java.util.List;
@@ -18,6 +23,10 @@ import java.util.Map;
  */
 @Log
 public class Util {
+
+    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+        .followRedirects(HttpClient.Redirect.NORMAL)
+        .build();
 
     static final JsonFactory JSONFACTORY = JsonFactory.builder()
         .configure(JsonReadFeature.ALLOW_UNQUOTED_PROPERTY_NAMES, true)
@@ -103,10 +112,37 @@ public class Util {
         }
         Path file = FileSystems.getDefault().getPath(arg);
         if (! Files.exists(file)) {
-            return new URL(arg).openStream();
+            URL url = new URL(arg);
+            if ("http".equals(url.getProtocol()) || "https".equals(url.getProtocol())) {
+                //return new URL(arg).openStream();
+
+                return getHttpInput(url);
+            }
+            return url.openStream();
         } else {
             return Files.newInputStream(file);
         }
+    }
+
+   private static InputStream getHttpInput(URL url) throws IOException {
+        final HttpResponse<InputStream> response;
+        try {
+            response = HTTP_CLIENT.send(
+                HttpRequest.newBuilder(URI.create(url.toExternalForm())).GET().build(),
+                HttpResponse.BodyHandlers.ofInputStream()
+            );
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Interrupted while fetching " + url, e);
+        } catch (IllegalArgumentException e) {
+            throw new IOException("Invalid HTTP URL: " + url, e);
+        }
+        if (response.statusCode() < HttpURLConnection.HTTP_OK
+            || response.statusCode() >= HttpURLConnection.HTTP_MULT_CHOICE) {
+            response.body().close();
+            throw new IOException("Could not fetch " + url + ": HTTP " + response.statusCode());
+        }
+        return response.body();
     }
 
     public static OutputStream getOutput(String[] argv, int pos) throws IOException {
