@@ -31,6 +31,8 @@ public class MainUtil {
     public static void ignore(Options options){
         ignoreArrays(options);
         ignoreCase(options);
+        options.addOption(new Option("i", "ignore", false, "Ignore case and arrays"));
+
     }
     public static void debug(Options options) {
         options.addOption(new Option("d", "debug", false, "Debug"));

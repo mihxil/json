@@ -167,7 +167,7 @@ public class PutAll {
             if (sort != null) {
                 u += "&sort=" + sort;
             }
-            log.info("Using " + u);
+            log.info("Using {}", u);
             URI url = URI.create(u);
             HttpRequest request = HttpRequest.newBuilder(url).GET().build();
             HttpResponse<InputStream> send = client.send(request, HttpResponse.BodyHandlers.ofInputStream());

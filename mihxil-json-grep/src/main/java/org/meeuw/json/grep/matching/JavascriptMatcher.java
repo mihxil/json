@@ -41,6 +41,7 @@ public class JavascriptMatcher extends ObjectMatcher {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private ScriptableObject getNativeObject(ParseEvent event) {
 
         if (event.getNode() != null) {
