@@ -22,9 +22,16 @@ public class MainUtil {
     }
 
     public static void ignoreArrays(Options options){
-        options.addOption(new Option("i", "ignoreArrays", false, "Ignore arrays (no need to match those)"));
+        options.addOption(new Option("ia", "ignoreArrays", false, "Ignore arrays (no need to match those)"));
+    }
+    public static void ignoreCase(Options options){
+        options.addOption(new Option("ic", "ignoreCase", false, "Ignore case"));
     }
 
+    public static void ignore(Options options){
+        ignoreArrays(options);
+        ignoreCase(options);
+    }
     public static void debug(Options options) {
         options.addOption(new Option("d", "debug", false, "Debug"));
     }
@@ -53,7 +60,6 @@ public class MainUtil {
             HelpFormatter formatter = HelpFormatter.builder()
                 .setShowSince(false)
                 .get();
-
 
             formatter.printHelp(
                 name + " [OPTIONS] " + argsDescription,

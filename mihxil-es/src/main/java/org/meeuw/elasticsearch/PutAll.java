@@ -3,6 +3,7 @@ package org.meeuw.elasticsearch;
 
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import tools.jackson.core.JsonParser;
 
 import java.io.*;
 import java.net.URI;
@@ -12,12 +13,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import org.apache.commons.cli.*;
+import org.apache.commons.cli.help.HelpFormatter;
+import org.apache.commons.cli.help.TextHelpAppendable;
 import org.meeuw.json.Util;
 import org.meeuw.json.grep.Grep;
 import org.meeuw.json.grep.GrepEvent;
 import org.meeuw.json.grep.matching.*;
-
-import tools.jackson.core.JsonParser;
 
 /**
  * This can download an entire elastic search database.
@@ -68,7 +69,7 @@ public class PutAll {
 
     private String getTypesString() {
         String typesString = "";
-        if (types != null && types.size() > 0) {
+        if (types != null && !types.isEmpty()) {
             typesString = String.join(",", types) + "/";
         }
         return typesString;
@@ -155,7 +156,9 @@ public class PutAll {
             HttpResponse<InputStream> send = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             status.calls++;
             if (send.statusCode() != 200) {
-                log.warn("\n\n" + new String(send.body().readAllBytes()));
+                try (var bo = send.body()) {
+                    log.warn("\n\n" + new String(bo.readAllBytes()));
+                }
                 log.warn(send.toString());
             }
             return send.body();
@@ -169,7 +172,9 @@ public class PutAll {
             HttpRequest request = HttpRequest.newBuilder(url).GET().build();
             HttpResponse<InputStream> send = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             if (send.statusCode() != 200) {
-                log.error(new String(send.body().readAllBytes()));
+                try (var bo = send.body()) {
+                    log.error(new String(bo.readAllBytes()));
+                }
                 log.error(send.toString());
             }
             return send.body();
@@ -206,7 +211,7 @@ public class PutAll {
 
 
 
-    private static class Status {
+    protected static class Status {
         long startTime = System.currentTimeMillis();
         String scroll_id = null;
         long count = 0;
@@ -215,10 +220,14 @@ public class PutAll {
         long byteCount = 0;
     }
 
-    private static void printHelp(Options options) {
-        HelpFormatter formatter = new HelpFormatter();
+    private static void printHelp(Options options) throws IOException {
+        HelpFormatter formatter = HelpFormatter.builder()
+            .setShowSince(true)
+            .setHelpAppendable(new TextHelpAppendable(System.out))
+            .get();
+        formatter
+            .printHelp("downloadall <elastic search server> <elastic database> [<output file>]", "", options, "", true);
 
-        formatter.printHelp("downloadall <elastic search server> <elastic database> [<output file>]", options);
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

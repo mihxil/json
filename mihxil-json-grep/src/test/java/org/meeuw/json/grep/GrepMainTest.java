@@ -9,12 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import org.apache.commons.cli.ParseException;
 import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
 import org.meeuw.main.AbstractMainTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.meeuw.main.Assertions.assertExitCode;
 
 public class GrepMainTest {
@@ -182,7 +184,7 @@ public class GrepMainTest {
     @Test // Tests NeedsObjectObjectMatcher...
     public void grepContains() {
         GrepMain.Output output = GrepMain.Output.FULLVALUE;
-        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("...arr[*] contains d", false, output.needsObject(), null));
+        GrepMain grep = new GrepMain(Parser.parsePathMatcherChain("...arr[*] contains d", false, false, output.needsObject(), null));
         grep.setOutputFormat(output);
 
         String result = grep.read(new StringReader("{a:'b', y: {c:'x', arr:[{d:'y'}, {e:'z'}]}}"));
@@ -319,6 +321,19 @@ public class GrepMainTest {
             }).isNormal();
 
             assertThat(outContent.toString()).isEqualTo("a OR b\n");
+        }
+
+        @Test
+        public void withFiles() throws IOException, ParseException {
+            String js =  getClass().getResource("/matchingFunction.js").getFile();
+            String items =  getClass().getResource("/items.json").getFile();
+
+            assertExitCode(() -> {
+
+                GrepMain.main(new String[]{ "-output", "PATHANDFULLVALUE", js, items});
+            }).isNormal();
+
+
         }
 
     }

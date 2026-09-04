@@ -17,11 +17,11 @@ public class Parser {
     // Parse methods for the command line
 
     public static PathMatcher parsePathMatcherChain(String arg) {
-        return parsePathMatcherChain(arg, false, false, null);
+        return parsePathMatcherChain(arg, false, false, false, null);
     }
 
 
-    public static PathMatcher parsePathMatcherChain(String arg, boolean ignoreArrays, boolean needsObject, String recordPrefix) {
+    public static PathMatcher parsePathMatcherChain(String arg, boolean ignoreArrays, boolean ignoreCase, boolean needsObject, String recordPrefix) {
         String[] split = arg.split(",");
         for (int i = 0 ; i < split.length; i++) {
             if (split[i].startsWith(".") && recordPrefix != null) {
@@ -29,58 +29,65 @@ public class Parser {
             }
         }
         if (split.length == 1) {
-            return parsePathMatcher(arg, ignoreArrays, needsObject);
+            return parsePathMatcher(arg, ignoreArrays, ignoreCase, needsObject);
         }
         ArrayList<PathMatcher> list = new ArrayList<>(split.length);
         for (String s : split) {
-            list.add(parsePathMatcher(s, ignoreArrays, needsObject));
+            list.add(parsePathMatcher(s, ignoreArrays,  ignoreCase, needsObject));
         }
         return new PathMatcherOrChain(list.toArray(new PathMatcher[0]));
 
     }
 
-    protected static PathMatcher parsePathMatcher(String arg, boolean ignoreArrays, boolean needsObject) {
+    protected static PathMatcher parsePathMatcher(String arg, boolean ignoreArrays,  boolean needsObject) {
+        return parsePathMatcher(arg, ignoreArrays, false, needsObject);
+    }
+
+    protected static PathMatcher parsePathMatcher(String arg, boolean ignoreArrays, boolean ignoreCase, boolean needsObject) {
         String[] split = arg.split("~", 3);
         if (split.length >= 2) {
             String replacement = split.length == 3 ? split[2] : null;
             return new PathMatcherAndChain(
-                    parseKeysMatcher(split[0], ignoreArrays),
+                    parseKeysMatcher(split[0], ignoreArrays, ignoreCase),
                     new ScalarRegexpMatcher(Pattern.compile(split[1]), replacement));
         }
 
 		split = arg.split("\\s+!\\s*contains\\s+", 2);
 		if (split.length == 2) {
 			return new PathMatcherAndChain(
-					parseKeysMatcher(split[0], ignoreArrays),
+					parseKeysMatcher(split[0], ignoreArrays, ignoreCase),
 					NeedsObjectObjectMatcher.get(new ObjectMatcherNot(new ObjectHasKeyMatcher(split[1])), needsObject));
 		}
 		split = arg.split("\\s+contains\\s+", 2);
 		if (split.length == 2) {
 			return new PathMatcherAndChain(
-					parseKeysMatcher(split[0], ignoreArrays),
+					parseKeysMatcher(split[0], ignoreArrays, ignoreCase),
 					NeedsObjectObjectMatcher.get(new ObjectHasKeyMatcher(split[1]), needsObject));
 		}
         split = arg.split("\\s+function\\(", 2);
         if (split.length == 2) {
             return new PathMatcherAndChain(
-                    parseKeysMatcher(split[0], ignoreArrays),
+                    parseKeysMatcher(split[0], ignoreArrays, ignoreCase),
                     new JavascriptMatcher("function(" + split[1]));
         }
         split = arg.split("=", 3);
         if (split.length >= 2) {
             String replacement = split.length == 2 ? null : split[2];
             return new PathMatcherAndChain(
-                    parseKeysMatcher(split[0], ignoreArrays),
+                    parseKeysMatcher(split[0], ignoreArrays, ignoreCase),
                     new ScalarEqualsMatcher(split[1], replacement));
         }
 
         // >, <, operators...
 
-        return parseKeysMatcher(split[0], ignoreArrays);
+        return parseKeysMatcher(split[0], ignoreArrays, ignoreCase);
 
     }
 
     public static SinglePathMatcher parseKeysMatcher(String arg, boolean ignoreArrays) {
+        return parseKeysMatcher(arg, ignoreArrays, false);
+    }
+    public static SinglePathMatcher parseKeysMatcher(String arg, boolean ignoreArrays, boolean ignoreCase) {
         String[] split = arg.split("\\.");
         List<KeysPattern> list = new ArrayList<>(split.length);
         boolean foundEmpty = false;
@@ -95,16 +102,18 @@ public class Parser {
 
             } else {
                 foundEmpty = false;
-                parseKeyPattern(list, s);
+                parseKeyPattern(list, s, ignoreCase);
             }
         }
         return new SinglePathMatcher(ignoreArrays, list.toArray(new KeysPattern[0]));
     }
 
 
-    protected static void parseKeyPattern(List<KeysPattern> list, String arg) {
+    protected static void parseKeyPattern(List<KeysPattern> list, String arg, boolean ignoreCase) {
         if (arg.startsWith("/") && arg.endsWith("/")) {
-            list.add(new RegexpKeyMatch(Pattern.compile(arg.substring(1, arg.length() - 1))));
+            list.add(new RegexpKeyMatch(
+                Pattern.compile(arg.substring(1, arg.length() - 1), ignoreCase ? Pattern.CASE_INSENSITIVE : 0))
+            );
             return;
         }
         for (String s : arg.split("\\[")) {
@@ -120,8 +129,8 @@ public class Parser {
                 list.add(new ArrayIndexMatch(Integer.parseInt(s.substring(0, s.length() - 1))));
                 continue;
             }
-            if (s.length() > 0) {
-                list.add(new PreciseMatch(s));
+            if (!s.isEmpty()) {
+                list.add(new PreciseMatch(s, ignoreCase));
             }
         }
 

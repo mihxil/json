@@ -35,7 +35,7 @@ public class SedMain {
             "<pathMatcher expression> [<INPUT FILE>|-] [<OUTPUT FILE>|-]",
             (options) -> {
                 options.addOption(new Option("f", "format", false, "Pretty print output"));
-                MainUtil.ignoreArrays(options);
+                MainUtil.ignore(options);
                 MainUtil.debug(options);
             },
             1,
@@ -43,9 +43,10 @@ public class SedMain {
 
         String[] args = cl.getArgs();
         final List<String> argList = cl.getArgList();
-        boolean ignoreArrays = cl.hasOption("ignoreArrays");
+        boolean ignoreArrays = cl.hasOption("ignoreArrays") || cl.hasOption("ignore");
+        boolean ignoreCase = cl.hasOption("ignoreCase")  || cl.hasOption("ignore");
 
-        SedMain main = new SedMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, false, null), cl.hasOption("format"));
+        SedMain main = new SedMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, ignoreCase, false, null), cl.hasOption("format"));
 
         if (cl.hasOption("debug")) {
             System.out.println(main.matcher);

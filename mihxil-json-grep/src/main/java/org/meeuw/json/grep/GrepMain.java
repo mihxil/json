@@ -124,6 +124,9 @@ public class GrepMain  {
     private Long previousMaxRecordSize = null;
 
 
+    @Setter
+    boolean ignoreCase = false;
+
     public GrepMain(PathMatcher pathMatcher) {
         this.matcher = pathMatcher;
     }
@@ -197,7 +200,7 @@ public class GrepMain  {
                 options.addOption(new Option("rs", "recordsep", true, "Record separator"));
                 options.addOption(new Option("sf", "sortfields", true, "Sort the fields of a found 'record', according to the order of the matchers."));
                 options.addOption(new Option("m", "max", false, "Max number of records"));
-                MainUtil.ignoreArrays(options);
+                MainUtil.ignore(options);
                 MainUtil.debug(options);
             }, 1, argv
         );
@@ -205,7 +208,10 @@ public class GrepMain  {
         String[] args = cl.getArgs();
 
         final List<String> argList = cl.getArgList();
-        boolean ignoreArrays = cl.hasOption("ignoreArrays");
+        boolean ignoreArrays = cl.hasOption("ignoreArrays") || cl.hasOption("ignore");
+
+        boolean ignoreCase = cl.hasOption("ignoreCase") || cl.hasOption("ignore");
+
 
         Output output = Output.PATHANDVALUE;
         if (cl.hasOption("output")) {
@@ -216,7 +222,8 @@ public class GrepMain  {
             record = cl.getOptionValue("record");
         }
 
-        GrepMain main = new GrepMain(Parser.parsePathMatcherChain(args[0], ignoreArrays, output.needsObject(), record));
+        GrepMain main = new GrepMain(
+            Parser.parsePathMatcherChain(args[0], ignoreArrays, ignoreCase, output.needsObject(), record));
 
         main.setOutputFormat(output);
 
