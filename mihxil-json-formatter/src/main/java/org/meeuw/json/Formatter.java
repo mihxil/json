@@ -45,7 +45,7 @@ public class Formatter extends AbstractJsonReader {
                 "[<INPUT FILE>|-] [<OUTPUT FILE>|-]",  (options) -> {}, 0, argv);
         String[] args  = cl.getArgs();
         try (InputStream in = Util.getInput(args, 0);
-             OutputStream out = Util.getOutput(args, 1);) {
+             OutputStream out = Util.getOutput(args, 1)) {
 
             Formatter formatter = new Formatter(out);
             formatter.read(Util.getJsonParser(in));

@@ -12,20 +12,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SedMainTest {
 
-    public static class Main extends AbstractMainTest {
+    public static class MainTest extends AbstractMainTest {
 
         @Test
         public void test() {
             System.setIn(new ByteArrayInputStream("{ \"items\" : [ { \"a\" : 'abc def'},  { \"a\" : 'xyz qwv'}]}".getBytes(StandardCharsets.UTF_8)));
             Assertions.assertExitCode(() -> SedMain.main(new String[] {"--ignoreArrays", "--format", "items.a~abc\\s*(.*)~def", "-", "-"})).isNormal();
 
-            assertThat(outContent.toString()).isEqualTo("{\n" +
-                "  \"items\" : [ {\n" +
-                "    \"a\" : \"def\"\n" +
-                "  }, {\n" +
-                "    \"a\" : \"xyz qwv\"\n" +
-                "  } ]\n" +
-                "}");
+            assertThat(outContent.toString()).isEqualTo("""
+                {
+                  "items" : [ {
+                    "a" : "def"
+                  }, {
+                    "a" : "xyz qwv"
+                  } ]
+                }""");
         }
 
         @Test

@@ -12,6 +12,7 @@ import org.meeuw.json.Util;
 import org.meeuw.json.grep.matching.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static tools.jackson.core.ObjectWriteContext.empty;
 
 class SedTest {
 
@@ -27,7 +28,7 @@ class SedTest {
             Util.getJsonParser("{ \"items\" : [ { \"a\" : 'abc def'},  { \"a\" : 'xyz qwv'}]}"));
 
         StringWriter out = new StringWriter();
-        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(out)) {
+        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(empty(), out)) {
             sed.toGenerator(generator);
         }
 
@@ -49,7 +50,7 @@ class SedTest {
             Util.getJsonParser("{ \"items\" : [ { \"a\" : 'abc def'},  { \"a\" : 'xyz qwv'}]}"));
 
         StringWriter out = new StringWriter();
-        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(out)) {
+        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(empty(), out)) {
             sed.toGenerator(generator);
         }
 
@@ -70,7 +71,7 @@ class SedTest {
             Util.getJsonParser("{ \"items\" : [ { \"a\" : 'abc def'},  { \"a\" : 'xyz qwv'}]}"));
 
         StringWriter out = new StringWriter();
-        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(out)) {
+        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(empty(),out)) {
             sed.toGenerator(generator);
         }
 
@@ -91,7 +92,7 @@ class SedTest {
             Util.getJsonParser("{ \"items\" : [ { \"a\" : 'abc def'},  { \"a\" : 'xyz qwv'}]}"));
 
         StringWriter out = new StringWriter();
-        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(out)) {
+        try (JsonGenerator generator = Util.getJsonFactory().createGenerator(empty(),out)) {
             sed.toGenerator(generator);
         }
 
@@ -102,10 +103,11 @@ class SedTest {
 
     @Test
     public void swagger() throws IOException {
-        String input = "{apiVersion: \"3.0\",\n" +
-            "swaggerVersion: \"1.2\",\n" +
-            "basePath2: \"/${CONTEXT}/api\",\n" +
-            "basePath: \"/${api.basePath}\"}";
+        String input = """
+            {apiVersion: "3.0",
+            swaggerVersion: "1.2",
+            basePath2: "/${CONTEXT}/api",
+            basePath: "/${api.basePath}"}""";
         PathMatcher matcher = new PathMatcherOrChain(
             new PathMatcherAndChain(
                 new SinglePathMatcher(new PreciseMatch("basePath")),

@@ -6,7 +6,7 @@ import tools.jackson.core.JsonParser;
 import java.io.*;
 
 
-public abstract class AbstractJsonReader implements Closeable {
+public abstract class AbstractJsonReader implements AutoCloseable {
 
 
     public void read(final JsonParser jp)  {

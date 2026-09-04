@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import org.apache.commons.cli.ParseException;
 import org.meeuw.json.grep.matching.*;
 import org.meeuw.json.grep.parsing.Parser;
 import org.meeuw.main.AbstractMainTest;
@@ -96,8 +95,10 @@ public class GrepMainTest {
         grep.setOutputFormat(GrepMain.Output.FULLVALUE);
 
         String result = grep.read(new StringReader("{titles: [{value: 'title1'}, {value: 'title2'}]}"));
-        assertEquals("{\"value\":\"title1\"}\n" +
-                "[{\"value\":\"title1\"},{\"value\":\"title2\"}]\n", result);
+        assertEquals("""
+            {"value":"title1"}
+            [{"value":"title1"},{"value":"title2"}]
+            """, result);
     }
 
 
@@ -120,8 +121,10 @@ public class GrepMainTest {
         grep.setOutputFormat(GrepMain.Output.PATHANDVALUE);
 
         String result = grep.read(new StringReader("{titles: [{a: 'A'}, {b: 'B'}]}"));
-        assertEquals("titles[0]={...}\n" +
-            "titles[1]={...}\n", result);
+        assertEquals("""
+            titles[0]={...}
+            titles[1]={...}
+            """, result);
     }
 
     @Test
@@ -131,8 +134,10 @@ public class GrepMainTest {
 
         String result = grep.read(getClass().getResourceAsStream("/items.json"));
         assertEquals(
-                "items[0]={...}\n" +
-                "items[1]={...}\n", result);
+            """
+                items[0]={...}
+                items[1]={...}
+                """, result);
     }
 
 
@@ -142,14 +147,16 @@ public class GrepMainTest {
 
         String result = grep.read(getClass().getResourceAsStream("/big.json"));
         assertEquals(
-                "items[0]={...}\n" +
-                "items[1]={...}\n" +
-                "items[2]={...}\n" +
-                "items[3]={...}\n" +
-                "items[4]={...}\n" +
-                "items[5]={...}\n" +
-                "items[6]={...}\n" +
-                "items[7]={...}\n",
+            """
+                items[0]={...}
+                items[1]={...}
+                items[2]={...}
+                items[3]={...}
+                items[4]={...}
+                items[5]={...}
+                items[6]={...}
+                items[7]={...}
+                """,
                 result);
     }
 
@@ -175,10 +182,12 @@ public class GrepMainTest {
         String result = grep.read(getClass().getResourceAsStream("/big.json"));
 
         assertEquals(
-                "items[4]={...}\n" +
-                "items[5]={...}\n" +
-                "items[6]={...}\n" +
-                "items[7]={...}\n", result);
+            """
+                items[4]={...}
+                items[5]={...}
+                items[6]={...}
+                items[7]={...}
+                """, result);
     }
 
     @Test // Tests NeedsObjectObjectMatcher...
@@ -265,14 +274,14 @@ public class GrepMainTest {
         assertThat(i.hasNext()).isFalse();
     }
 
-    public static class Main extends AbstractMainTest {
+    @SuppressWarnings("DataFlowIssue")
+    public static class MainTest extends AbstractMainTest {
 
 
+        @SuppressWarnings("ConfusingMainMethod")
         @Test
         public void main() throws IOException {
-            assertExitCode(() -> {
-                GrepMain.main(new String[]{});
-            }).isNormal();
+            assertExitCode(() -> GrepMain.main(new String[]{})).isNormal();
 
             String version = GrepMain.version();
             assertThat(outContent.toString())
@@ -282,9 +291,7 @@ public class GrepMainTest {
 
         @Test
         public void version() {
-            assertExitCode(() -> {
-                GrepMain.main(new String[]{"-version"});
-            }).isNormal();
+            assertExitCode(() -> GrepMain.main(new String[]{"-version"})).isNormal();
             assertThat(outContent.toString())
                 .isNotEmpty();
 
@@ -294,9 +301,7 @@ public class GrepMainTest {
         public void output() {
             System.setIn(new ByteArrayInputStream("{'a': 'B'}".getBytes(StandardCharsets.UTF_8)));
 
-            assertExitCode(() -> {
-                GrepMain.main(new String[]{"-output", "PATHANDFULLVALUE", "a"});
-            }).isNormal();
+            assertExitCode(() -> GrepMain.main(new String[]{"-output", "PATHANDFULLVALUE", "a"})).isNormal();
             assertThat(outContent.toString()).isEqualTo("a=B\n");
         }
 
@@ -305,9 +310,7 @@ public class GrepMainTest {
         public void output(GrepMain.Output output) {
             System.setIn(new ByteArrayInputStream("{'a': 'B'}".getBytes(StandardCharsets.UTF_8)));
 
-            assertExitCode(() -> {
-                GrepMain.main(new String[]{"-output", output.name(), "a"});
-            }).isNormal();
+            assertExitCode(() -> GrepMain.main(new String[]{"-output", output.name(), "a"})).isNormal();
 
             assertThat(outContent.toString()).containsAnyOf("a", "B");
         }
@@ -316,22 +319,17 @@ public class GrepMainTest {
         public void debug() {
             System.setIn(new ByteArrayInputStream("{'a': 'B'}".getBytes(StandardCharsets.UTF_8)));
 
-            assertExitCode(() -> {
-                GrepMain.main(new String[]{"-debug", "-output", "PATHANDFULLVALUE", "a,b"});
-            }).isNormal();
+            assertExitCode(() -> GrepMain.main(new String[]{"-debug", "-output", "PATHANDFULLVALUE", "a,b"})).isNormal();
 
             assertThat(outContent.toString()).isEqualTo("a OR b\n");
         }
 
         @Test
-        public void withFiles() throws IOException, ParseException {
+        public void withFiles() {
             String js =  getClass().getResource("/matchingFunction.js").getFile();
             String items =  getClass().getResource("/items.json").getFile();
 
-            assertExitCode(() -> {
-
-                GrepMain.main(new String[]{ "-output", "PATHANDFULLVALUE", js, items});
-            }).isNormal();
+            assertExitCode(() -> GrepMain.main(new String[]{ "-output", "PATHANDFULLVALUE", js, items})).isNormal();
 
 
         }

@@ -24,45 +24,42 @@ public class FormatterTest {
 
         formatter.read(
                 new StringReader("{a:1, b:2}"));
-        assertEquals("{\n" +
-                "  \"a\" : 1,\n" +
-                "  \"b\" : 2\n" +
-                "}", out.toString());
+        assertEquals("""
+            {
+              "a" : 1,
+              "b" : 2
+            }""", out.toString());
     }
 
 
-    public static class Main extends AbstractMainTest {
+    public static class MainTest extends AbstractMainTest {
 
+        @SuppressWarnings("ConfusingMainMethod")
         @Test
         public void main() {
             System.setIn(new ByteArrayInputStream("{'a': 'B', 'array': [1, 2.0, true, false], 'object': { 'x': null }}".getBytes(StandardCharsets.UTF_8)));
 
-            assertExitCode(() -> {
-                Formatter.main(new String[]{});
-            }).isNormal();
+            assertExitCode(() -> Formatter.main(new String[]{})).isNormal();
 
-            assertThat(outContent.toString()).isEqualTo("{\n" +
-                "  \"a\" : \"B\",\n" +
-                "  \"array\" : [ 1, 2.0, true, false ],\n" +
-                "  \"object\" : {\n" +
-                "    \"x\" : null\n" +
-                "  }\n" +
-                "}");
+            assertThat(outContent.toString()).isEqualTo("""
+                {
+                  "a" : "B",
+                  "array" : [ 1, 2.0, true, false ],
+                  "object" : {
+                    "x" : null
+                  }
+                }""");
         }
 
         @Test
         public void help() {
-            assertExitCode(() -> {
-                Formatter.main(new String[]{"-help"});
-            }).isNormal();
+            assertExitCode(() -> Formatter.main(new String[]{"-help"})).isNormal();
             assertThat(outContent.toString()).startsWith(" usage:  jsonformat [OPTIONS] [<INPUT FILE>|-] [<OUTPUT FILE>|-]");
 
         }
         @Test
         public void version() throws IOException {
-            assertExitCode(() -> {
-                Formatter.main(new String[]{"-version"});
-            }).isNormal();
+            assertExitCode(() -> Formatter.main(new String[]{"-version"})).isNormal();
             assertThat(outContent.toString()).startsWith(String.valueOf(MainUtil.version()));
         }
     }
