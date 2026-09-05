@@ -53,12 +53,11 @@ public class MainUtil {
         addOptions.accept(options);
         CommandLine cl = parser.parse(options, argv, true);
 
-        boolean exit = false;
         if (cl.hasOption("version")) {
             System.out.println(version());
-            exit = true;
+            System.exit(0);
         }
-        if (cl.hasOption("help") || cl.getArgList().size() < expectedNumberOfArguments) {
+        if (cl.hasOption("help") || (cl.getArgList().size() < expectedNumberOfArguments)) {
             HelpFormatter formatter = HelpFormatter.builder()
                 .setShowSince(false)
                 .get();
@@ -68,14 +67,11 @@ public class MainUtil {
                 header,
                 options,
                 "See https://github.com/mihxil/json",
-                false);
-
-            exit = true;
-        }
-
-        if (exit) {
+                true
+            );
             System.exit(0);
         }
+
 
         return cl;
      }

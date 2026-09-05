@@ -209,7 +209,6 @@ public class GrepMain  {
 
         final List<String> argList = cl.getArgList();
         boolean ignoreArrays = cl.hasOption("ignoreArrays") || cl.hasOption("ignore");
-
         boolean ignoreCase = cl.hasOption("ignoreCase") || cl.hasOption("ignore");
 
 
