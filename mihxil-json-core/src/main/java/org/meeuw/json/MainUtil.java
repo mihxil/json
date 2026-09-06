@@ -1,10 +1,19 @@
 package org.meeuw.json;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.function.Consumer;
 
 import org.apache.commons.cli.*;
 import org.apache.commons.cli.help.HelpFormatter;
+import org.apache.commons.cli.help.OptionFormatter;
+import org.apache.commons.cli.help.TableDefinition;
+import org.apache.commons.cli.help.TextHelpAppendable;
+import org.apache.commons.cli.help.TextStyle;
 import org.meeuw.util.Manifests;
 
 public class MainUtil {
@@ -58,9 +67,15 @@ public class MainUtil {
             System.exit(0);
         }
         if (cl.hasOption("help") || (cl.getArgList().size() < expectedNumberOfArguments)) {
-            HelpFormatter formatter = HelpFormatter.builder()
+            TextHelpAppendable helpOutput = isTerminal() ? new BoldOptionHelpAppendable(System.out) : new TextHelpAppendable(System.out);
+            helpOutput.setMaxWidth(120);
+            HelpFormatter formatter = new UnixHelpFormatter(HelpFormatter.builder()
+                .setHelpAppendable(helpOutput)
+                .setOptionFormatBuilder(OptionFormatter.builder()
+                    .setArgumentNameDelimiters("", "")
+                    .setOptArgSeparator("="))
                 .setShowSince(false)
-                .get();
+            );
 
             formatter.printHelp(
                 name + " [OPTIONS] " + argsDescription,
@@ -75,4 +90,78 @@ public class MainUtil {
 
         return cl;
      }
+
+    private static boolean isTerminal() {
+        return System.console() != null && System.getenv("NO_COLOR") == null;
+    }
+
+    private static final class UnixHelpFormatter extends HelpFormatter {
+
+        private UnixHelpFormatter(Builder builder) {
+            super(builder);
+        }
+
+        @Override
+        public TableDefinition getTableDefinition(Iterable<Option> options) {
+            TextStyle style = TextStyle.builder()
+                .setAlignment(TextStyle.Alignment.LEFT)
+                .setIndent(4)
+                .setScalable(true)
+                .get();
+            List<List<String>> rows = new ArrayList<>();
+            options.forEach(option -> {
+                OptionFormatter formatter = getOptionFormatter(option);
+                String optionHelp = formatter.getBothOpt();
+                if (option.hasArg()) {
+                    optionHelp += "=" + formatter.getArgName();
+                }
+                if (!formatter.getDescription().isEmpty()) {
+                    optionHelp += "\n" + formatter.getDescription();
+                }
+                rows.add(Collections.singletonList(optionHelp));
+            });
+            return TableDefinition.from("", Collections.singletonList(style), Collections.singletonList(""), rows);
+        }
+    }
+
+    private static final class BoldOptionHelpAppendable extends TextHelpAppendable {
+
+        private static final String BOLD = "\u001B[1m";
+        private static final String RESET = "\u001B[0m";
+
+        private boolean formattingOptions;
+
+        private BoldOptionHelpAppendable(Appendable output) {
+            super(output);
+        }
+
+        @Override
+        public void appendTable(TableDefinition table) throws IOException {
+            formattingOptions = true;
+            try {
+                super.appendTable(table);
+            } finally {
+                formattingOptions = false;
+            }
+        }
+
+        @Override
+        protected Queue<String> makeColumnQueue(CharSequence columnData, TextStyle style) {
+            Queue<String> lines = super.makeColumnQueue(columnData, style);
+            if (!formattingOptions || columnData.isEmpty()) {
+                return lines;
+            }
+
+            int descriptionStart = columnData.toString().indexOf('\n');
+            int optionLineCount = descriptionStart < 0
+                ? lines.size()
+                : super.makeColumnQueue(columnData.subSequence(0, descriptionStart), style).size();
+            Queue<String> formatted = new LinkedList<>();
+            for (int line = 0; !lines.isEmpty(); line++) {
+                String text = lines.remove();
+                formatted.add(line < optionLineCount ? BOLD + text + RESET : text);
+            }
+            return formatted;
+        }
+    }
 }
