@@ -26,7 +26,7 @@
     <dependency>
       <groupId>org.mozilla</groupId>
       <artifactId>rhino</artifactId>
-      <version>1.9.0</version>
+      <version>1.9.1</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -40,6 +40,36 @@
 
   <build>
     <plugins>
+    <!--
+      <plugin>
+        <groupId>org.javacc.plugin</groupId>
+        <artifactId>javacc-maven-plugin</artifactId>
+        <version>3.8.0</version>
+        <executions>
+          <execution>
+            <id>javacc</id>
+            <goals>
+              <goal>javacc</goal>
+            </goals>
+            <configuration>
+              <failOnGrammarError>true</failOnGrammarError>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.javacc.generator</groupId>
+            <artifactId>java</artifactId>
+            <version>${javacc.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.javacc</groupId>
+            <artifactId>core</artifactId>
+            <version>${javacc.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
