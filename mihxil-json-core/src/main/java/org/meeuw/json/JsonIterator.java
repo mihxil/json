@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Represents a json object as an iterator of {@link ParseEvent}s.
@@ -27,15 +28,35 @@ public class JsonIterator implements Iterator<ParseEvent> {
 
 	private final Predicate<Path> needsJsonCollection;
 
+    /**
+     * The {@link JsonNode} this iterator was constructed from, if any. If set, matched containers and
+     * values will be resolved as live nodes from this tree (via {@link Path#toJsonPointer()}), rather
+     * than being rebuilt as disconnected {@code Map}/{@code List} copies, so they can be used to mutate
+     * the original tree in place.
+     */
+    private final JsonNode root;
 
     public  JsonIterator(JsonParser jp) {
         this(jp, p -> false, p -> false);
     }
 
     public JsonIterator(JsonParser jp, Predicate<Path> needsKeyCollection, Predicate<Path> needsJsonCollection) {
+        this(jp, needsKeyCollection, needsJsonCollection, null);
+    }
+
+    public JsonIterator(JsonNode root) {
+        this(root, p -> false, p -> false);
+    }
+
+    public JsonIterator(JsonNode root, Predicate<Path> needsKeyCollection, Predicate<Path> needsJsonCollection) {
+        this(root.traverse(), needsKeyCollection, needsJsonCollection, root);
+    }
+
+    private JsonIterator(JsonParser jp, Predicate<Path> needsKeyCollection, Predicate<Path> needsJsonCollection, JsonNode root) {
         this.jp = jp;
 		this.needsKeyCollection = needsKeyCollection;
 		this.needsJsonCollection = needsJsonCollection;
+        this.root = root;
     }
 
     @Override
@@ -77,19 +98,19 @@ public class JsonIterator implements Iterator<ParseEvent> {
                             if (needsKeyCollection.test(path)) {
                                 keys.add(new ArrayList<>());
                             }
-                            if (needsJsonCollection.test(path) || ! objects.isEmpty()) {
+                            if (root == null && (needsJsonCollection.test(path) || ! objects.isEmpty())) {
                                 objects.add(new LinkedHashMap<String, Object>());
                             }
                             break;
                         case START_ARRAY:
-                            if (needsJsonCollection.test(path) || !objects.isEmpty()) {
+                            if (root == null && (needsJsonCollection.test(path) || !objects.isEmpty())) {
                                 objects.add(new ArrayList<>());
                             }
                             break;
                         case END_ARRAY:
                             path.pollLast();
                             if (needsJsonCollection.test(path)) {
-                                eventObjects = objects.peekLast();
+                                eventObjects = root != null ? root.at(path.toJsonPointer()) : objects.peekLast();
                             }
                             break;
                         case FIELD_NAME:
@@ -104,8 +125,22 @@ public class JsonIterator implements Iterator<ParseEvent> {
                                 eventKeys = keys.pollLast();
                             }
                             if (needsJsonCollection.test(path)) {
-                                eventObjects = objects.peekLast();
+                                eventObjects = root != null ? root.at(path.toJsonPointer()) : objects.peekLast();
                             }
+                    }
+
+                    if (root != null) {
+                        switch (token) {
+                            case VALUE_STRING:
+                            case VALUE_NUMBER_INT:
+                            case VALUE_NUMBER_FLOAT:
+                            case VALUE_TRUE:
+                            case VALUE_FALSE:
+                            case VALUE_NULL:
+                                if (needsJsonCollection.test(path)) {
+                                    eventObjects = root.at(path.toJsonPointer());
+                                }
+                        }
                     }
 
                     next = new ParseEvent(token, new Path(path), text, eventKeys, eventObjects);

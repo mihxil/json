@@ -13,7 +13,7 @@ public class MaxOffsetIterator<T> implements Iterator<T> {
 
     private final Iterator<T> wrapped;
 
-    private final long offsetmax;
+    private final long offsetMax;
 
     private final long offset;
 
@@ -26,8 +26,6 @@ public class MaxOffsetIterator<T> implements Iterator<T> {
     private T next;
 
     private Runnable callback;
-
-
 
     public MaxOffsetIterator(Iterator<T> wrapped, Number max, boolean countNulls) {
         this(wrapped, max, 0L, countNulls);
@@ -44,7 +42,7 @@ public class MaxOffsetIterator<T> implements Iterator<T> {
     public MaxOffsetIterator(Iterator<T> wrapped, Number max, Number offset, boolean countNulls) {
         this.wrapped = wrapped;
         this.offset = offset == null ? 0L : offset.longValue();
-        this.offsetmax = max == null ? Long.MAX_VALUE : max.longValue() + this.offset;
+        this.offsetMax = max == null ? Long.MAX_VALUE : max.longValue() + this.offset;
         this.countNulls = countNulls;
     }
 
@@ -80,7 +78,7 @@ public class MaxOffsetIterator<T> implements Iterator<T> {
                 }
             }
 
-            if(count < offsetmax && wrapped.hasNext()) {
+            if(count < offsetMax && wrapped.hasNext()) {
                 next = wrapped.next();
                 if (countNulls || next != null) {
                     count++;

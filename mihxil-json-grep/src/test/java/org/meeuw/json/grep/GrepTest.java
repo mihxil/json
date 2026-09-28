@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.junit.jupiter.api.Test;
 
 import org.meeuw.json.Util;
@@ -26,6 +31,42 @@ public class GrepTest {
         assertEquals("b.b1=5", grep.next().toString());
         assertFalse(grep.hasNext());
         assertThatThrownBy(grep::next).isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    public void grepSubObjectWithMapper() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        JsonNode node = mapper.reader().readTree("{'a':1, 'b': {'b1': 5}, 'c': [ {'d': 4, 'e':5 }]}");
+        PathMatcher matcher = new SinglePathMatcher(
+            new PreciseMatch("b"),
+            new PreciseMatch("b1"));
+        // grepping directly in a JsonNode (rather than on 'node.traverse()') gives back events
+        // whose node is the actual, live node in the tree, not a disconnected copy.
+        Grep grep = new Grep(matcher, node);
+        GrepEvent event = grep.next();
+        assertEquals("b.b1=5", event.toString());
+        assertFalse(grep.hasNext());
+        assertThatThrownBy(grep::next).isInstanceOf(NoSuchElementException.class);
+
+        assertThat(event.getEvent().getNode()).isSameAs(node.get("b").get("b1"));
+    }
+
+    @Test
+    public void grepSubObjectWithMapperCanUpdate() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        JsonNode node = mapper.reader().readTree("{'a':1, 'b': {'b1': 5}, 'c': [ {'d': 4, 'e':5 }]}");
+        Grep grep = new Grep(new SinglePathMatcher(new PreciseMatch("b")), node);
+
+        GrepEvent event = grep.next();
+        assertEquals("b={...}", event.toString());
+        assertFalse(grep.hasNext());
+
+        // the matched node is 'node's own live "b" object, so mutating it updates 'node' itself
+        ObjectNode b = (ObjectNode) event.getEvent().getNode();
+        b.put("b1", 6);
+        assertEquals(6, node.get("b").get("b1").asInt());
     }
 
 

@@ -1,7 +1,8 @@
 package org.meeuw.json;
 
-import javax.swing.table.TableStringConverter;
 import java.util.*;
+
+import com.fasterxml.jackson.core.JsonPointer;
 
 /**
 * @author Michiel Meeuwissen
@@ -78,5 +79,22 @@ public class Path extends AbstractList<PathEntry> {
 
     public void addLast(ArrayEntry inc) {
         backing.add(inc);
+    }
+
+    /**
+     * Represents this path as a {@link JsonPointer}, so it can be used to look up the corresponding
+     * {@code JsonNode} in the tree it originated from (e.g. via {@code JsonNode#at(JsonPointer)}).
+     */
+    public JsonPointer toJsonPointer() {
+        StringBuilder builder = new StringBuilder();
+        for (PathEntry pe : this) {
+            builder.append('/');
+            if (pe instanceof ArrayEntry) {
+                builder.append(((ArrayEntry) pe).getIndex());
+            } else {
+                builder.append(pe.toString().replace("~", "~0").replace("/", "~1"));
+            }
+        }
+        return JsonPointer.compile(builder.toString());
     }
 }

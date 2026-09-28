@@ -11,6 +11,7 @@ import org.meeuw.json.grep.matching.NeverPathMatcher;
 import org.meeuw.json.grep.matching.PathMatcher;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * jsongrep. To search in json streams. You can match on the keys
@@ -27,7 +28,7 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
     @Setter
     private PathMatcher recordMatcher = new NeverPathMatcher();
 
-    final JsonIterator wrapped;
+    final Iterator<ParseEvent> wrapped;
     private final List<GrepEvent> next = new ArrayList<>();
 
     @lombok.Builder
@@ -35,7 +36,21 @@ public class Grep implements Iterator<GrepEvent>, Iterable<GrepEvent> {
         this.matcher = matcher == null ? new NeverPathMatcher() : matcher;
         this.wrapped = new JsonIterator(jp,
                 this.matcher.needsKeyCollection(),
-                this.matcher.needsObjectCollection());
+                this.matcher.needsObjectCollection()
+        );
+    }
+
+    /**
+     * Greps directly in an already parsed {@link JsonNode}. Matched containers and values will be the
+     * actual, live nodes from this tree (rather than disconnected copies), so they can be used to
+     * mutate {@code node} in place.
+     */
+    public Grep(PathMatcher matcher, JsonNode node) {
+        this.matcher = matcher == null ? new NeverPathMatcher() : matcher;
+        this.wrapped = new JsonIterator(node,
+                this.matcher.needsKeyCollection(),
+                this.matcher.needsObjectCollection()
+        );
     }
 
     @Override
